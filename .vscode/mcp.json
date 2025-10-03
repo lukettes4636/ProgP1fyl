@@ -1,0 +1,21 @@
+{
+  "servers": {
+    "Unity-MCP": {
+      "type": "stdio",
+      "command": "C:/Users/Luk/Documents/GitHub/ParciaProgramacion1yEfvqa - Copy/Library/mcp-server/win-x64/unity-mcp-server.exe",
+      "args": [
+        "--port=8080",
+        "--plugin-timeout=10000",
+        "--client-transport=stdio"
+      ]
+    }
+  },
+  "mcpServers": {
+    "mcp-unity": {
+      "command": "node",
+      "args": [
+        "C:/Users/Luk/Documents/GitHub/ParciaProgramacion1yEfvqa - Copy/Library/PackageCache/com.gamelovers.mcp-unity@7a061ae194/Server~/build/index.js"
+      ]
+    }
+  }
+}
