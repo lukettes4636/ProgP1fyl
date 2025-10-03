@@ -8,16 +8,21 @@ public class Arrow : MonoBehaviour
 
     void Start()
     {
-        // Get the Rigidbody2D component if not assigned
+        
         if (rb == null)
         {
             rb = GetComponent<Rigidbody2D>();
         }
         
-        // If still null, add one
+        
         if (rb == null)
         {
             rb = gameObject.AddComponent<Rigidbody2D>();
+            
+            
+            rb.mass = 0.2f;
+            rb.drag = 0.1f;
+            rb.angularDrag = 0.01f;
             rb.gravityScale = 0;
         }
         

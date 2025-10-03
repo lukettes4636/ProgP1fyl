@@ -5,6 +5,6 @@ public class VictoryScene : MonoBehaviour
 {
     public void MainMenu()
     {
-        SceneManager.LoadScene(0); // Assuming the main menu scene is at index 0
+        SceneManager.LoadScene(0); 
     }
 }

@@ -4,7 +4,7 @@ public class TestArrowSystem : MonoBehaviour
 {
     void Start()
     {
-        // Test if Player has ShootArrows component
+        
         GameObject player = GameObject.Find("Player");
         if (player != null)
         {
@@ -23,7 +23,7 @@ public class TestArrowSystem : MonoBehaviour
             Debug.LogError("✗ Player GameObject not found");
         }
         
-        // Test if ArrowPrefab exists
+        
         GameObject arrowPrefab = GameObject.Find("ArrowPrefab");
         if (arrowPrefab != null)
         {
@@ -47,3 +47,4 @@ public class TestArrowSystem : MonoBehaviour
         Debug.Log("Arrow shooting system test completed!");
     }
 }
+

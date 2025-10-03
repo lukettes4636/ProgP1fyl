@@ -24,6 +24,7 @@ private void OnTriggerEnter2D(Collider2D other)
         EnemyHealth enemyHealth = other.GetComponent<EnemyHealth>();
         if (enemyHealth != null && toolUsed == PlayerActionController.EquipType.Espada)
         {
+            Debug.Log($"Jugador hizo {damage} de daño a {enemyHealth.gameObject.name}");
             enemyHealth.TakeDamage(damage);
             gameObject.SetActive(false);
             return;

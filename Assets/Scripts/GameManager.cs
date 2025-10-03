@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
         enemyCount--;
         if (enemyCount <= 0)
         {
-            SceneManager.LoadScene(3); // Load Victory Scene
+            SceneManager.LoadScene(3); 
         }
     }
 

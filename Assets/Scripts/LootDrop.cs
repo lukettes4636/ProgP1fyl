@@ -12,7 +12,7 @@ public class LootDrop : MonoBehaviour
         
         if (playerAction != null && other.CompareTag("Player"))
         {
-            
+            Debug.Log($"Jugador agarró {resourceName}");
             playerAction.CollectResource(resourceName, 1);
 
             Destroy(gameObject);

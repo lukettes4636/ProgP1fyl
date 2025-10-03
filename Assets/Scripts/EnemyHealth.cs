@@ -12,17 +12,7 @@ public class EnemyHealth : MonoBehaviour
     public float lootDropForce = 5f;
     public float lootSpreadRadius = 1f;
     
-    [Header("Death Effects")]
-    public float deathDelay = 0f;
-    public bool disableColliderOnDeath = true;
-    public bool disableMovementOnDeath = true;
-    public bool enableDeathAnimation = false;
-    public string deathAnimationTrigger = "Death";
-    public bool enableDeathParticles = false;
-    public GameObject deathParticlesPrefab;
-    public bool enableScreenShake = false;
-    public float screenShakeIntensity = 0.5f;
-    public float screenShakeDuration = 0.3f;
+    
     
     [Header("Audio Settings")]
     public AudioClip damageSound;
@@ -35,9 +25,7 @@ public class EnemyHealth : MonoBehaviour
     public bool enableDamageFlash = false;
     public Color damageFlashColor = Color.red;
     public float damageFlashDuration = 0.1f;
-    public bool healthBarEnabled = false;
     public bool damageFlashEnabled = false;
-    public GameObject healthBarPrefab;
     
     [Header("AI Behavior")]
     public bool disableAIOnDeath = true;
@@ -54,11 +42,10 @@ public class EnemyHealth : MonoBehaviour
     private Collider2D enemyCollider;
     private MonoBehaviour movementScript;
     private SpriteRenderer spriteRenderer;
-    private Animator animator;
+    private Animator animator; 
     private AudioSource audioSource;
     private Rigidbody2D rb;
     private Vector3 originalPosition;
-    private GameObject healthBarInstance;
     
     private void Awake()
     {
@@ -71,11 +58,7 @@ public class EnemyHealth : MonoBehaviour
         
         originalPosition = transform.position;
         
-        if (healthBarEnabled && healthBarPrefab != null)
-        {
-            healthBarInstance = Instantiate(healthBarPrefab, transform);
-            UpdateHealthBar();
-        }
+        
         
         healthSystem.OnDamageTaken.AddListener(OnEnemyDamageTaken);
         healthSystem.OnDeath.AddListener(OnEnemyDeath);
@@ -86,7 +69,7 @@ public class EnemyHealth : MonoBehaviour
     {
         if (showHealthInConsole)
         {
-            Debug.Log($"{gameObject.name} took {damage} damage. Health: {healthSystem.CurrentHealth}/{healthSystem.maxHealth}");
+            Debug.Log($"{gameObject.name} took {damage} damage. Current Health: {healthSystem.CurrentHealth}/{healthSystem.maxHealth}");
         }
         
         PlayAudioClip(damageSound);
@@ -96,7 +79,7 @@ public class EnemyHealth : MonoBehaviour
             StartDamageFlash();
         }
         
-        UpdateHealthBar();
+        
     }
     
     private void OnEnemyDeath()
@@ -108,16 +91,6 @@ public class EnemyHealth : MonoBehaviour
         
         PlayAudioClip(deathSound);
         
-        if (enableDeathAnimation && animator != null)
-        {
-            animator.SetTrigger(deathAnimationTrigger);
-        }
-        
-        if (enableDeathParticles && deathParticlesPrefab != null)
-        {
-            Instantiate(deathParticlesPrefab, transform.position, Quaternion.identity);
-        }
-        
         if (disableAIOnDeath)
         {
             EnemyAI enemyAI = GetComponent<EnemyAI>();
@@ -127,15 +100,7 @@ public class EnemyHealth : MonoBehaviour
             }
         }
         
-        if (disableColliderOnDeath && enemyCollider != null)
-        {
-            enemyCollider.enabled = false;
-        }
         
-        if (disableMovementOnDeath && movementScript != null)
-        {
-            movementScript.enabled = false;
-        }
         
         if (dropLootOnDeath && lootPrefab != null)
         {
@@ -153,10 +118,7 @@ public class EnemyHealth : MonoBehaviour
             StartCoroutine(FadeOut());
         }
         
-        if (healthBarInstance != null)
-        {
-            Destroy(healthBarInstance);
-        }
+        
         
         if (canRespawn)
         {
@@ -173,11 +135,11 @@ public class EnemyHealth : MonoBehaviour
     {
         if (showHealthInConsole)
         {
-            Debug.Log($"{gameObject.name} healed {amount} HP. Health: {healthSystem.CurrentHealth}/{healthSystem.maxHealth}");
+            Debug.Log($"{gameObject.name} healed {amount} HP. Current Health: {healthSystem.CurrentHealth}/{healthSystem.maxHealth}");
         }
         
         PlayAudioClip(healSound);
-        UpdateHealthBar();
+        
     }
     
     private void DropLoot()
@@ -262,14 +224,7 @@ private void StartDamageFlash()
         }
     }
     
-    private void UpdateHealthBar()
-    {
-        if (healthBarInstance != null)
-        {
-            float healthPercentage = (float)healthSystem.CurrentHealth / healthSystem.maxHealth;
-            healthBarInstance.transform.localScale = new Vector3(healthPercentage, 1f, 1f);
-        }
-    }
+    
     
     private void EnableRagdoll()
     {
@@ -325,11 +280,7 @@ private void StartDamageFlash()
             movementScript.enabled = true;
         }
         
-        if (healthBarEnabled && healthBarPrefab != null)
-        {
-            healthBarInstance = Instantiate(healthBarPrefab, transform);
-            UpdateHealthBar();
-        }
+        
         
         gameObject.SetActive(true);
     }

@@ -46,6 +46,13 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        
+        
+        rb.mass = 1.0f;
+        rb.drag = 8.0f;
+        rb.angularDrag = 0.05f;
+        rb.gravityScale = 0.0f;
+        
         animator = GetComponent<Animator>();
         
         audioSource = GetComponent<AudioSource>();
@@ -162,8 +169,13 @@ isDashing = true;
         bool isMoving = moveInput.sqrMagnitude > 0.01f;
 
         animator.SetBool("IsMoving", isMoving);
-        animator.SetBool("IsRunning", isRunning);
-        animator.SetBool("IsCrouching", isCrouching);
+        
+        if (animator.HasParameter("IsRunning"))
+            animator.SetBool("IsRunning", isRunning);
+            
+        if (animator.HasParameter("IsCrouching"))
+            animator.SetBool("IsCrouching", isCrouching);
+            
         animator.SetFloat("MoveX", Mathf.Abs(lastDirection.x));
         animator.SetFloat("MoveY", lastDirection.y);
     }

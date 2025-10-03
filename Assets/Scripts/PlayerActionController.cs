@@ -8,7 +8,7 @@ public class PlayerActionController : MonoBehaviour
     public enum EquipType { None, Espada, Hacha, Pico, Arado, Arco }
 
     [SerializeField] private EquipType equipActual = EquipType.None;
-    [SerializeField] private int baseDamage = 1;
+    [SerializeField] private int baseDamage = 20;
 
     [SerializeField] private GameObject damageHitbox;
 
@@ -108,6 +108,12 @@ animator = GetComponent<Animator>();
 
             case EquipType.Arco:
                 animator.SetBool("Disparar", true);
+                
+                var shootArrows = GetComponent<ShootArrows>();
+                if (shootArrows != null)
+                {
+                    shootArrows.TryShootViaActionController();
+                }
                 break;
         }
     }
@@ -225,5 +231,21 @@ public void EndActionState()
         animator.SetBool("Arar", false);
         animator.SetBool("Disparar", false);
         animator.SetInteger("AttackIndex", 0);
+    }
+
+    public int GetBaseDamage()
+    {
+        return baseDamage;
+    }
+
+    
+    public bool HasItem(string itemName)
+    {
+        return inventory.ContainsKey(itemName) && inventory[itemName] > 0;
+    }
+
+    public EquipType GetCurrentEquip()
+    {
+        return equipActual;
     }
 }

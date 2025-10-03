@@ -6,16 +6,29 @@ public class ShootArrows : MonoBehaviour
     public Transform firePoint;
     public float arrowForce = 20f;
     public AudioClip arrowSFX;
+    [Header("Requirements")]
+    [SerializeField] private string requiredItemName = "Arco";
+    [SerializeField] private bool requireEquippedArco = true;
+
+    private PlayerActionController actionController;
+
+    private void Awake()
+    {
+        actionController = GetComponent<PlayerActionController>();
+    }
 
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            Shoot();
+            if (CanShoot())
+            {
+                Shoot();
+            }
         }
     }
 
-    void Shoot()
+    public void Shoot()
     {
         if (arrowPrefab == null)
         {
@@ -33,13 +46,46 @@ public class ShootArrows : MonoBehaviour
         GameObject arrow = Instantiate(arrowPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();
         
-        // If the arrow doesn't have a Rigidbody2D, add one
+        
         if (rb == null)
         {
             rb = arrow.AddComponent<Rigidbody2D>();
-            rb.gravityScale = 0; // Arrows shouldn't fall due to gravity
+            rb.gravityScale = 0; 
         }
         
         rb.AddForce(firePoint.up * arrowForce, ForceMode2D.Impulse);
+    }
+
+    private bool CanShoot()
+    {
+        if (actionController == null)
+        {
+            Debug.LogWarning("ShootArrows: PlayerActionController no encontrado. El disparo requiere validar que el jugador tenga el objeto 'Arco'.");
+            return false;
+        }
+
+        
+        bool hasArco = actionController.HasItem(requiredItemName);
+        if (!hasArco)
+        {
+            return false;
+        }
+
+        
+        if (requireEquippedArco && actionController.GetCurrentEquip() != PlayerActionController.EquipType.Arco)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    
+    public void TryShootViaActionController()
+    {
+        if (CanShoot())
+        {
+            Shoot();
+        }
     }
 }
