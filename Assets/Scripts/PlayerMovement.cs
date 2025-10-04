@@ -25,7 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 dashDirection;
     
     
-    [Header("Audio Settings")]
+    [Header("Audio Sttings")]
     [SerializeField] private AudioClip[] footstepSounds;
     [SerializeField] private AudioClip[] runFootstepSounds;
     [SerializeField] private float footstepVolume = 0.5f;
