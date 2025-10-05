@@ -16533,6 +16533,10 @@ PrefabInstance:
       propertyPath: enableRagdollOnDeath
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3000495905516708502, guid: 204d925562b7e6b418d450bc3358f314, type: 3}
+      propertyPath: maxHealth
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 3197214786419464734, guid: 204d925562b7e6b418d450bc3358f314, type: 3}
       propertyPath: m_AutoTiling
       value: 0
@@ -16827,7 +16831,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9203162195943041336, guid: 204d925562b7e6b418d450bc3358f314, type: 3}
       propertyPath: attackDamage
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 9203162195943041336, guid: 204d925562b7e6b418d450bc3358f314, type: 3}
       propertyPath: attackCooldown
