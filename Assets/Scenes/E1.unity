@@ -3133,12 +3133,12 @@ MonoBehaviour:
   targetTilemap: {fileID: 1800813646}
   playerTransform: {fileID: 346905516}
   playerMovement: {fileID: 955288120}
+  playerActionController: {fileID: 955288119}
   tileSize: 1
   minTileDistance: 1
   maxTileDistance: 2
   offset: {x: 0, y: 0.1, z: 0}
   snapToGrid: 1
-  onlyShowWhenAiming: 0
 --- !u!1 &389846374 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4835464465933021864, guid: 39247641ceee2da4fa47b53903949427, type: 3}
@@ -6960,6 +6960,17 @@ MonoBehaviour:
   arrowSFX: {fileID: 8300000, guid: f1e9b5628e5e4da408394b4def049c6a, type: 3}
   requiredItemName: Arco
   requireEquippedArco: 1
+--- !u!114 &955288119 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6168014285639349253, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
+  m_PrefabInstance: {fileID: 7284686815361938805}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955288104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 201adcfbc4598d342ad6aeb6eac43faf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &955288120 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5824247866913775190, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}

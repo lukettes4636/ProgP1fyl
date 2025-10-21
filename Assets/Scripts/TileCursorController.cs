@@ -8,6 +8,7 @@ public class TileCursorController : MonoBehaviour
     [SerializeField] private Tilemap targetTilemap;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private PlayerActionController playerActionController;
 
     [Header("Configuración de distancia")]
     [Tooltip("Tamaño de un tile en unidades del mundo (normalmente 1).")]
@@ -21,9 +22,7 @@ public class TileCursorController : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField] private Vector3 offset = new Vector3(0, 0.05f, 0);
-    [SerializeField] private bool snapToGrid = true; // si true se alinea exactamente al tile center
-    [SerializeField, Tooltip("Si true, el cursor solo aparece cuando el stick derecho tiene entrada.")]
-    private bool onlyShowWhenAiming = false;
+    [SerializeField] private bool snapToGrid = true;
 
     private SpriteRenderer spriteRenderer;
 
@@ -36,54 +35,55 @@ public class TileCursorController : MonoBehaviour
 
     private void Update()
     {
-        if (playerMovement == null || playerTransform == null || targetTilemap == null)
+        // Verificar dependencias
+        if (playerMovement == null || playerTransform == null || targetTilemap == null || playerActionController == null)
         {
             if (spriteRenderer != null) spriteRenderer.enabled = false;
             return;
         }
 
-        // Obtener dirección y magnitud del apuntado (stick derecho)
-        Vector2 aimDir = playerMovement.GetLastDirection();
-        float aimMag = aimDir.magnitude;
+        // Verificar herramienta equipada
+        var equip = playerActionController.GetCurrentEquip();
+        bool herramientaActiva = equip == PlayerActionController.EquipType.Hacha ||
+                                 equip == PlayerActionController.EquipType.Pico ||
+                                 equip == PlayerActionController.EquipType.Arado;
 
-        // Si onlyShowWhenAiming está activado y no hay input de aim, ocultar cursor
-        if (onlyShowWhenAiming && aimMag <= 0.01f)
+        if (!herramientaActiva)
         {
             spriteRenderer.enabled = false;
             return;
         }
 
-        // Si no hay dirección (por seguridad), usar hacia abajo
-        if (aimDir == Vector2.zero)
+        // Obtener dirección de apuntado o última dirección
+        Vector2 aimDir = playerMovement.GetLastDirection();
+        float aimMag = aimDir.magnitude;
+
+        if (aimMag <= 0.01f)
         {
-            aimDir = Vector2.down;
-            aimMag = 1f; // tratamos como input completo para poder seleccionar distancia si se quisiera
+            spriteRenderer.enabled = false;
+            return;
         }
 
         aimDir.Normalize();
 
-        // ---- USO de minTileDistance y maxTileDistance ----
-        // Calculamos cuántos tiles adelante posicionar el cursor en función de la magnitud del stick.
-        // Resultado: minTileDistance cuando aimMag cerca de 0, maxTileDistance cuando aimMag cerca de 1.
+        // Calcular distancia dinámica según magnitud del stick
         int distanceTiles = Mathf.Clamp(
             Mathf.RoundToInt(minTileDistance + (aimMag * (maxTileDistance - minTileDistance))),
             minTileDistance,
             maxTileDistance
         );
 
-        // Posición objetivo en mundo (distancia en unidades = distanceTiles * tileSize)
+        // Posición objetivo en el mundo
         Vector3 targetWorldPos = playerTransform.position + (Vector3)(aimDir * distanceTiles * tileSize);
 
-        // Convertir a cell y obtener centro de celda
+        // Convertir a coordenadas del Tilemap
         Vector3Int cellPos = targetTilemap.WorldToCell(targetWorldPos);
         Vector3 cellCenter = targetTilemap.GetCellCenterWorld(cellPos);
 
-        // Si snapToGrid false, deja la posición exacta calculada (útil si usás tiles no contiguos)
-        Vector3 finalPos = snapToGrid ? cellCenter : targetWorldPos;
+        // Posición final
+        transform.position = (snapToGrid ? cellCenter : targetWorldPos) + offset;
 
-        transform.position = finalPos + offset;
-
-        // Mostrar cursor
-        if (spriteRenderer != null) spriteRenderer.enabled = true;
+        // Mostrar cursor solo si tiene herramienta válida y hay dirección
+        spriteRenderer.enabled = true;
     }
 }
