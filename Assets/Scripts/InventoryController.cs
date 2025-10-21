@@ -1,15 +1,10 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class InventoryController : MonoBehaviour
 {
     [Header("UI Settings")]
     [Tooltip("Arrastra aquí el GameObject del Canvas que quieres mostrar/ocultar.")]
     [SerializeField] private GameObject inventoryCanvas;
-
-    [Header("Input Settings")]
-    [Tooltip("Acción de input para abrir/cerrar el inventario. Por defecto, el botón Norte del gamepad.")]
-    [SerializeField] private InputAction openInventoryAction;
 
     [Header("Audio Settings")]
     [Tooltip("Sonido al abrir el inventario.")]
@@ -18,6 +13,7 @@ public class InventoryController : MonoBehaviour
     [SerializeField] private AudioClip closeSound;
 
     private AudioSource audioSource;
+    private bool isInventoryOpen = false;
 
     private void Awake()
     {
@@ -26,26 +22,18 @@ public class InventoryController : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+    }
 
-        if (openInventoryAction.bindings.Count == 0)
+    private void Update()
+    {
+        // Usa el botón "Inventory" definido en el Input Manager clásico
+        if (Input.GetButtonDown("Inventory"))
         {
-            openInventoryAction.AddBinding("<Gamepad>/buttonNorth");
+            ToggleInventory();
         }
     }
 
-    private void OnEnable()
-    {
-        openInventoryAction.Enable();
-        openInventoryAction.performed += ToggleInventory;
-    }
-
-    private void OnDisable()
-    {
-        openInventoryAction.performed -= ToggleInventory;
-        openInventoryAction.Disable();
-    }
-
-    private void ToggleInventory(InputAction.CallbackContext context)
+    private void ToggleInventory()
     {
         if (inventoryCanvas == null)
         {
@@ -53,14 +41,14 @@ public class InventoryController : MonoBehaviour
             return;
         }
 
-        bool isNowActive = !inventoryCanvas.activeSelf;
-        inventoryCanvas.SetActive(isNowActive);
+        isInventoryOpen = !isInventoryOpen;
+        inventoryCanvas.SetActive(isInventoryOpen);
 
-        if (isNowActive && openSound != null)
+        if (isInventoryOpen && openSound != null)
         {
             audioSource.PlayOneShot(openSound);
         }
-        else if (!isNowActive && closeSound != null)
+        else if (!isInventoryOpen && closeSound != null)
         {
             audioSource.PlayOneShot(closeSound);
         }
