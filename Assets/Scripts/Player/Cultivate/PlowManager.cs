@@ -4,59 +4,55 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Gestiona la lógica de arado, riego y siembra, usando 4 capas de Tilemap.
-/// Los cultivos ahora son GameObjects individuales para mejor sorting.
+/// Integra la lógica de crecimiento y cosecha con loot físico CollectableItem.cs.
 /// </summary>
 public class PlowManager : MonoBehaviour
 {
+    // === Singleton (Si lo estás usando) ===
     public static PlowManager Instance { get; private set; }
 
-    // Layer 1
-    [Header("1. Tilemap de Base (Ground)")]
+    // Layers y Tiles
+    [Header("Tilemaps")]
     [Tooltip("La capa más baja (ej: hierba/tierra común).")]
     [SerializeField] private Tilemap groundTilemap;
-
-    // Layer 2
-    [Header("2. Tilemap de Arado (Plow)")]
     [Tooltip("Capa de cultivo. Aquí se coloca la tierra arada seca.")]
     [SerializeField] private Tilemap plowTilemap;
-    [SerializeField] private TileBase plowedTile; // El Tile de tierra arada seca
-
-    // Layer 3
-    [Header("3. Tilemap de Agua/Mojado")]
-    [Tooltip("Capa que muestra el efecto de agua/mojado.")]
+    [Tooltip("Capa que muestra el efecto de agua/mojado (DEBAJO del cultivo).")]
     [SerializeField] private Tilemap waterTilemap;
-    [SerializeField] private TileBase wateredTile; // El Tile de agua/mojado
-    [SerializeField] private TileBase groundTile; // El Tile de tierra original (para secado)
-
-    // Layer 4 (MODIFICADO)
-    [Header("4. Tilemap de Coordenadas de Cultivo")]
-    [Tooltip("Capa superior usada SOLO para obtener coordenadas y posición del mundo.")]
+    [Tooltip("Capa superior que usamos para mapear los GameObjects de cultivos.")]
     [SerializeField] private Tilemap cropTilemap;
+    [SerializeField] private TileBase plowedTile;
+    [SerializeField] private TileBase wateredTile;
 
-    // NUEVA REFERENCIA
-    [Header("Prefabs y Data")]
-    [Tooltip("El Prefab del cultivo que será instanciado (debe tener CropVisualController).")]
+    [Header("Configuración de Cultivos")]
+    [Tooltip("El Prefab que contiene CropVisualController.cs")]
     [SerializeField] private GameObject cropPrefab;
-
-    // REFERENCIA: Array de ScriptableObject CropTile (Data)
-    [Tooltip("Array de CropTile ScriptableObjects que contienen la data de cada semilla.")]
+    [Tooltip("ScriptableObjects con la data de cada tipo de semilla.")]
     [SerializeField] private CropTile[] cropTiles;
 
-    // CLAVE: El diccionario ahora guarda el GameObject instanciado, NO el CropTile.
-    [Tooltip("Cultivos activos. Mapea la posición de la celda al GAME OBJECT instanciado.")]
-    private Dictionary<Vector3Int, GameObject> activeCrops = new Dictionary<Vector3Int, GameObject>();
+    // REFERENCIA AL PREFAB DE LOOT CON SCRIPT CollectableItem.cs
+    [Header("Configuración de Loot")]
+    [Tooltip("El Prefab con el script CollectableItem.cs (debe tener un SpriteRenderer).")]
+    [SerializeField] private GameObject lootPrefab; // ¡Arrastra el Prefab aquí!
 
     [Header("Control de Secado")]
     [Tooltip("Tiempo (en segundos) que tarda el suelo/cultivo en secarse por completo.")]
     [SerializeField] private float dryingCycleIntervalSeconds = 60f;
-    private float dryingTimer = 0f;
+    private float dryTimer = 0f;
 
-    // =======================================================================
-    // CICLO DE VIDA
-    // =======================================================================
+    // === ESTADO LÓGICO Y DE GAME OBJECTS ===
+    // Almacena las instancias de CropTile (el estado).
+    private Dictionary<Vector3Int, CropTile> activeCrops = new Dictionary<Vector3Int, CropTile>();
+    // Diccionario para rastrear los GameObjects (la visual) del cultivo.
+    private Dictionary<Vector3Int, GameObject> activeCropObjects = new Dictionary<Vector3Int, GameObject>();
+
+    // REFERENCIA AL JUGADOR
+    [SerializeField] private PlayerActionController playerActionController;
+
 
     private void Awake()
     {
+        // Implementación Singleton
         if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
@@ -65,248 +61,200 @@ public class PlowManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        playerActionController = FindObjectOfType<PlayerActionController>();
+        if (playerActionController == null)
+        {
+            Debug.LogError("[PlowManager] No se encontró el PlayerActionController. Asegura que está activo en la escena.");
+        }
     }
 
     private void Update()
     {
         float deltaTime = Time.deltaTime;
-        AdvanceAllCropsGrowth(deltaTime);
-        DryingCycle(deltaTime);
-    }
 
-    // =======================================================================
-    // LÓGICA DE TIEMPO
-    // =======================================================================
-
-    private void DryingCycle(float deltaTime)
-    {
-        dryingTimer += deltaTime;
-        if (dryingTimer >= dryingCycleIntervalSeconds)
+        // 1. Manejar Crecimiento/Humedad
+        List<Vector3Int> cellsToUpdate = new List<Vector3Int>(activeCrops.Keys);
+        foreach (Vector3Int cell in cellsToUpdate)
         {
-            dryingTimer = 0f;
-            UnwaterRandomTile();
+            CropTile cropInstance = activeCrops[cell];
+
+            // Si crece, actualiza visual (llama a UpdateVisuals en CropVisualController)
+            if (cropInstance.AdvanceGrowth(deltaTime))
+            {
+                if (activeCropObjects.ContainsKey(cell))
+                {
+                    activeCropObjects[cell].GetComponent<CropVisualController>()?.UpdateVisuals();
+                }
+            }
+        }
+
+        // 2. Manejar Secado
+        dryTimer += deltaTime;
+        if (dryTimer >= dryingCycleIntervalSeconds)
+        {
+            dryTimer = 0f;
+            ProcessDryingCycle();
         }
     }
 
-    private void UnwaterRandomTile()
+    private void ProcessDryingCycle()
     {
+        // 1. Quitar agua a la tierra
         List<Vector3Int> wateredCells = new List<Vector3Int>();
-
-        // Recorre solo las celdas donde hay agua visible (Layer 3)
-        // Puedes optimizar esto si mantienes una lista separada de celdas mojadas.
-        BoundsInt bounds = waterTilemap.cellBounds;
-        for (int x = bounds.xMin; x < bounds.xMax; x++)
+        foreach (var pos in waterTilemap.cellBounds.allPositionsWithin)
         {
-            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            if (waterTilemap.GetTile(pos) == wateredTile)
             {
-                Vector3Int cellPosition = new Vector3Int(x, y, 0);
-                if (waterTilemap.GetTile(cellPosition) == wateredTile)
-                {
-                    wateredCells.Add(cellPosition);
-                }
+                wateredCells.Add(pos);
             }
         }
 
-        if (wateredCells.Count > 0)
+        foreach (Vector3Int pos in wateredCells)
         {
-            Vector3Int cellToDry = wateredCells[UnityEngine.Random.Range(0, wateredCells.Count)];
+            waterTilemap.SetTile(pos, null);
 
-            // 1. Quitar el Tile de agua (Layer 3)
-            waterTilemap.SetTile(cellToDry, null);
-
-            // 2. Notificar al cultivo si existe
-            if (activeCrops.ContainsKey(cellToDry))
+            // 2. Quitar humedad a los cultivos
+            if (activeCrops.ContainsKey(pos))
             {
-                GameObject cropGO = activeCrops[cellToDry];
-                CropVisualController visualController = cropGO.GetComponent<CropVisualController>();
-                if (visualController != null && visualController.cropDataState != null)
-                {
-                    visualController.cropDataState.SetMoisture(false);
-                    visualController.UpdateVisuals(); // Actualizar color a seco
-                    Debug.Log($"[PlowManager] El cultivo en {cellToDry} se ha secado.");
-                }
-            }
-            else // Si es solo tierra arada mojada, se convierte en tierra arada seca
-            {
-                // Si la capa de agua estaba sobre la capa de tierra arada
-                if (plowTilemap.GetTile(cellToDry) == plowedTile)
-                {
-                    // No hace falta poner un tile, solo quitar el de agua.
-                }
-                else // Si la capa de agua estaba sobre el tile base (río, etc.)
-                {
-                    // Si el tile base es el mismo que el tile original, dejarlo en null (agua desaparece)
-                    // Si manejas un tile de tierra base para todo, podrías poner groundTilemap.SetTile(cellToDry, groundTile);
-                }
+                activeCrops[pos].SetMoisture(false);
+                // Actualizar visual de la planta (cambio de color/aspecto)
+                activeCropObjects[pos].GetComponent<CropVisualController>()?.UpdateVisuals();
             }
         }
     }
 
     // =======================================================================
-    // ACCIONES DEL JUGADOR
+    // MÉTODOS DE ACCIÓN DEL JUGADOR
     // =======================================================================
 
     public void PlowAt(Vector3Int cellPosition)
     {
-        // Solo siembra si no hay ya algo arado o si ya es tierra arada.
-        if (plowTilemap.GetTile(cellPosition) == null)
-        {
-            plowTilemap.SetTile(cellPosition, plowedTile);
-        }
-        else if (plowTilemap.GetTile(cellPosition) == plowedTile)
-        {
-            // Quitar tierra arada
-            plowTilemap.SetTile(cellPosition, null);
-            waterTilemap.SetTile(cellPosition, null); // Quitar agua por si acaso
-
-            // Si hay un cultivo, se pierde al des-arar
-            if (activeCrops.ContainsKey(cellPosition))
-            {
-                GameObject lostCrop = activeCrops[cellPosition];
-                activeCrops.Remove(cellPosition);
-                Destroy(lostCrop);
-            }
-        }
+        if (activeCrops.ContainsKey(cellPosition)) return;
+        waterTilemap.SetTile(cellPosition, null);
+        plowTilemap.SetTile(cellPosition, plowedTile);
     }
 
     public void WaterAt(Vector3Int cellPosition)
     {
-        // Solo riega si es tierra arada (Layer 2)
-        if (plowTilemap.GetTile(cellPosition) == plowedTile)
-        {
-            // 1. Pone el Tile de agua (Layer 3)
-            waterTilemap.SetTile(cellPosition, wateredTile);
+        if (plowTilemap.GetTile(cellPosition) != plowedTile) return;
+        waterTilemap.SetTile(cellPosition, wateredTile);
 
-            // 2. Notificar al cultivo si existe
-            if (activeCrops.ContainsKey(cellPosition))
-            {
-                GameObject cropGO = activeCrops[cellPosition];
-                CropVisualController visualController = cropGO.GetComponent<CropVisualController>();
-                if (visualController != null && visualController.cropDataState != null)
-                {
-                    visualController.cropDataState.SetMoisture(true);
-                    visualController.UpdateVisuals(); // Actualizar color a mojado
-                    Debug.Log($"[PlowManager] El cultivo en {cellPosition} ha sido regado.");
-                }
-            }
+        if (activeCrops.ContainsKey(cellPosition))
+        {
+            activeCrops[cellPosition].SetMoisture(true);
+            activeCropObjects[cellPosition].GetComponent<CropVisualController>()?.UpdateVisuals();
         }
     }
 
-    // MODIFICACIÓN MAYOR
     /// <summary>
-    /// Planta la semilla: crea el GameObject del cultivo y le pasa el ScriptableObject instanciado.
+    /// Planta la semilla: deja el Tile de Agua y coloca el GameObject con la instancia del CropTile.
     /// </summary>
     public bool PlantSeedAt(Vector3Int cellPosition, int seedIndex)
     {
         if (cropTiles == null || seedIndex < 0 || seedIndex >= cropTiles.Length || cropTiles[seedIndex] == null) return false;
         if (plowTilemap.GetTile(cellPosition) != plowedTile) return false;
 
+        // 1. Verificar estado de humedad inicial y que la tierra esté mojada para plantar.
         bool isInitiallyMoist = waterTilemap.GetTile(cellPosition) == wateredTile;
-        if (!isInitiallyMoist) return false;
-        if (activeCrops.ContainsKey(cellPosition)) return false;
-        if (cropPrefab == null) { Debug.LogError("Crop Prefab no asignado en PlowManager!"); return false; }
-
-
-        // 1. Crear la INSTANCIA del CropTile (Data/Estado)
-        CropTile originalCropTile = cropTiles[seedIndex];
-        // Es esencial instanciar el ScriptableObject para que cada cultivo tenga su propio estado.
-        CropTile newCropInstance = ScriptableObject.Instantiate(originalCropTile);
-        newCropInstance.Initialize(isInitiallyMoist);
-
-        // 2. Instanciar el GameObject Visual en la posición central de la celda
-        Vector3 worldPos = cropTilemap.CellToWorld(cellPosition);
-        // Ajustamos la posición al centro del tile para un mejor sorting (importante para top-down)
-        worldPos += (Vector3)cropTilemap.cellSize / 2f;
-
-        GameObject newCropGO = Instantiate(cropPrefab, worldPos, Quaternion.identity);
-
-        // 3. Pasar el ScriptableObject instanciado al controlador visual del GO
-        CropVisualController visualController = newCropGO.GetComponent<CropVisualController>();
-        if (visualController != null)
+        if (!isInitiallyMoist)
         {
-            visualController.Initialize(newCropInstance);
-        }
-        else
-        {
-            Debug.LogError("El Crop Prefab no tiene el componente CropVisualController!");
-            Destroy(newCropGO);
+            Debug.Log($"[PlowManager] Siembra fallida. La celda {cellPosition} no es tierra mojada.");
             return false;
         }
 
-        // 4. Registrar el GameObject en la lista de cultivos activos
-        activeCrops.Add(cellPosition, newCropGO);
-        Debug.Log($"[PlowManager] Semilla de {newCropInstance.cropName} plantada en {cellPosition}. (GO)");
+        // 2. Verificar que no haya un cultivo activo.
+        if (activeCrops.ContainsKey(cellPosition)) return false;
+
+        // 3. Crear la INSTANCIA del CropTile (data)
+        CropTile originalCropTile = cropTiles[seedIndex];
+        CropTile newCropInstance = ScriptableObject.Instantiate(originalCropTile);
+        newCropInstance.Initialize(isInitiallyMoist);
+
+        // 4. Instanciar el GameObject de la planta y asignarle la data
+        GameObject cropGO = Instantiate(cropPrefab);
+        CropVisualController visualController = cropGO.GetComponent<CropVisualController>();
+
+        if (visualController != null)
+        {
+            visualController.Initialize(newCropInstance);
+
+            // Posicionar el GO en el centro de la celda
+            Vector3 worldPos = cropTilemap.CellToWorld(cellPosition) + cropTilemap.cellSize / 2f;
+            cropGO.transform.position = worldPos;
+        }
+
+        // 5. Registrar la data y el GameObject
+        activeCrops.Add(cellPosition, newCropInstance);
+        activeCropObjects.Add(cellPosition, cropGO);
 
         return true;
     }
 
-    // MODIFICACIÓN MENOR
     public bool IsCropReadyToHarvest(Vector3Int cellPosition)
     {
-        if (activeCrops.ContainsKey(cellPosition))
-        {
-            GameObject cropGO = activeCrops[cellPosition];
-            // Accedemos al estado a través del controlador visual
-            CropVisualController visualController = cropGO.GetComponent<CropVisualController>();
-
-            if (visualController != null && visualController.cropDataState != null && visualController.cropDataState.IsReadyToHarvest())
-            {
-                Debug.Log($"[PlowManager] Cultivo {visualController.cropDataState.cropName} listo para cosechar en {cellPosition}.");
-                return true;
-            }
-        }
-        return false;
+        if (!activeCrops.ContainsKey(cellPosition)) return false;
+        return activeCrops[cellPosition].IsReadyToHarvest();
     }
 
-    // MODIFICACIÓN MAYOR
+
     /// <summary>
-    /// Ejecuta la acción de cosecha: destruye el GameObject.
+    /// FUNCIÓN DE COSECHA: Suelta el loot físico (CollectableItem.cs) y elimina el cultivo.
     /// </summary>
     public void HarvestAt(Vector3Int cellPosition)
     {
-        if (!activeCrops.ContainsKey(cellPosition)) return;
-
-        GameObject harvestedCropGO = activeCrops[cellPosition];
-        CropVisualController visualController = harvestedCropGO.GetComponent<CropVisualController>();
-
-        string cropName = (visualController != null && visualController.cropDataState != null)
-                          ? visualController.cropDataState.cropName
-                          : "Cultivo Desconocido";
-
-        // 1. Remover de la lista de cultivos activos
-        activeCrops.Remove(cellPosition);
-
-        // 2. Destruir el GameObject instanciado
-        Destroy(harvestedCropGO);
-
-        // 3. Opcional: limpiar la tierra (si ya estaba lista para re-usarse)
-        // waterTilemap.SetTile(cellPosition, null);
-        // plowTilemap.SetTile(cellPosition, plowedTile); // Dejar solo la tierra arada (seca)
-
-        Debug.Log($"[PlowManager] **¡COSECHADO!** {cropName} en la celda {cellPosition}.");
-    }
-
-    // =======================================================================
-    // CRECIMIENTO
-    // =======================================================================
-
-    private void AdvanceAllCropsGrowth(float deltaTime)
-    {
-        // Iteramos sobre todos los GameObjects activos
-        foreach (var entry in activeCrops)
+        if (!activeCrops.ContainsKey(cellPosition) || !activeCropObjects.ContainsKey(cellPosition) || lootPrefab == null)
         {
-            GameObject cropGO = entry.Value;
-            CropVisualController visualController = cropGO.GetComponent<CropVisualController>();
+            Debug.LogWarning("[PlowManager] Cosecha fallida: Revisa la celda, el GameObject del cultivo o la asignación de lootPrefab.");
+            return;
+        }
 
-            if (visualController != null && visualController.cropDataState != null)
+        // 1. Obtener la data del cultivo
+        CropTile cropInstance = activeCrops[cellPosition];
+        GameObject cropGO = activeCropObjects[cellPosition];
+
+        if (!cropInstance.IsReadyToHarvest())
+        {
+            Debug.LogWarning($"[PlowManager] La planta {cropInstance.cropName} aún no está lista.");
+            return;
+        }
+
+        // 2. Determinar la cantidad de loot.
+        int dropAmount = UnityEngine.Random.Range(cropInstance.minDropAmount, cropInstance.maxDropAmount + 1);
+
+        // 3. Obtener el Sprite del item directamente de la data del cultivo.
+        Sprite itemSprite = cropInstance.harvestItemSprite;
+
+        // 4. SOLTAR EL LOOT FÍSICO EN EL MUNDO
+        for (int i = 0; i < dropAmount; i++)
+        {
+            // Instanciar el prefab de loot en la posición de la planta
+            GameObject lootObject = Instantiate(lootPrefab, cropGO.transform.position, Quaternion.identity);
+
+            // OBTENER EL SCRIPT CollectableItem
+            CollectableItem collectable = lootObject.GetComponent<CollectableItem>();
+            if (collectable != null)
             {
-                // Si la función de crecimiento devuelve true, la planta cambió de stage
-                if (visualController.cropDataState.AdvanceGrowth(deltaTime))
-                {
-                    // Pedimos al controlador visual que actualice el Sprite
-                    visualController.UpdateVisuals();
-                }
+                // PASAMOS LA INFORMACIÓN: Nombre, Cantidad (1 por item) y SPRITE
+                collectable.Initialize(cropInstance.harvestItemName, 1, itemSprite);
             }
         }
+
+        Debug.Log($"[PlowManager] Cosechado {dropAmount} de {cropInstance.harvestItemName}.");
+
+        // 5. Limpiar el suelo y los registros.
+
+        // 5a. Destruir el GameObject visual del cultivo.
+        Destroy(cropGO);
+
+        // 5b. Destruir la instancia del ScriptableObject (memoria).
+        ScriptableObject.Destroy(cropInstance);
+
+        // 5c. Eliminar los registros.
+        activeCrops.Remove(cellPosition);
+        activeCropObjects.Remove(cellPosition);
+
+        // 6. Revertir el suelo (quitar la humedad)
+        waterTilemap.SetTile(cellPosition, null);
     }
 }
