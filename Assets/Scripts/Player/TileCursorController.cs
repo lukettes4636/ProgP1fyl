@@ -34,78 +34,51 @@ public class TileCursorController : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
-            Debug.LogWarning("TileCursorController: falta SpriteRenderer en el GameObject.");
+        {
+            Debug.LogError("TileCursorController requiere un SpriteRenderer.");
+        }
     }
 
     private void Update()
     {
-        if (playerMovement == null || playerTransform == null || targetTilemap == null || playerActionController == null)
+        // El Update llama a la misma función pública para obtener la posición y actualizar la visualización
+        Vector3Int targetCell = GetCurrentCellPosition();
+
+        // Muestra u oculta el cursor y lo posiciona.
+        if (targetCell.x != 999)
         {
-            if (spriteRenderer != null) spriteRenderer.enabled = false;
-            return;
-        }
+            if (!spriteRenderer.enabled) spriteRenderer.enabled = true;
 
-        var equip = playerActionController.GetCurrentEquip();
+            // Posiciona el cursor en el centro del tile objetivo
+            Vector3 targetWorldPos = targetTilemap.CellToWorld(targetCell);
+            targetWorldPos += targetTilemap.cellSize / 2f; // Centrar
 
-        // Verificar si es una herramienta de acción de Tilemap (Arado, Riego, o cualquiera de las 8 Semillas)
-        bool herramientaActiva = equip == PlayerActionController.EquipType.Hacha ||
-                                 equip == PlayerActionController.EquipType.Pico ||
-                                 equip == PlayerActionController.EquipType.Arado ||
-                                 equip == PlayerActionController.EquipType.Regadera ||
-                                 (equip >= PlayerActionController.EquipType.Semilla1 && equip <= PlayerActionController.EquipType.Semilla8); // RANGO DE SEMILLAS
-
-        if (!herramientaActiva)
-        {
-            spriteRenderer.enabled = false;
-            return;
-        }
-
-        Vector2 aimDir = playerMovement.GetLastDirection();
-        float aimMag = aimDir.magnitude;
-
-        if (aimMag <= 0.01f)
-        {
-            spriteRenderer.enabled = false;
-            return;
-        }
-
-        aimDir.Normalize();
-
-        // Lógica de sensibilidad discreta
-        int distanceTiles;
-        if (aimMag >= maxDistanceThreshold)
-        {
-            distanceTiles = maxTileDistance;
+            transform.position = targetWorldPos + offset;
         }
         else
         {
-            distanceTiles = minTileDistance;
+            if (spriteRenderer.enabled) spriteRenderer.enabled = false;
         }
-
-        Vector3 targetWorldPos = playerTransform.position + (Vector3)(aimDir * distanceTiles * tileSize);
-        Vector3Int cellPos = targetTilemap.WorldToCell(targetWorldPos);
-        Vector3 cellCenter = targetTilemap.GetCellCenterWorld(cellPos);
-
-        transform.position = (snapToGrid ? cellCenter : targetWorldPos) + offset;
-        spriteRenderer.enabled = true;
     }
 
     /// <summary>
-    /// Obtiene la posición de la celda del tilemap donde está el cursor para la acción.
+    ///  MÉTODO PÚBLICO CORREGIDO. Calcula la posición de la celda objetivo y la limita a 4 direcciones.
     /// </summary>
     public Vector3Int GetCurrentCellPosition()
     {
-        if (playerMovement == null || playerTransform == null || targetTilemap == null || playerActionController == null)
+        if (targetTilemap == null || playerTransform == null || playerActionController == null || playerMovement == null)
         {
             return Vector3Int.one * 999;
         }
 
         var equip = playerActionController.GetCurrentEquip();
+
+        // La compatibilidad con PlayerActionController.EquipType se mantiene:
         bool herramientaActiva = equip == PlayerActionController.EquipType.Hacha ||
                                  equip == PlayerActionController.EquipType.Pico ||
                                  equip == PlayerActionController.EquipType.Arado ||
                                  equip == PlayerActionController.EquipType.Regadera ||
-                                 (equip >= PlayerActionController.EquipType.Semilla1 && equip <= PlayerActionController.EquipType.Semilla8); // RANGO DE SEMILLAS
+                                 (equip >= PlayerActionController.EquipType.Semilla1 && equip <= PlayerActionController.EquipType.Semilla8);
 
         if (!herramientaActiva)
         {
@@ -120,6 +93,33 @@ public class TileCursorController : MonoBehaviour
             return Vector3Int.one * 999;
         }
 
+        // -------------------------------------------------------------------
+        // LÓGICA DE 4 DIRECCIONES CARDINALES (SOLUCIÓN)
+        // -------------------------------------------------------------------
+        float angle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
+
+        // Normalizar el ángulo a 0-360
+        if (angle < 0) angle += 360;
+
+        // Forzamos la dirección a la más cercana (Arriba: 45-135, Izquierda: 135-225, Abajo: 225-315, Derecha: 315-45)
+        if (angle >= 45 && angle < 135)
+        {
+            aimDir = Vector2.up;    // Arriba
+        }
+        else if (angle >= 135 && angle < 225)
+        {
+            aimDir = Vector2.left;  // Izquierda
+        }
+        else if (angle >= 225 && angle < 315)
+        {
+            aimDir = Vector2.down;  // Abajo
+        }
+        else
+        {
+            aimDir = Vector2.right; // Derecha 
+        }
+        // -------------------------------------------------------------------
+
         aimDir.Normalize();
 
         int distanceTiles;
@@ -132,9 +132,14 @@ public class TileCursorController : MonoBehaviour
             distanceTiles = minTileDistance;
         }
 
-        Vector3 targetWorldPos = playerTransform.position + (Vector3)(aimDir * distanceTiles * tileSize);
-        Vector3Int cellPos = targetTilemap.WorldToCell(targetWorldPos);
+        float effectiveDistance = distanceTiles * tileSize;
 
-        return cellPos;
+        // Ajustamos la posición objetivo usando la dirección forzada (aimDir)
+        Vector3 targetWorldPos = playerTransform.position + (Vector3)(aimDir * effectiveDistance);
+
+        // Convertir la posición del mundo a celda
+        Vector3Int cellPosition = targetTilemap.WorldToCell(targetWorldPos);
+
+        return cellPosition;
     }
 }
