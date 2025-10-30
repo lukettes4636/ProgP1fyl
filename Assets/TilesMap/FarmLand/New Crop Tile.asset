@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3d3e77ad60b16045b9925cb93f621c6, type: 3}
+  m_Name: New Crop Tile
+  m_EditorClassIdentifier: 
+  cropName: Girasol
+  growthStages:
+  - {fileID: 887929212, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
+  - {fileID: -336539070, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
+  - {fileID: -77594568, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
+  - {fileID: -1457907525, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
+  timePerStage: 5
+  currentStage: 0
+  timeGrown: 0
+  isReadyToHarvest: 0
+  isMoist: 0
