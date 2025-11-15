@@ -1,4 +1,6 @@
 using UnityEngine;
+// Comentario: Controla el disparo de flechas desde el jugador
+// Comentario: Mantiene validaciones de inventario/equipo actuales
 
 public class ShootArrows : MonoBehaviour
 {
@@ -12,11 +14,13 @@ public class ShootArrows : MonoBehaviour
 
     private PlayerActionController actionController;
 
+    // Comentario: Obtiene referencia al controlador de acciones para validar equipo/ítems
     private void Awake()
     {
         actionController = GetComponent<PlayerActionController>();
     }
 
+    // Comentario: Detecta input de disparo y verifica requisitos antes de disparar
     void Update()
     {
         if (Input.GetButtonDown("Fire1"))
@@ -28,6 +32,7 @@ public class ShootArrows : MonoBehaviour
         }
     }
 
+    // Comentario: Instancia la flecha y aplica fuerza en la dirección del firePoint
     public void Shoot()
     {
         if (arrowPrefab == null)
@@ -56,6 +61,7 @@ public class ShootArrows : MonoBehaviour
         rb.AddForce(firePoint.up * arrowForce, ForceMode2D.Impulse);
     }
 
+    // Comentario: Verifica si el jugador puede disparar según inventario y equipamiento
     private bool CanShoot()
     {
         if (actionController == null)
@@ -81,6 +87,7 @@ public class ShootArrows : MonoBehaviour
     }
 
     
+    // Comentario: Método auxiliar para intentar disparar desde eventos del controlador de acciones
     public void TryShootViaActionController()
     {
         if (CanShoot())

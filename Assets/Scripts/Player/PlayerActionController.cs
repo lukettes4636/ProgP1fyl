@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Animator))]
 public class PlayerActionController : MonoBehaviour
 {
-    // Añadimos 8 tipos de semillas diferentes, Regadera y Arado
+    // Aï¿½adimos 8 tipos de semillas diferentes, Regadera y Arado
     public enum EquipType
     {
         None, Espada, Hacha, Pico, Arado, Regadera,
@@ -22,7 +22,7 @@ public class PlayerActionController : MonoBehaviour
     private Dictionary<string, int> inventory = new Dictionary<string, int>();
     [SerializeField] private List<string> inventoryDisplay = new List<string>();
 
-    // Diccionario para mapear EquipType de Semillas a un nombre de ítem en el inventario.
+    // Diccionario para mapear EquipType de Semillas a un nombre de ï¿½tem en el inventario.
     private readonly Dictionary<EquipType, string> SeedItemNames = new Dictionary<EquipType, string>
     {
         { EquipType.Semilla1, "SemillasDeGirasol" },
@@ -39,7 +39,7 @@ public class PlayerActionController : MonoBehaviour
     private PlayerMovement playerMovement;
     private SpriteRenderer spriteRenderer;
 
-    // >> REFERENCIAS CRÍTICAS PARA ARADO/SIEMBRA/RIEGO
+    // >> REFERENCIAS CRï¿½TICAS PARA ARADO/SIEMBRA/RIEGO
     [SerializeField] private PlowManager plowManager;
     [SerializeField] private TileCursorController tileCursorController;
     // <<
@@ -54,14 +54,15 @@ public class PlayerActionController : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private bool enAccion = false;
 
-    [Header("Configuración de acción")]
+    [Header("Configuraciï¿½n de acciï¿½n")]
     [SerializeField] private float actionRange = 1.2f;
     [SerializeField] private LayerMask resourceLayer;
 
-    [Tooltip("Duración máxima de una acción antes de desbloquear automáticamente (seguridad).")]
+    [Tooltip("DuraciÃ³n mÃ¡xima de una acciÃ³n antes de desbloquear automÃ¡ticamente (seguridad).")]
     [SerializeField] private float maxActionDuration = 0.6f;
 
-    private Coroutine actionResetCoroutine;
+    // Comentario: Temporizador simple para finalizar acciones sin usar corrutinas
+    private float actionTimer = 0f;
 
     private void Awake()
     {
@@ -73,7 +74,7 @@ public class PlayerActionController : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // >> INICIALIZACIÓN ROBUSTA DE MANAGERS (CLAVE PARA SOLUCIONAR EL NULL)
+        // >> INICIALIZACIï¿½N ROBUSTA DE MANAGERS (CLAVE PARA SOLUCIONAR EL NULL)
         plowManager = PlowManager.Instance;
 
         if (plowManager == null)
@@ -84,7 +85,7 @@ public class PlayerActionController : MonoBehaviour
         tileCursorController = FindObjectOfType<TileCursorController>();
         // <<
 
-        // --- CÓDIGO TEMPORAL PARA PRUEBAS (Inventario) ---
+        // --- Cï¿½DIGO TEMPORAL PARA PRUEBAS (Inventario) ---
         foreach (var item in SeedItemNames)
         {
             inventory.Add(item.Value, 10);
@@ -95,14 +96,23 @@ public class PlayerActionController : MonoBehaviour
         // ---------------------------------------------------------------------------------------
 
         if (plowManager == null)
-            Debug.LogError("PlayerActionController: PlowManager.Instance es nulo. ¡Asegura el Script Execution Order!");
+            Debug.LogError("PlayerActionController: PlowManager.Instance es nulo. ï¿½Asegura el Script Execution Order!");
         if (tileCursorController == null)
-            Debug.LogError("PlayerActionController: No se encontró TileCursorController.");
+            Debug.LogError("PlayerActionController: No se encontrï¿½ TileCursorController.");
     }
 
     private void Update()
     {
-        if (enAccion) return;
+        // Comentario: Si estamos en acciÃ³n, reducimos el temporizador y liberamos al terminar
+        if (enAccion)
+        {
+            actionTimer -= Time.deltaTime;
+            if (actionTimer <= 0f)
+            {
+                EndActionState();
+            }
+            return;
+        }
 
         if (Input.GetButtonDown("Action"))
             HandleAction();
@@ -117,7 +127,7 @@ public class PlayerActionController : MonoBehaviour
 
         bool isSeedEquipped = equipActual >= EquipType.Semilla1 && equipActual <= EquipType.Semilla8;
 
-        // 1. Siembra Instantánea
+        // 1. Siembra Instantï¿½nea
         if (isSeedEquipped)
         {
             if (!HasItem(SeedItemNames[equipActual]))
@@ -129,8 +139,9 @@ public class PlayerActionController : MonoBehaviour
             return;
         }
 
-        // 2. Ejecución de Otras Acciones (con animación)
-        enAccion = true; // Bloquea el input durante la animación
+        // 2. Otras acciones (con animaciÃ³n y bloqueo temporal)
+        enAccion = true; // Bloquea el input durante la animaciÃ³n
+        actionTimer = maxActionDuration; // Comentario: Inicia el temporizador para terminar la acciÃ³n
 
         Vector2 actionDirection = playerMovement.GetLastDirection();
 
@@ -150,7 +161,7 @@ public class PlayerActionController : MonoBehaviour
             );
         }
 
-        // Ejecutar animación según herramienta
+        // Ejecutar animaciï¿½n segï¿½n herramienta
         switch (equipActual)
         {
             case EquipType.Espada:
@@ -184,13 +195,11 @@ public class PlayerActionController : MonoBehaviour
 
         TryHitResource(actionDirection);
 
-        if (actionResetCoroutine != null)
-            StopCoroutine(actionResetCoroutine);
-        actionResetCoroutine = StartCoroutine(AutoResetActionState());
+        // Comentario: Se reemplaza la corrutina por un temporizador en Update
     }
 
     // ----------------------------------------------------------------------------------
-    // FUNCIÓN DE SIEMBRA INSTANTÁNEA
+    // FUNCIï¿½N DE SIEMBRA INSTANTï¿½NEA
     // ----------------------------------------------------------------------------------
 
     private void ExecuteSeedActionInstant()
@@ -202,10 +211,10 @@ public class PlayerActionController : MonoBehaviour
         //  ESTA LLAMADA ES LA QUE CAUSABA EL CONFLICTO DE NOMBRE.
         Vector3Int cellPos = tileCursorController.GetCurrentCellPosition();
 
-        // El valor 999 es el código de error para celda inválida
+        // El valor 999 es el cï¿½digo de error para celda invï¿½lida
         if (cellPos.x == 999)
         {
-            Debug.LogWarning("Siembra fallida: Cursor no apunta a un tile válido.");
+            Debug.LogWarning("Siembra fallida: Cursor no apunta a un tile vï¿½lido.");
             return;
         }
 
@@ -222,12 +231,12 @@ public class PlayerActionController : MonoBehaviour
 
 
     // ----------------------------------------------------------------------------------
-    // FUNCIONES DE ACCIÓN (Llamadas por Animation Event)
+    // FUNCIONES DE ACCIï¿½N (Llamadas por Animation Event)
     // ----------------------------------------------------------------------------------
 
-    /// <summary> Llamado por el evento de animación "ExecutePlowAction" </summary>
+    /// <summary> Llamado por el evento de animaciï¿½n "ExecutePlowAction" </summary>
     /// <summary> 
-    /// Llamado por el evento de animación "ExecutePlowAction".
+    /// Llamado por el evento de animaciï¿½n "ExecutePlowAction".
     /// Decide si Arar o Cosechar.
     /// </summary>
     public void ExecutePlowAction()
@@ -255,7 +264,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    /// <summary> Llamado por el evento de animación "ExecuteWaterAction" </summary>
+    /// <summary> Llamado por el evento de animaciï¿½n "ExecuteWaterAction" </summary>
     public void ExecuteWaterAction()
     {
         if (equipActual != EquipType.Regadera || plowManager == null || tileCursorController == null)
@@ -285,7 +294,7 @@ public class PlayerActionController : MonoBehaviour
             inventory.Add(resourceName, amount);
 
         UpdateInventoryDisplay();
-        Debug.Log($"¡Recogido! {amount} de {resourceName}.");
+        Debug.Log($"ï¿½Recogido! {amount} de {resourceName}.");
     }
 
     public void RemoveItem(string itemName, int amount)
@@ -307,12 +316,9 @@ public class PlayerActionController : MonoBehaviour
             inventoryDisplay.Add($"{item.Key}: {item.Value}");
     }
 
-    private IEnumerator AutoResetActionState()
-    {
-        yield return new WaitForSeconds(maxActionDuration);
-        EndActionState(); // Libera automáticamente
-    }
+    // Comentario: Eliminado uso de corrutina; control se realiza con temporizador en Update
 
+    // Comentario: Lanza un raycast al frente para interactuar con recursos en el mundo
     private void TryHitResource(Vector2 direction)
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, actionRange, resourceLayer);
@@ -326,6 +332,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
+    // Comentario: Activa la caja de daÃ±o orientÃ¡ndola segÃºn la Ãºltima direcciÃ³n del jugador
     public void ActivateHitbox()
     {
         Vector2 lastDirection = playerMovement.GetLastDirection();
@@ -340,6 +347,7 @@ public class PlayerActionController : MonoBehaviour
         damageHitbox.SetActive(true);
     }
 
+    // Comentario: Desactiva la caja de daÃ±o y restablece su transformaciÃ³n
     public void DisableHitbox()
     {
         damageHitbox.SetActive(false);
@@ -347,6 +355,7 @@ public class PlayerActionController : MonoBehaviour
         damageHitbox.transform.localRotation = Quaternion.identity;
     }
 
+    // Comentario: Cambia la herramienta equipada recorriendo el enum de manera circular
     private void ChangeEquip(int direction)
     {
         if (enAccion) return;
@@ -362,6 +371,7 @@ public class PlayerActionController : MonoBehaviour
         Debug.Log("Equipment changed to: " + equipActual);
     }
 
+    // Comentario: Termina el estado de acciÃ³n y resetea parÃ¡metros del Animator
     public void EndActionState()
     {
         enAccion = false;
@@ -375,6 +385,7 @@ public class PlayerActionController : MonoBehaviour
         animator.SetInteger("AttackIndex", 0);
     }
 
+    // Comentario: Reproduce un sonido aleatorio de ataque con variaciÃ³n de pitch
     private void PlayAttackSound()
     {
         if (attackSounds != null && attackSounds.Length > 0 && audioSource != null)
@@ -385,6 +396,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
+    // Comentario: Reproduce un sonido aleatorio de talar Ã¡rboles con variaciÃ³n de pitch
     private void PlayTreeCuttingSound()
     {
         if (treeCuttingSounds != null && treeCuttingSounds.Length > 0 && audioSource != null)
@@ -395,6 +407,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
+    // Comentario: Reproduce el sonido de dash con una ligera variaciÃ³n de pitch
     public void PlayDashSound()
     {
         if (dashSound != null && audioSource != null)
@@ -404,7 +417,19 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    public int GetBaseDamage() => baseDamage;
-    public EquipType GetCurrentEquip() => equipActual;
-    public bool HasItem(string itemName) => inventory.ContainsKey(itemName) && inventory[itemName] > 0;
+    // Comentario: MÃ©todos de acceso sencillos usados por otros scripts
+    public int GetBaseDamage()
+    {
+        return baseDamage;
+    }
+
+    public EquipType GetCurrentEquip()
+    {
+        return equipActual;
+    }
+
+    public bool HasItem(string itemName)
+    {
+        return inventory.ContainsKey(itemName) && inventory[itemName] > 0;
+    }
 }

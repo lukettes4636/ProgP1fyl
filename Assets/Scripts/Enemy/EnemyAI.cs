@@ -1,8 +1,11 @@
 using UnityEngine;
+// Comentario: Lógica sencilla de IA de enemigo con estados básicos
+// Comentario: Persigue y ataca al jugador, vuelve a su posición inicial cuando se aleja
 
 public class EnemyAI : MonoBehaviour
 {
     
+    // Comentario: Estados principales del enemigo
     public enum EnemyState
     {
         Idle,
@@ -53,6 +56,7 @@ public class EnemyAI : MonoBehaviour
     
     
 
+    // Comentario: Inicializa componentes y parámetros del Rigidbody2D para 2D
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -78,6 +82,7 @@ public class EnemyAI : MonoBehaviour
         lastAttackTime = -attackCooldown;
     }
 
+    // Comentario: Cada frame decide el estado y actualiza la animación
     void Update()
     {
         if (target == null) return;
@@ -87,6 +92,7 @@ public class EnemyAI : MonoBehaviour
         UpdateAnimator();
     }
 
+    // Comentario: Aplica el movimiento según el estado
     void FixedUpdate()
     {
         HandleMovement();
@@ -98,6 +104,7 @@ public class EnemyAI : MonoBehaviour
 
     
 
+    // Comentario: Decide el estado en función de distancias al jugador y al origen
     void HandleStateLogic()
     {
         float distanceToTarget = Vector2.Distance(transform.position, target.position);
@@ -154,6 +161,7 @@ public class EnemyAI : MonoBehaviour
     
     
 
+    // Comentario: Calcula destino y decide si moverse en estados Chasing/Returning
     void HandleMovement()
     {
         Vector3 destination = transform.position;
@@ -188,6 +196,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    // Comentario: Se mueve hacia el objetivo y evita superponerse con otros enemigos
     void MoveTowards(Vector3 targetPosition)
     {
         Vector2 direction = (targetPosition - transform.position).normalized;
@@ -226,6 +235,7 @@ public class EnemyAI : MonoBehaviour
     }
 
     
+    // Comentario: Orienta el sprite hacia el jugador para ataques
     void FaceTarget()
     {
         Vector2 direction = (target.position - transform.position).normalized;
@@ -255,12 +265,14 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    // Comentario: Actualiza el momento del último ataque y aplica daño si está en rango
     void Attack()
     {
         lastAttackTime = Time.time;
         DealDamageToPlayer();
     }
 
+    // Comentario: Aplica daño al jugador si está a distancia de ataque
     public void DealDamageToPlayer()
     {
         
@@ -282,6 +294,7 @@ public class EnemyAI : MonoBehaviour
     
     
 
+    // Comentario: Actualiza parámetros del Animator para moverse/atacar
     void UpdateAnimator()
     {
         if (animator == null) return;
@@ -331,21 +344,25 @@ public class EnemyAI : MonoBehaviour
     
 
     
+    // Comentario: Permite asignar un nuevo objetivo a la IA
     public void SetTarget(Transform newTarget)
     {
         target = newTarget;
     }
 
+    // Comentario: Permite ajustar la velocidad de movimiento
     public void SetMoveSpeed(float newSpeed)
     {
         moveSpeed = newSpeed;
     }
 
+    // Comentario: Devuelve el estado actual del enemigo
     public EnemyState GetCurrentState()
     {
         return currentState;
     }
 
+    // Comentario: Fuerza el estado del enemigo a uno concreto
     public void ForceState(EnemyState newState)
     {
         currentState = newState;

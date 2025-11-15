@@ -1,6 +1,8 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// Comentario: Sistema simple de día/noche interpolando colores de luz global
+// Comentario: Enciende/apaga luces del mapa según el ciclo
 
 
 /*
@@ -11,6 +13,7 @@ using UnityEngine;
 - Github:     https://github.com/leandrovieiraa
 */
 
+// Comentario: Ciclos del día usados para cambiar colores y luces
 public enum DayCycles // Enum with day and night cycles, you can change or modify with whatever you want
 {
     Sunrise = 0,
@@ -57,12 +60,14 @@ public class DayNightSystem2D : MonoBehaviour
     [Tooltip("Objects to turn on and off based on day night cycles, you can use this example for create some custom stuffs")]
     public UnityEngine.Rendering.Universal.Light2D[] mapLights; // enable/disable in day/night states
 
+    // Comentario: Inicializa el ciclo en amanecer y aplica color inicial
     void Start() 
     {
         dayCycle = DayCycles.Sunrise; // start with sunrise state
         globalLight.color = sunrise; // start global color at sunrise
     }
 
+     // Comentario: Avanza el tiempo del ciclo y actualiza color/luces según el estado
      void Update()
      {
         // Update cycle time
@@ -109,6 +114,7 @@ public class DayNightSystem2D : MonoBehaviour
             globalLight.color = Color.Lerp(midnight, day, percent);     
      }
 
+     // Comentario: Activa o desactiva las luces del mapa según estado
      void ControlLightMaps(bool status)
      {
          // loop in light array of objects to enable/disable

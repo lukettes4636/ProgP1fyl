@@ -4,24 +4,24 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Crop Data", menuName = "Crops/Crop Data")]
 public class CropTile : ScriptableObject
 {
-    [Header("ConfiguraciÛn del Cultivo")]
+    [Header("ConfiguraciÔøΩn del Cultivo")]
     public string cropName = "NuevoCultivo";
     public Sprite[] growthStages;
 
     [Header("Tiempos de Crecimiento")]
     public float timePerStage = 60f;
 
-    // cAMBIO: AÒadimos el SPRITE que debe caer al cosechar
-    [Header("ConfiguraciÛn de Cosecha (Loot)")]
-    [Tooltip("El Sprite del Ìtem final que se mostrar· al caer en el mundo.")]
-    public Sprite harvestItemSprite; // °NUEVO CAMPO!
+    // cAMBIO: AÔøΩadimos el SPRITE que debe caer al cosechar
+    [Header("ConfiguraciÔøΩn de Cosecha (Loot)")]
+    [Tooltip("El Sprite del ÔøΩtem final que se mostrarÔøΩ al caer en el mundo.")]
+    public Sprite harvestItemSprite; // ÔøΩNUEVO CAMPO!
 
-    [Tooltip("Nombre del recurso final que se aÒade al inventario del jugador.")]
+    [Tooltip("Nombre del recurso final que se aÔøΩade al inventario del jugador.")]
     public string harvestItemName = "Tomate";
 
-    [Tooltip("Cantidad mÌnima de Ìtems que caen al cosechar.")]
+    [Tooltip("Cantidad mÔøΩnima de ÔøΩtems que caen al cosechar.")]
     public int minDropAmount = 1;
-    [Tooltip("Cantidad m·xima de Ìtems que caen al cosechar.")]
+    [Tooltip("Cantidad mÔøΩxima de ÔøΩtems que caen al cosechar.")]
     public int maxDropAmount = 3;
 
     // --- ESTADO INTERNO DEL CULTIVO (RUNTIME) ---
@@ -32,7 +32,7 @@ public class CropTile : ScriptableObject
     [SerializeField] private bool isMoist = false;
 
     // =======================================================================
-    // M…TODOS P⁄BLICOS DE INTERACCI”N (sin cambios en la lÛgica)
+    // MÔøΩTODOS PÔøΩBLICOS DE INTERACCIÔøΩN (sin cambios en la lÔøΩgica)
     // =======================================================================
 
     public void Initialize(bool isInitiallyMoist)
@@ -48,10 +48,12 @@ public class CropTile : ScriptableObject
         isMoist = isWet;
     }
 
-    public bool IsMoist() => isMoist;
-    public bool IsReadyToHarvest() => isReadyToHarvest;
-    public int GetCurrentStage() => currentStage;
+    // Comentario: Indicadores de estado b√°sicos para saber si est√° h√∫medo, listo y su etapa actual
+    public bool IsMoist() { return isMoist; }
+    public bool IsReadyToHarvest() { return isReadyToHarvest; }
+    public int GetCurrentStage() { return currentStage; }
 
+    // Comentario: Devuelve el sprite que corresponde a la etapa actual
     public Sprite GetCurrentSprite()
     {
         if (growthStages == null || growthStages.Length == 0) return null;
@@ -59,6 +61,7 @@ public class CropTile : ScriptableObject
         return growthStages[stage];
     }
 
+    // Comentario: Avanza el crecimiento si est√° h√∫medo; marca listo al llegar a la √∫ltima etapa
     public bool AdvanceGrowth(float deltaTime)
     {
         if (isReadyToHarvest || !isMoist) return false;

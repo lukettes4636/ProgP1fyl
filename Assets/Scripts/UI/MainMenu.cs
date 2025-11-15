@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+// Comentario: Menú principal simple para iniciar o salir del juego
 
 public class MainMenu : MonoBehaviour
 {

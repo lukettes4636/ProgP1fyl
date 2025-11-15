@@ -1,20 +1,22 @@
 using UnityEngine;
+// Comentario: Controla el movimiento del jugador en 2D top-down, incluyendo correr y dash
+// Comentario: Mantiene el mismo comportamiento y parÃ¡metros actuales
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Configuración de movimiento")]
+    [Header("Configuraciï¿½n de movimiento")]
     [SerializeField] private float moveSpeed = 5f;    // Velocidad de caminar
     [SerializeField] private float runSpeed = 8f;     // Velocidad de correr
     [SerializeField] private float spriteScale = 2f;  // Escala del sprite (para voltear)
 
     private Vector2 moveInput;       // Movimiento con el stick izquierdo
     private Vector2 aimInput;        // Apuntado con el stick derecho
-    private Vector2 lastDirection = Vector2.down; // Última dirección usada
+    private Vector2 lastDirection = Vector2.down; // ï¿½ltima direcciï¿½n usada
 
-    [Header("Configuración de dash")]
+    [Header("Configuraciï¿½n de dash")]
     [SerializeField] private float dashSpeed = 15f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
@@ -24,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private float dashCooldownTimer = 0f;
     private Vector2 dashDirection;
 
-    [Header("Configuración de sonidos")]
+    [Header("Configuraciï¿½n de sonidos")]
     [SerializeField] private AudioClip[] footstepSounds;
     [SerializeField] private AudioClip[] runFootstepSounds;
     [SerializeField] private float footstepVolume = 0.5f;
@@ -42,17 +44,18 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    [Header("Configuración de apuntado")]
-    [Tooltip("Magnitud mínima del stick derecho para considerarse apuntando.")]
+    [Header("Configuraciï¿½n de apuntado")]
+    [Tooltip("Magnitud mï¿½nima del stick derecho para considerarse apuntando.")]
     [SerializeField] private float aimThreshold = 0.2f;
 
-    private void Awake()
+// Comentario: Inicializa componentes y configura el Rigidbody2D
+private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // Configuración básica del Rigidbody
+        // Configuraciï¿½n bï¿½sica del Rigidbody
         rb.mass = 1.0f;
         rb.drag = 8.0f;
         rb.angularDrag = 0.05f;
@@ -66,7 +69,8 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void Update()
+// Comentario: Lee entradas cada frame y gestiona dash, pasos y animaciones
+private void Update()
     {
         HandleInput();
         HandleDash();
@@ -74,31 +78,33 @@ public class PlayerMovement : MonoBehaviour
         UpdateAnimator();
     }
 
-    private void FixedUpdate()
+// Comentario: Aplica el movimiento fÃ­sico estable
+private void FixedUpdate()
     {
         HandleMovement();
     }
 
-    private void HandleInput()
+// Comentario: Procesa sticks izquierdo/derecho y determina Ãºltima direcciÃ³n
+private void HandleInput()
     {
         //Stick izquierdo Movimiento
         moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        // Stick derecho Apuntado o rotación
+        // Stick derecho Apuntado o rotaciï¿½n
         aimInput = new Vector2(Input.GetAxis("AimHorizontal"), Input.GetAxis("AimVertical"));
 
-        // Si el stick derecho se usa, priorizar esa dirección
+        // Si el stick derecho se usa, priorizar esa direcciï¿½n
         if (aimInput.sqrMagnitude > aimThreshold)
         {
             lastDirection = aimInput.normalized;
         }
-        // Si no hay apuntado, usar la dirección de movimiento
+        // Si no hay apuntado, usar la direcciï¿½n de movimiento
         else if (moveInput.sqrMagnitude > 0.01f)
         {
             lastDirection = moveInput.normalized;
         }
 
-        // Voltear sprite según dirección en X
+        // Voltear sprite segï¿½n direcciï¿½n en X
         if (lastDirection.x != 0)
         {
             spriteRenderer.transform.localScale = new Vector3(
@@ -112,7 +118,8 @@ public class PlayerMovement : MonoBehaviour
         isRunning = Input.GetButton("Run");
     }
 
-    private void HandleMovement()
+// Comentario: Aplica la velocidad de caminar/correr o el dash actual
+private void HandleMovement()
     {
         if (isDashing)
         {
@@ -129,7 +136,8 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void HandleDash()
+// Comentario: Controla temporizador y cooldown del dash
+private void HandleDash()
     {
         dashCooldownTimer -= Time.deltaTime;
 
@@ -148,7 +156,8 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void StartDash()
+// Comentario: Inicia dash y reproduce el sonido mediante el controlador de acciones
+private void StartDash()
     {
         PlayerActionController actionController = GetComponent<PlayerActionController>();
         if (actionController != null)
@@ -162,28 +171,31 @@ public class PlayerMovement : MonoBehaviour
         dashDirection = lastDirection;
     }
 
-    private void EndDash()
+// Comentario: Finaliza el dash y limpia temporizadores
+private void EndDash()
     {
         isDashing = false;
         dashTimer = 0f;
     }
 
-    private void UpdateAnimator()
+// Comentario: Actualiza parÃ¡metros del Animator para reflejar movimiento/idle
+private void UpdateAnimator()
     {
         bool isMoving = moveInput.sqrMagnitude > 0.01f;
         animator.SetBool("IsMoving", isMoving);
         animator.SetBool("IsRunning", isRunning);
 
-        // Actualiza dirección actual para el blend tree de movimiento / idle
+        // Actualiza direcciï¿½n actual para el blend tree de movimiento / idle
         animator.SetFloat("MoveX", lastDirection.x);
         animator.SetFloat("MoveY", lastDirection.y);
 
-        // Guarda última dirección (para idle direccional)
+        // Guarda ï¿½ltima direcciï¿½n (para idle direccional)
         animator.SetFloat("LastMoveX", lastDirection.x);
         animator.SetFloat("LastMoveY", lastDirection.y);
     }
 
-    private void HandleFootsteps()
+// Comentario: Genera sonidos de pasos segÃºn el estado de movimiento
+private void HandleFootsteps()
     {
         bool isMoving = moveInput.sqrMagnitude > 0.01f && canMove && !isDashing;
 
@@ -206,7 +218,8 @@ public class PlayerMovement : MonoBehaviour
         wasMovingLastFrame = isMoving;
     }
 
-    private void PlayFootstepSound()
+// Comentario: Reproduce un clip de pasos con variaciÃ³n de pitch simple
+private void PlayFootstepSound()
     {
         AudioClip[] soundArray = isRunning ? runFootstepSounds : footstepSounds;
 
@@ -223,23 +236,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void SetCanMove(bool state)
+// Comentario: Permite habilitar/deshabilitar movimiento desde otros scripts
+public void SetCanMove(bool state)
     {
         canMove = state;
     }
 
-    // Permite a otros scripts (como PlayerActionController) obtener la dirección actual
-    public Vector2 GetLastDirection()
+    // Permite a otros scripts (como PlayerActionController) obtener la direcciï¿½n actual
+// Comentario: Devuelve la Ãºltima direcciÃ³n Ãºtil para orientar acciones
+public Vector2 GetLastDirection()
     {
         return lastDirection;
     }
 
-    public SpriteRenderer GetSpriteRenderer()
+// Comentario: Devuelve el SpriteRenderer para ajustar flip/escala
+public SpriteRenderer GetSpriteRenderer()
     {
         return spriteRenderer;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+// Comentario: Cambia el tipo de cuerpo al chocar con enemigos
+private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
@@ -247,7 +264,8 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+// Comentario: Limita movimiento en contacto con enemigos/agua
+private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
@@ -261,7 +279,8 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+// Comentario: Restaura el movimiento al salir de colisiones
+private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {

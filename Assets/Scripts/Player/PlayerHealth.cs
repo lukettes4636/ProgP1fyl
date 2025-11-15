@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+// Comentario: Gestiona la salud del jugador usando HealthSystem y maneja efectos/escenas
+// Comentario: Mantiene los mismos logs y comportamientos actuales
 
 [RequireComponent(typeof(HealthSystem))]
 public class PlayerHealth : MonoBehaviour
@@ -23,7 +25,12 @@ public class PlayerHealth : MonoBehaviour
     private PlayerMovement playerMovement;
     private SpriteRenderer spriteRenderer;
     private AudioSource audioSource;
+    // Comentario: Variables internas para gestionar el flash de daño sin corrutinas
+    private bool isDamageFlashing = false;
+    private float damageFlashTimer = 0f;
+    private Color originalSpriteColor;
     
+    // Comentario: Conecta callbacks de HealthSystem y obtiene referencias necesarias
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
@@ -38,7 +45,8 @@ public class PlayerHealth : MonoBehaviour
     }
 
     
-private void OnPlayerDamageTaken(int damage)
+    // Comentario: Callback cuando el jugador recibe daño
+    private void OnPlayerDamageTaken(int damage)
     {
         if (showHealthInConsole)
         {
@@ -53,6 +61,7 @@ private void OnPlayerDamageTaken(int damage)
         }
     }
     
+    // Comentario: Callback cuando el jugador muere (cambia la escena)
     private void OnPlayerDeath()
     {
         if (showHealthInConsole)
@@ -64,6 +73,7 @@ private void OnPlayerDamageTaken(int damage)
         SceneManager.LoadScene(2); 
     }
     
+    // Comentario: Callback cuando el jugador se cura
     private void OnPlayerHealed(int amount)
     {
         if (showHealthInConsole)
@@ -74,6 +84,7 @@ private void OnPlayerDamageTaken(int damage)
         PlayAudioClip(healSound);
     }
     
+    // Comentario: Actualiza estados habilitados cuando cambia la salud
     private void OnPlayerHealthChanged(int newHealth)
     {
         if (newHealth <= 0)
@@ -93,21 +104,25 @@ private void OnPlayerDamageTaken(int damage)
         }
     }
     
+    // Comentario: Método público para aplicar daño al jugador
     public void TakeDamage(int damage)
     {
         healthSystem.TakeDamage(damage);
     }
     
+    // Comentario: Método público para curar al jugador
     public void Heal(int amount)
     {
         healthSystem.Heal(amount);
     }
     
+    // Comentario: Restaura la salud del jugador al máximo
     public void RestoreFullHealth()
     {
         healthSystem.RestoreFullHealth();
     }
     
+    // Comentario: Revive al jugador y re-habilita componentes
     public void Revive()
     {
         healthSystem.Revive();
@@ -126,43 +141,58 @@ private void OnPlayerDamageTaken(int damage)
 
     }
     
+    // Comentario: Devuelve la salud actual
     public int GetCurrentHealth()
     {
         return healthSystem.CurrentHealth;
     }
     
+    // Comentario: Devuelve la salud máxima
     public int GetMaxHealth()
     {
         return healthSystem.maxHealth;
     }
     
+    // Comentario: Indica si el jugador está vivo
     public bool IsAlive()
     {
         return !healthSystem.IsDead;
     }
     
+    // Comentario: Devuelve el porcentaje de salud actual
     public float GetHealthPercentage()
     {
         return healthSystem.HealthPercentage;
     }
 
 
+    // Comentario: Inicia el efecto de flash de daño usando un temporizador sencillo
     private void StartDamageFlash()
     {
         if (spriteRenderer != null)
         {
-            StartCoroutine(DamageFlashCoroutine());
+            originalSpriteColor = spriteRenderer.color;
+            spriteRenderer.color = damageFlashColor;
+            isDamageFlashing = true;
+            damageFlashTimer = damageFlashDuration;
+        }
+    }
+
+    // Comentario: Actualiza el temporizador del flash de daño y restaura el color
+    private void Update()
+    {
+        if (isDamageFlashing)
+        {
+            damageFlashTimer -= Time.deltaTime;
+            if (damageFlashTimer <= 0f)
+            {
+                spriteRenderer.color = originalSpriteColor;
+                isDamageFlashing = false;
+            }
         }
     }
     
-    private System.Collections.IEnumerator DamageFlashCoroutine()
-    {
-        Color originalColor = spriteRenderer.color;
-        spriteRenderer.color = damageFlashColor;
-        yield return new WaitForSeconds(damageFlashDuration);
-        spriteRenderer.color = originalColor;
-    }
-    
+    // Comentario: Reproduce clips de daño/curación/muerte
     private void PlayAudioClip(AudioClip clip)
     {
         if (audioSource != null && clip != null)

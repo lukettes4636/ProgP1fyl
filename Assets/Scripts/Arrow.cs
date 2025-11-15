@@ -1,4 +1,6 @@
 using UnityEngine;
+// Comentario: Controla el comportamiento básico de la flecha (velocidad y daño)
+// Comentario: Se destruye al impactar y aplica daño a enemigos
 
 public class Arrow : MonoBehaviour
 {
@@ -6,6 +8,7 @@ public class Arrow : MonoBehaviour
     public int damage = 10;
     public Rigidbody2D rb;
 
+    // Comentario: Asegura que exista Rigidbody2D y aplica velocidad inicial
     void Start()
     {
         
@@ -29,6 +32,7 @@ public class Arrow : MonoBehaviour
         rb.velocity = transform.up * speed;
     }
 
+    // Comentario: Al colisionar con un enemigo, aplica daño y destruye la flecha
     void OnTriggerEnter2D(Collider2D hitInfo)
     {
         EnemyHealth enemy = hitInfo.GetComponent<EnemyHealth>();
