@@ -78,7 +78,7 @@ public class TileCursorController : MonoBehaviour
                             equip == PlayerActionController.EquipType.Pico ||
                             equip == PlayerActionController.EquipType.Arado ||
                             equip == PlayerActionController.EquipType.Regadera ||
-                            (equip >= PlayerActionController.EquipType.Semilla1 && equip <= PlayerActionController.EquipType.Semilla8);
+                            (equip >= PlayerActionController.EquipType.Semilla1 && equip <= PlayerActionController.EquipType.Semilla2);
 
         if (!isToolActive)
         {

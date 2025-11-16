@@ -1,18 +1,15 @@
 using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Animator))]
 public class PlayerActionController : MonoBehaviour
 {
-    // A�adimos 8 tipos de semillas diferentes, Regadera y Arado
+    // Solo 2 tipos de semillas
     public enum EquipType
     {
         None, Espada, Hacha, Pico, Arado, Regadera,
-        Semilla1, Semilla2, Semilla3, Semilla4,
-        Semilla5, Semilla6, Semilla7, Semilla8,
-        Arco
+        Semilla1, Semilla2, Arco
     }
 
     [SerializeField] private EquipType equipActual = EquipType.None;
@@ -22,24 +19,18 @@ public class PlayerActionController : MonoBehaviour
     private Dictionary<string, int> inventory = new Dictionary<string, int>();
     [SerializeField] private List<string> inventoryDisplay = new List<string>();
 
-    // Diccionario para mapear EquipType de Semillas a un nombre de �tem en el inventario.
+    // Diccionario para mapear EquipType de Semillas a un nombre de ítem en el inventario.
     private readonly Dictionary<EquipType, string> SeedItemNames = new Dictionary<EquipType, string>
     {
         { EquipType.Semilla1, "SemillasDeGirasol" },
-        { EquipType.Semilla2, "SemillasDeCebolla" },
-        { EquipType.Semilla3, "SemillasDePatata" },
-        { EquipType.Semilla4, "SemillasDeFresa" },
-        { EquipType.Semilla5, "SemillasDeRemolacha" },
-        { EquipType.Semilla6, "SemillasDeZanahoria" },
-        { EquipType.Semilla7, "SemillasDeApio" },
-        { EquipType.Semilla8, "SemillasDeUva" }
+        { EquipType.Semilla2, "SemillasDeCebolla" }
     };
 
     private Animator animator;
     private PlayerMovement playerMovement;
     private SpriteRenderer spriteRenderer;
 
-    // >> REFERENCIAS CR�TICAS PARA ARADO/SIEMBRA/RIEGO
+    // >> REFERENCIAS CRÍTICAS PARA ARADO/SIEMBRA/RIEGO
     [SerializeField] private PlowManager plowManager;
     [SerializeField] private TileCursorController tileCursorController;
     // <<
@@ -54,14 +45,14 @@ public class PlayerActionController : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private bool enAccion = false;
 
-    [Header("Configuraci�n de acci�n")]
+    [Header("Configuración de acción")]
     [SerializeField] private float actionRange = 1.2f;
     [SerializeField] private LayerMask resourceLayer;
 
     [Tooltip("Duración máxima de una acción antes de desbloquear automáticamente (seguridad).")]
     [SerializeField] private float maxActionDuration = 0.6f;
 
-    // Comentario: Temporizador simple para finalizar acciones sin usar corrutinas
+    // Temporizador simple para finalizar acciones
     private float actionTimer = 0f;
 
     private void Awake()
@@ -74,7 +65,7 @@ public class PlayerActionController : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // >> INICIALIZACI�N ROBUSTA DE MANAGERS (CLAVE PARA SOLUCIONAR EL NULL)
+        // Inicializar managers
         plowManager = PlowManager.Instance;
 
         if (plowManager == null)
@@ -83,9 +74,8 @@ public class PlayerActionController : MonoBehaviour
         }
 
         tileCursorController = FindObjectOfType<TileCursorController>();
-        // <<
 
-        // --- C�DIGO TEMPORAL PARA PRUEBAS (Inventario) ---
+        // Código temporal para pruebas (Inventario)
         foreach (var item in SeedItemNames)
         {
             inventory.Add(item.Value, 10);
@@ -93,17 +83,16 @@ public class PlayerActionController : MonoBehaviour
         if (!inventory.ContainsKey("Regadera"))
             inventory.Add("Regadera", 1);
         UpdateInventoryDisplay();
-        // ---------------------------------------------------------------------------------------
 
         if (plowManager == null)
-            Debug.LogError("PlayerActionController: PlowManager.Instance es nulo. �Asegura el Script Execution Order!");
+            Debug.LogError("PlayerActionController: PlowManager.Instance es nulo.");
         if (tileCursorController == null)
-            Debug.LogError("PlayerActionController: No se encontr� TileCursorController.");
+            Debug.LogError("PlayerActionController: No se encontró TileCursorController.");
     }
 
     private void Update()
     {
-        // Comentario: Si estamos en acción, reducimos el temporizador y liberamos al terminar
+        // Si estamos en acción, reducimos el temporizador y liberamos al terminar
         if (enAccion)
         {
             actionTimer -= Time.deltaTime;
@@ -117,17 +106,18 @@ public class PlayerActionController : MonoBehaviour
         if (Input.GetButtonDown("Action"))
             HandleAction();
 
-        if (Input.GetButtonDown("ChangeWeapon"))
-            ChangeEquip(1);
+        // YA NO NECESITAMOS ESTO PORQUE EL HOTBAR LO MANEJA
+        // if (Input.GetButtonDown("ChangeWeapon"))
+        //     ChangeEquip(1);
     }
 
     private void HandleAction()
     {
         if (enAccion || equipActual == EquipType.None) return;
 
-        bool isSeedEquipped = equipActual >= EquipType.Semilla1 && equipActual <= EquipType.Semilla8;
+        bool isSeedEquipped = equipActual == EquipType.Semilla1 || equipActual == EquipType.Semilla2;
 
-        // 1. Siembra Instant�nea
+        // 1. Siembra Instantánea
         if (isSeedEquipped)
         {
             if (!HasItem(SeedItemNames[equipActual]))
@@ -140,8 +130,8 @@ public class PlayerActionController : MonoBehaviour
         }
 
         // 2. Otras acciones (con animación y bloqueo temporal)
-        enAccion = true; // Bloquea el input durante la animación
-        actionTimer = maxActionDuration; // Comentario: Inicia el temporizador para terminar la acción
+        enAccion = true;
+        actionTimer = maxActionDuration;
 
         Vector2 actionDirection = playerMovement.GetLastDirection();
 
@@ -161,7 +151,7 @@ public class PlayerActionController : MonoBehaviour
             );
         }
 
-        // Ejecutar animaci�n seg�n herramienta
+        // Ejecutar animación según herramienta
         switch (equipActual)
         {
             case EquipType.Espada:
@@ -194,27 +184,20 @@ public class PlayerActionController : MonoBehaviour
         }
 
         TryHitResource(actionDirection);
-
-        // Comentario: Se reemplaza la corrutina por un temporizador en Update
     }
 
-    // ----------------------------------------------------------------------------------
-    // FUNCI�N DE SIEMBRA INSTANT�NEA
-    // ----------------------------------------------------------------------------------
-
+    // Función de siembra instantánea
     private void ExecuteSeedActionInstant()
     {
-        bool isSeedEquipped = equipActual >= EquipType.Semilla1 && equipActual <= EquipType.Semilla8;
+        bool isSeedEquipped = equipActual == EquipType.Semilla1 || equipActual == EquipType.Semilla2;
         if (!isSeedEquipped || plowManager == null || tileCursorController == null)
             return;
 
-        //  ESTA LLAMADA ES LA QUE CAUSABA EL CONFLICTO DE NOMBRE.
         Vector3Int cellPos = tileCursorController.GetCurrentCellPosition();
 
-        // El valor 999 es el c�digo de error para celda inv�lida
         if (cellPos.x == 999)
         {
-            Debug.LogWarning("Siembra fallida: Cursor no apunta a un tile v�lido.");
+            Debug.LogWarning("Siembra fallida: Cursor no apunta a un tile válido.");
             return;
         }
 
@@ -229,16 +212,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-
-    // ----------------------------------------------------------------------------------
-    // FUNCIONES DE ACCI�N (Llamadas por Animation Event)
-    // ----------------------------------------------------------------------------------
-
-    /// <summary> Llamado por el evento de animaci�n "ExecutePlowAction" </summary>
-    /// <summary> 
-    /// Llamado por el evento de animaci�n "ExecutePlowAction".
-    /// Decide si Arar o Cosechar.
-    /// </summary>
+    // Llamado por el evento de animación "ExecutePlowAction"
     public void ExecutePlowAction()
     {
         if (equipActual != EquipType.Arado || plowManager == null || tileCursorController == null)
@@ -247,7 +221,6 @@ public class PlayerActionController : MonoBehaviour
             return;
         }
 
-        // ESTA LLAMADA ES LA QUE CAUSABA EL CONFLICTO DE NOMBRE.
         Vector3Int cellPos = tileCursorController.GetCurrentCellPosition();
 
         if (cellPos.x == 999) return;
@@ -264,7 +237,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    /// <summary> Llamado por el evento de animaci�n "ExecuteWaterAction" </summary>
+    // Llamado por el evento de animación "ExecuteWaterAction"
     public void ExecuteWaterAction()
     {
         if (equipActual != EquipType.Regadera || plowManager == null || tileCursorController == null)
@@ -273,18 +246,12 @@ public class PlayerActionController : MonoBehaviour
             return;
         }
 
-        // ESTA LLAMADA ES LA QUE CAUSABA EL CONFLICTO DE NOMBRE.
         Vector3Int cellPos = tileCursorController.GetCurrentCellPosition();
 
         if (cellPos.x == 999) return;
 
         plowManager.WaterAt(cellPos);
     }
-
-
-    // ----------------------------------------------------------------------------------
-    // FUNCIONES DE SOPORTE Y UTILIDAD
-    // ----------------------------------------------------------------------------------
 
     public void CollectResource(string resourceName, int amount)
     {
@@ -294,7 +261,7 @@ public class PlayerActionController : MonoBehaviour
             inventory.Add(resourceName, amount);
 
         UpdateInventoryDisplay();
-        Debug.Log($"�Recogido! {amount} de {resourceName}.");
+        Debug.Log($"¡Recogido! {amount} de {resourceName}.");
     }
 
     public void RemoveItem(string itemName, int amount)
@@ -316,9 +283,6 @@ public class PlayerActionController : MonoBehaviour
             inventoryDisplay.Add($"{item.Key}: {item.Value}");
     }
 
-    // Comentario: Eliminado uso de corrutina; control se realiza con temporizador en Update
-
-    // Comentario: Lanza un raycast al frente para interactuar con recursos en el mundo
     private void TryHitResource(Vector2 direction)
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, actionRange, resourceLayer);
@@ -332,7 +296,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // Comentario: Activa la caja de daño orientándola según la última dirección del jugador
     public void ActivateHitbox()
     {
         Vector2 lastDirection = playerMovement.GetLastDirection();
@@ -347,7 +310,6 @@ public class PlayerActionController : MonoBehaviour
         damageHitbox.SetActive(true);
     }
 
-    // Comentario: Desactiva la caja de daño y restablece su transformación
     public void DisableHitbox()
     {
         damageHitbox.SetActive(false);
@@ -355,23 +317,6 @@ public class PlayerActionController : MonoBehaviour
         damageHitbox.transform.localRotation = Quaternion.identity;
     }
 
-    // Comentario: Cambia la herramienta equipada recorriendo el enum de manera circular
-    private void ChangeEquip(int direction)
-    {
-        if (enAccion) return;
-
-        int currentEquipIndex = (int)equipActual;
-        int maxEquipIndex = Enum.GetValues(typeof(EquipType)).Length - 1;
-        int newIndex = currentEquipIndex + direction;
-
-        if (newIndex < 0) newIndex = maxEquipIndex;
-        else if (newIndex > maxEquipIndex) newIndex = 0;
-
-        equipActual = (EquipType)newIndex;
-        Debug.Log("Equipment changed to: " + equipActual);
-    }
-
-    // Comentario: Termina el estado de acción y resetea parámetros del Animator
     public void EndActionState()
     {
         enAccion = false;
@@ -385,7 +330,6 @@ public class PlayerActionController : MonoBehaviour
         animator.SetInteger("AttackIndex", 0);
     }
 
-    // Comentario: Reproduce un sonido aleatorio de ataque con variación de pitch
     private void PlayAttackSound()
     {
         if (attackSounds != null && attackSounds.Length > 0 && audioSource != null)
@@ -396,7 +340,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // Comentario: Reproduce un sonido aleatorio de talar árboles con variación de pitch
     private void PlayTreeCuttingSound()
     {
         if (treeCuttingSounds != null && treeCuttingSounds.Length > 0 && audioSource != null)
@@ -407,7 +350,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // Comentario: Reproduce el sonido de dash con una ligera variación de pitch
     public void PlayDashSound()
     {
         if (dashSound != null && audioSource != null)
@@ -417,7 +359,15 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // Comentario: Métodos de acceso sencillos usados por otros scripts
+    // MÉTODO PÚBLICO PARA CAMBIAR EQUIPO DESDE EL HOTBAR
+    public void SetEquip(EquipType newEquip)
+    {
+        if (enAccion) return;
+
+        equipActual = newEquip;
+        Debug.Log("Equipo cambiado a: " + equipActual);
+    }
+
     public int GetBaseDamage()
     {
         return baseDamage;
