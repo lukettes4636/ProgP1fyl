@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3d3e77ad60b16045b9925cb93f621c6, type: 3}
   m_Name: New Crop Tile
   m_EditorClassIdentifier: 
-  cropName: Girasol
+  cropName: Uva
   growthStages:
-  - {fileID: 887929212, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
-  - {fileID: -336539070, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
-  - {fileID: -77594568, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
-  - {fileID: -1457907525, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
+  - {fileID: -941193305, guid: f9829597595de694c91e91f68e5da944, type: 3}
+  - {fileID: 806348278, guid: f9829597595de694c91e91f68e5da944, type: 3}
+  - {fileID: -1715883234, guid: f9829597595de694c91e91f68e5da944, type: 3}
+  - {fileID: 1268462903, guid: f9829597595de694c91e91f68e5da944, type: 3}
   timePerStage: 60
+  harvestItemSprite: {fileID: -1869311964, guid: f9829597595de694c91e91f68e5da944, type: 3}
+  harvestItemName: Uva
+  minDropAmount: 1
+  maxDropAmount: 3
   currentStage: 0
   timeGrown: 0
   isReadyToHarvest: 0
