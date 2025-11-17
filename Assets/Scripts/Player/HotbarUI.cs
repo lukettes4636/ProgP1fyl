@@ -1,190 +1,193 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
-// Script principal del Hotbar - Maneja la UI y selección de herramientas
+// Script SIMPLE del Hotbar - 9 herramientas fijas con navegación bidireccional
 public class HotbarUI : MonoBehaviour
 {
-    [Header("Referencias UI")]
-    [SerializeField] private Transform slotsContainer; // El panel que contiene los slots
+    [Header("Slots - Iconos (Arrastra los 9 iconos en orden)")]
+    [SerializeField] private Image slot1Icon;
+    [SerializeField] private Image slot2Icon;
+    [SerializeField] private Image slot3Icon;
+    [SerializeField] private Image slot4Icon;
+    [SerializeField] private Image slot5Icon;
+    [SerializeField] private Image slot6Icon;
+    [SerializeField] private Image slot7Icon;
+    [SerializeField] private Image slot8Icon;
+    [SerializeField] private Image slot9Icon;
 
-    [Header("Configuración")]
-    [SerializeField] private int numberOfSlots = 6; // Número de espacios en el hotbar
-    [SerializeField] private Color selectedColor = Color.yellow; // Color del slot seleccionado
-    [SerializeField] private Color normalColor = new Color(1f, 1f, 1f, 0.3f); // Color de slots normales (semi-transparente)
+    [Header("Slots - Marcos de selección (Arrastra los 9 marcos en orden)")]
+    [SerializeField] private GameObject slot1Selection;
+    [SerializeField] private GameObject slot2Selection;
+    [SerializeField] private GameObject slot3Selection;
+    [SerializeField] private GameObject slot4Selection;
+    [SerializeField] private GameObject slot5Selection;
+    [SerializeField] private GameObject slot6Selection;
+    [SerializeField] private GameObject slot7Selection;
+    [SerializeField] private GameObject slot8Selection;
+    [SerializeField] private GameObject slot9Selection;
 
-    [Header("Sprites de Herramientas")]
+    [Header("Sprites de Herramientas (en orden: Espada, Hacha, Pico, Arado, Regadera, Arco, Antorcha, Semilla1, Semilla2)")]
     [SerializeField] private Sprite espadaSprite;
     [SerializeField] private Sprite hachaSprite;
     [SerializeField] private Sprite picoSprite;
     [SerializeField] private Sprite aradoSprite;
     [SerializeField] private Sprite regaderaSprite;
+    [SerializeField] private Sprite arcoSprite;
+    [SerializeField] private Sprite antorchaSprite;
     [SerializeField] private Sprite semilla1Sprite;
     [SerializeField] private Sprite semilla2Sprite;
-    [SerializeField] private Sprite arcoSprite;
 
-    private List<HotbarSlot> slots = new List<HotbarSlot>(); // Lista de slots creados
-    private int currentSlotIndex = 0; // Slot actualmente seleccionado
-    private PlayerActionController playerController; // Referencia al controlador del jugador
-
-    // Diccionario que asocia cada tipo de equipo con su sprite
-    private Dictionary<PlayerActionController.EquipType, Sprite> equipSprites;
+    private int slotActual = 0; // Qué slot está seleccionado (0 a 8)
+    private PlayerActionController playerController;
 
     // Control de input para evitar múltiples cambios
-    private bool changeWeaponPressed = false;
+    private bool nextWeaponPressed = false;
+    private bool prevWeaponPressed = false;
 
     void Start()
     {
-        // Buscar el PlayerActionController en la escena
         playerController = FindObjectOfType<PlayerActionController>();
 
         if (playerController == null)
         {
-            Debug.LogError("No se encontró PlayerActionController en la escena!");
+            Debug.LogError("No se encontró PlayerActionController!");
             return;
         }
 
-        // Inicializar el diccionario de sprites
-        InitializeEquipSprites();
+        // Configurar los iconos fijos de cada slot
+        slot1Icon.sprite = espadaSprite;
+        slot2Icon.sprite = hachaSprite;
+        slot3Icon.sprite = picoSprite;
+        slot4Icon.sprite = aradoSprite;
+        slot5Icon.sprite = regaderaSprite;
+        slot6Icon.sprite = arcoSprite;
+        slot7Icon.sprite = antorchaSprite;
+        slot8Icon.sprite = semilla1Sprite;
+        slot9Icon.sprite = semilla2Sprite;
 
-        // Buscar los slots que ya existen como hijos
-        FindExistingSlots();
-
-        // Configurar las herramientas iniciales
-        SetupInitialTools();
-
-        // Seleccionar el primer slot
-        SelectSlot(0);
+        // Seleccionar el primer slot al inicio
+        ActualizarSeleccion();
     }
 
     void Update()
     {
-        // Detectar el botón ChangeWeapon del joystick
-        bool changeWeaponButton = Input.GetButton("ChangeWeapon");
+        // Leer el eje ChangeWeapon (positivo = R1, negativo = L1)
+        float axisValue = Input.GetAxis("ChangeWeapon");
 
-        // Solo cambiar cuando se PRESIONA (no mientras se mantiene)
-        if (changeWeaponButton && !changeWeaponPressed)
+        // AVANZAR (R1 - valor positivo mayor a 0.5)
+        if (axisValue > 0.5f && !nextWeaponPressed)
         {
-            changeWeaponPressed = true;
-            SelectNextSlot();
+            nextWeaponPressed = true;
+            CambiarSlotAdelante();
         }
 
-        // Resetear cuando se suelta el botón
-        if (!changeWeaponButton && changeWeaponPressed)
+        // Resetear cuando se suelta R1
+        if (axisValue <= 0.5f && nextWeaponPressed)
         {
-            changeWeaponPressed = false;
-        }
-    }
-
-    // Inicializa el diccionario que relaciona equipos con sprites
-    private void InitializeEquipSprites()
-    {
-        equipSprites = new Dictionary<PlayerActionController.EquipType, Sprite>
-        {
-            { PlayerActionController.EquipType.Espada, espadaSprite },
-            { PlayerActionController.EquipType.Hacha, hachaSprite },
-            { PlayerActionController.EquipType.Pico, picoSprite },
-            { PlayerActionController.EquipType.Arado, aradoSprite },
-            { PlayerActionController.EquipType.Regadera, regaderaSprite },
-            { PlayerActionController.EquipType.Semilla1, semilla1Sprite },
-            { PlayerActionController.EquipType.Semilla2, semilla2Sprite },
-            { PlayerActionController.EquipType.Arco, arcoSprite }
-        };
-    }
-
-    // Busca los slots que ya existen como hijos del container
-    private void FindExistingSlots()
-    {
-        slots.Clear();
-
-        // Recorrer todos los hijos del container
-        for (int i = 0; i < slotsContainer.childCount; i++)
-        {
-            Transform child = slotsContainer.GetChild(i);
-            HotbarSlot slot = child.GetComponent<HotbarSlot>();
-
-            if (slot != null)
-            {
-                slot.Initialize(i, this);
-                slots.Add(slot);
-            }
+            nextWeaponPressed = false;
         }
 
-        Debug.Log("Slots encontrados: " + slots.Count);
-    }
-
-    // Configura las herramientas iniciales en el hotbar
-    private void SetupInitialTools()
-    {
-        // Coloca las herramientas en los slots
-        if (slots.Count > 0) SetSlotEquip(0, PlayerActionController.EquipType.Espada);
-        if (slots.Count > 1) SetSlotEquip(1, PlayerActionController.EquipType.Hacha);
-        if (slots.Count > 2) SetSlotEquip(2, PlayerActionController.EquipType.Pico);
-        if (slots.Count > 3) SetSlotEquip(3, PlayerActionController.EquipType.Arado);
-        if (slots.Count > 4) SetSlotEquip(4, PlayerActionController.EquipType.Regadera);
-        if (slots.Count > 5) SetSlotEquip(5, PlayerActionController.EquipType.Semilla1);
-    }
-
-    // Establece qué equipo tiene un slot específico
-    public void SetSlotEquip(int slotIndex, PlayerActionController.EquipType equipType)
-    {
-        if (slotIndex >= 0 && slotIndex < slots.Count)
+        // RETROCEDER (L1 - valor negativo menor a -0.5)
+        if (axisValue < -0.5f && !prevWeaponPressed)
         {
-            Sprite sprite = null;
+            prevWeaponPressed = true;
+            CambiarSlotAtras();
+        }
 
-            if (equipType != PlayerActionController.EquipType.None)
-            {
-                equipSprites.TryGetValue(equipType, out sprite);
-            }
-
-            slots[slotIndex].SetEquip(equipType, sprite);
+        // Resetear cuando se suelta L1
+        if (axisValue >= -0.5f && prevWeaponPressed)
+        {
+            prevWeaponPressed = false;
         }
     }
 
-    // Selecciona el siguiente slot (avanza uno)
-    public void SelectNextSlot()
+    // Cambia al siguiente slot (adelante)
+    void CambiarSlotAdelante()
     {
-        int nextSlot = currentSlotIndex + 1;
+        slotActual = slotActual + 1;
 
-        // Volver al principio si llega al final
-        if (nextSlot >= slots.Count)
+        // Si llega al final, volver al principio
+        if (slotActual > 8)
         {
-            nextSlot = 0;
+            slotActual = 0;
         }
 
-        SelectSlot(nextSlot);
+        ActualizarSeleccion();
     }
 
-    // Selecciona un slot específico (cambia la herramienta equipada)
-    public void SelectSlot(int slotIndex)
+    // Cambia al slot anterior (atrás)
+    void CambiarSlotAtras()
     {
-        // Validar que el índice sea válido
-        if (slotIndex < 0 || slotIndex >= slots.Count)
+        slotActual = slotActual - 1;
+
+        // Si llega al principio, ir al final
+        if (slotActual < 0)
         {
-            return;
+            slotActual = 8;
         }
 
-        // Deseleccionar el slot anterior
-        if (currentSlotIndex >= 0 && currentSlotIndex < slots.Count)
-        {
-            slots[currentSlotIndex].SetSelected(false, normalColor);
-        }
-
-        // Seleccionar el nuevo slot
-        currentSlotIndex = slotIndex;
-        slots[currentSlotIndex].SetSelected(true, selectedColor);
-
-        // Cambiar el equipo en el PlayerActionController
-        PlayerActionController.EquipType equipType = slots[currentSlotIndex].GetEquipType();
-        ChangePlayerEquip(equipType);
+        ActualizarSeleccion();
     }
 
-    // Cambia el equipo del jugador
-    private void ChangePlayerEquip(PlayerActionController.EquipType newEquip)
+    // Actualiza qué slot está seleccionado y cambia la herramienta
+    void ActualizarSeleccion()
     {
-        if (playerController != null)
+        // Apagar TODOS los marcos de selección
+        slot1Selection.SetActive(false);
+        slot2Selection.SetActive(false);
+        slot3Selection.SetActive(false);
+        slot4Selection.SetActive(false);
+        slot5Selection.SetActive(false);
+        slot6Selection.SetActive(false);
+        slot7Selection.SetActive(false);
+        slot8Selection.SetActive(false);
+        slot9Selection.SetActive(false);
+
+        // Encender solo el marco del slot actual y cambiar herramienta
+        if (slotActual == 0)
         {
-            playerController.SetEquip(newEquip);
+            slot1Selection.SetActive(true);
+            playerController.SetEquip(PlayerActionController.EquipType.Espada);
+        }
+        else if (slotActual == 1)
+        {
+            slot2Selection.SetActive(true);
+            playerController.SetEquip(PlayerActionController.EquipType.Hacha);
+        }
+        else if (slotActual == 2)
+        {
+            slot3Selection.SetActive(true);
+            playerController.SetEquip(PlayerActionController.EquipType.Pico);
+        }
+        else if (slotActual == 3)
+        {
+            slot4Selection.SetActive(true);
+            playerController.SetEquip(PlayerActionController.EquipType.Arado);
+        }
+        else if (slotActual == 4)
+        {
+            slot5Selection.SetActive(true);
+            playerController.SetEquip(PlayerActionController.EquipType.Regadera);
+        }
+        else if (slotActual == 5)
+        {
+            slot6Selection.SetActive(true);
+            playerController.SetEquip(PlayerActionController.EquipType.Arco);
+        }
+        else if (slotActual == 6)
+        {
+            slot7Selection.SetActive(true);
+            playerController.SetEquip(PlayerActionController.EquipType.Antorcha);
+        }
+        else if (slotActual == 7)
+        {
+            slot8Selection.SetActive(true);
+            playerController.SetEquip(PlayerActionController.EquipType.Semilla1);
+        }
+        else if (slotActual == 8)
+        {
+            slot9Selection.SetActive(true);
+            playerController.SetEquip(PlayerActionController.EquipType.Semilla2);
         }
     }
 }

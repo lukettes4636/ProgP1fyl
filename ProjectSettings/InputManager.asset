@@ -89,14 +89,14 @@ InputManager:
     m_Name: ChangeWeapon
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
-    positiveButton: joystick button 4
+    negativeButton: joystick button 4
+    positiveButton: joystick button 5
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
-    snap: 0
+    snap: 1
     invert: 0
     type: 0
     axis: 0

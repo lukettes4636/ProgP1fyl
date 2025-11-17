@@ -5,11 +5,11 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Animator))]
 public class PlayerActionController : MonoBehaviour
 {
-    // Solo 2 tipos de semillas
+    // 9 herramientas: Espada, Hacha, Pico, Arado, Regadera, Arco, Antorcha, Semilla1, Semilla2
     public enum EquipType
     {
-        None, Espada, Hacha, Pico, Arado, Regadera,
-        Semilla1, Semilla2, Arco
+        None, Espada, Hacha, Pico, Arado, Regadera, Arco, Antorcha,
+        Semilla1, Semilla2
     }
 
     [SerializeField] private EquipType equipActual = EquipType.None;
@@ -19,7 +19,7 @@ public class PlayerActionController : MonoBehaviour
     private Dictionary<string, int> inventory = new Dictionary<string, int>();
     [SerializeField] private List<string> inventoryDisplay = new List<string>();
 
-    // Diccionario para mapear EquipType de Semillas a un nombre de ítem en el inventario.
+    // Diccionario para mapear EquipType de Semillas a un nombre de ítem en el inventario
     private readonly Dictionary<EquipType, string> SeedItemNames = new Dictionary<EquipType, string>
     {
         { EquipType.Semilla1, "SemillasDeGirasol" },
@@ -30,10 +30,9 @@ public class PlayerActionController : MonoBehaviour
     private PlayerMovement playerMovement;
     private SpriteRenderer spriteRenderer;
 
-    // >> REFERENCIAS CRÍTICAS PARA ARADO/SIEMBRA/RIEGO
+    // Referencias para arado/siembra/riego
     [SerializeField] private PlowManager plowManager;
     [SerializeField] private TileCursorController tileCursorController;
-    // <<
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip[] attackSounds;
@@ -105,10 +104,6 @@ public class PlayerActionController : MonoBehaviour
 
         if (Input.GetButtonDown("Action"))
             HandleAction();
-
-        // YA NO NECESITAMOS ESTO PORQUE EL HOTBAR LO MANEJA
-        // if (Input.GetButtonDown("ChangeWeapon"))
-        //     ChangeEquip(1);
     }
 
     private void HandleAction()
@@ -180,6 +175,11 @@ public class PlayerActionController : MonoBehaviour
             case EquipType.Arco:
                 animator.SetBool("Disparar", true);
                 Debug.Log("Disparar Arco");
+                break;
+
+            case EquipType.Antorcha:
+                animator.SetBool("UsarAntorcha", true);
+                Debug.Log("Usar Antorcha");
                 break;
         }
 
@@ -327,6 +327,7 @@ public class PlayerActionController : MonoBehaviour
         animator.SetBool("Arar", false);
         animator.SetBool("Regar", false);
         animator.SetBool("Disparar", false);
+        animator.SetBool("UsarAntorcha", false);
         animator.SetInteger("AttackIndex", 0);
     }
 
@@ -368,6 +369,7 @@ public class PlayerActionController : MonoBehaviour
         Debug.Log("Equipo cambiado a: " + equipActual);
     }
 
+    // MÉTODOS PÚBLICOS DE ACCESO
     public int GetBaseDamage()
     {
         return baseDamage;
