@@ -9,7 +9,6 @@ public class LootDrop : MonoBehaviour
     {
         PlayerActionController playerAction = other.GetComponent<PlayerActionController>();
 
-        
         if (playerAction != null && other.CompareTag("Player"))
         {
             Debug.Log($"Jugador agarró {resourceName}");

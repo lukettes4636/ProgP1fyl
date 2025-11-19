@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Script SIMPLE del Hotbar - 9 herramientas fijas con navegación bidireccional
 public class HotbarUI : MonoBehaviour
 {
     [Header("Slots - Iconos (Arrastra los 9 iconos en orden)")]
@@ -15,7 +14,7 @@ public class HotbarUI : MonoBehaviour
     [SerializeField] private Image slot8Icon;
     [SerializeField] private Image slot9Icon;
 
-    [Header("Slots - Marcos de selección (Arrastra los 9 marcos en orden)")]
+    [Header("Slots - Marcos de selecciï¿½n (Arrastra los 9 marcos en orden)")]
     [SerializeField] private GameObject slot1Selection;
     [SerializeField] private GameObject slot2Selection;
     [SerializeField] private GameObject slot3Selection;
@@ -37,10 +36,9 @@ public class HotbarUI : MonoBehaviour
     [SerializeField] private Sprite semilla1Sprite;
     [SerializeField] private Sprite semilla2Sprite;
 
-    private int slotActual = 0; // Qué slot está seleccionado (0 a 8)
+    private int slotActual = 0; 
     private PlayerActionController playerController;
 
-    // Control de input para evitar múltiples cambios
     private bool nextWeaponPressed = false;
     private bool prevWeaponPressed = false;
 
@@ -50,11 +48,10 @@ public class HotbarUI : MonoBehaviour
 
         if (playerController == null)
         {
-            Debug.LogError("No se encontró PlayerActionController!");
+            Debug.LogError("No se encontrï¿½ PlayerActionController!");
             return;
         }
 
-        // Configurar los iconos fijos de cada slot
         slot1Icon.sprite = espadaSprite;
         slot2Icon.sprite = hachaSprite;
         slot3Icon.sprite = picoSprite;
@@ -65,48 +62,40 @@ public class HotbarUI : MonoBehaviour
         slot8Icon.sprite = semilla1Sprite;
         slot9Icon.sprite = semilla2Sprite;
 
-        // Seleccionar el primer slot al inicio
         ActualizarSeleccion();
     }
 
     void Update()
     {
-        // Leer el eje ChangeWeapon (positivo = R1, negativo = L1)
         float axisValue = Input.GetAxis("ChangeWeapon");
 
-        // AVANZAR (R1 - valor positivo mayor a 0.5)
         if (axisValue > 0.5f && !nextWeaponPressed)
         {
             nextWeaponPressed = true;
             CambiarSlotAdelante();
         }
 
-        // Resetear cuando se suelta R1
         if (axisValue <= 0.5f && nextWeaponPressed)
         {
             nextWeaponPressed = false;
         }
 
-        // RETROCEDER (L1 - valor negativo menor a -0.5)
         if (axisValue < -0.5f && !prevWeaponPressed)
         {
             prevWeaponPressed = true;
             CambiarSlotAtras();
         }
 
-        // Resetear cuando se suelta L1
         if (axisValue >= -0.5f && prevWeaponPressed)
         {
             prevWeaponPressed = false;
         }
     }
 
-    // Cambia al siguiente slot (adelante)
     void CambiarSlotAdelante()
     {
         slotActual = slotActual + 1;
 
-        // Si llega al final, volver al principio
         if (slotActual > 8)
         {
             slotActual = 0;
@@ -115,12 +104,10 @@ public class HotbarUI : MonoBehaviour
         ActualizarSeleccion();
     }
 
-    // Cambia al slot anterior (atrás)
     void CambiarSlotAtras()
     {
         slotActual = slotActual - 1;
 
-        // Si llega al principio, ir al final
         if (slotActual < 0)
         {
             slotActual = 8;
@@ -129,10 +116,8 @@ public class HotbarUI : MonoBehaviour
         ActualizarSeleccion();
     }
 
-    // Actualiza qué slot está seleccionado y cambia la herramienta
     void ActualizarSeleccion()
     {
-        // Apagar TODOS los marcos de selección
         slot1Selection.SetActive(false);
         slot2Selection.SetActive(false);
         slot3Selection.SetActive(false);
@@ -143,7 +128,6 @@ public class HotbarUI : MonoBehaviour
         slot8Selection.SetActive(false);
         slot9Selection.SetActive(false);
 
-        // Encender solo el marco del slot actual y cambiar herramienta
         if (slotActual == 0)
         {
             slot1Selection.SetActive(true);

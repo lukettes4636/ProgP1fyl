@@ -12,8 +12,6 @@ public class EnemyHealth : MonoBehaviour
     public float lootDropForce = 5f;
     public float lootSpreadRadius = 1f;
     
-    
-    
     [Header("Audio Settings")]
     public AudioClip damageSound;
     public AudioClip deathSound;
@@ -58,8 +56,6 @@ public class EnemyHealth : MonoBehaviour
         
         originalPosition = transform.position;
         
-        
-        
         healthSystem.OnDamageTaken.AddListener(OnEnemyDamageTaken);
         healthSystem.OnDeath.AddListener(OnEnemyDeath);
         healthSystem.OnHealed.AddListener(OnEnemyHealed);
@@ -78,8 +74,6 @@ public class EnemyHealth : MonoBehaviour
         {
             StartDamageFlash();
         }
-        
-        
     }
     
     private void OnEnemyDeath()
@@ -100,8 +94,6 @@ public class EnemyHealth : MonoBehaviour
             }
         }
         
-        
-        
         if (dropLootOnDeath && lootPrefab != null)
         {
             DropLoot();
@@ -117,8 +109,6 @@ public class EnemyHealth : MonoBehaviour
         {
             StartCoroutine(FadeOut());
         }
-        
-        
         
         if (canRespawn)
         {
@@ -139,7 +129,6 @@ public class EnemyHealth : MonoBehaviour
         }
         
         PlayAudioClip(healSound);
-        
     }
     
     private void DropLoot()
@@ -198,8 +187,7 @@ public class EnemyHealth : MonoBehaviour
         return healthSystem.HealthPercentage;
     }
 
-
-private void StartDamageFlash()
+    private void StartDamageFlash()
     {
         if (spriteRenderer != null && damageFlashEnabled)
         {
@@ -223,8 +211,6 @@ private void StartDamageFlash()
             audioSource.PlayOneShot(clip);
         }
     }
-    
-    
     
     private void EnableRagdoll()
     {
@@ -279,8 +265,6 @@ private void StartDamageFlash()
         {
             movementScript.enabled = true;
         }
-        
-        
         
         gameObject.SetActive(true);
     }

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Animator))]
 public class PlayerActionController : MonoBehaviour
 {
-    // 9 herramientas: Espada, Hacha, Pico, Arado, Regadera, Arco, Antorcha, Semilla1, Semilla2
     public enum EquipType
     {
         None, Espada, Hacha, Pico, Arado, Regadera, Arco, Antorcha,
@@ -19,7 +18,6 @@ public class PlayerActionController : MonoBehaviour
     private Dictionary<string, int> inventory = new Dictionary<string, int>();
     [SerializeField] private List<string> inventoryDisplay = new List<string>();
 
-    // Diccionario para mapear EquipType de Semillas a un nombre de ítem en el inventario
     private readonly Dictionary<EquipType, string> SeedItemNames = new Dictionary<EquipType, string>
     {
         { EquipType.Semilla1, "SemillasDeGirasol" },
@@ -30,7 +28,6 @@ public class PlayerActionController : MonoBehaviour
     private PlayerMovement playerMovement;
     private SpriteRenderer spriteRenderer;
 
-    // Referencias para arado/siembra/riego
     [SerializeField] private PlowManager plowManager;
     [SerializeField] private TileCursorController tileCursorController;
 
@@ -51,7 +48,6 @@ public class PlayerActionController : MonoBehaviour
     [Tooltip("Duración máxima de una acción antes de desbloquear automáticamente (seguridad).")]
     [SerializeField] private float maxActionDuration = 0.6f;
 
-    // Temporizador simple para finalizar acciones
     private float actionTimer = 0f;
 
     private void Awake()
@@ -64,7 +60,6 @@ public class PlayerActionController : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // Inicializar managers
         plowManager = PlowManager.Instance;
 
         if (plowManager == null)
@@ -74,7 +69,6 @@ public class PlayerActionController : MonoBehaviour
 
         tileCursorController = FindObjectOfType<TileCursorController>();
 
-        // Código temporal para pruebas (Inventario)
         foreach (var item in SeedItemNames)
         {
             inventory.Add(item.Value, 10);
@@ -91,7 +85,6 @@ public class PlayerActionController : MonoBehaviour
 
     private void Update()
     {
-        // Si estamos en acción, reducimos el temporizador y liberamos al terminar
         if (enAccion)
         {
             actionTimer -= Time.deltaTime;
@@ -112,7 +105,6 @@ public class PlayerActionController : MonoBehaviour
 
         bool isSeedEquipped = equipActual == EquipType.Semilla1 || equipActual == EquipType.Semilla2;
 
-        // 1. Siembra Instantánea
         if (isSeedEquipped)
         {
             if (!HasItem(SeedItemNames[equipActual]))
@@ -124,13 +116,11 @@ public class PlayerActionController : MonoBehaviour
             return;
         }
 
-        // 2. Otras acciones (con animación y bloqueo temporal)
         enAccion = true;
         actionTimer = maxActionDuration;
 
         Vector2 actionDirection = playerMovement.GetLastDirection();
 
-        // Actualiza Animator y Sprite
         animator.SetFloat("MoveX", actionDirection.x);
         animator.SetFloat("MoveY", actionDirection.y);
         animator.SetFloat("LastMoveX", actionDirection.x);
@@ -146,7 +136,6 @@ public class PlayerActionController : MonoBehaviour
             );
         }
 
-        // Ejecutar animación según herramienta
         switch (equipActual)
         {
             case EquipType.Espada:
@@ -186,7 +175,6 @@ public class PlayerActionController : MonoBehaviour
         TryHitResource(actionDirection);
     }
 
-    // Función de siembra instantánea
     private void ExecuteSeedActionInstant()
     {
         bool isSeedEquipped = equipActual == EquipType.Semilla1 || equipActual == EquipType.Semilla2;
@@ -212,7 +200,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // Llamado por el evento de animación "ExecutePlowAction"
     public void ExecutePlowAction()
     {
         if (equipActual != EquipType.Arado || plowManager == null || tileCursorController == null)
@@ -237,7 +224,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // Llamado por el evento de animación "ExecuteWaterAction"
     public void ExecuteWaterAction()
     {
         if (equipActual != EquipType.Regadera || plowManager == null || tileCursorController == null)
@@ -360,7 +346,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // MÉTODO PÚBLICO PARA CAMBIAR EQUIPO DESDE EL HOTBAR
     public void SetEquip(EquipType newEquip)
     {
         if (enAccion) return;
@@ -369,7 +354,6 @@ public class PlayerActionController : MonoBehaviour
         Debug.Log("Equipo cambiado a: " + equipActual);
     }
 
-    // MÉTODOS PÚBLICOS DE ACCESO
     public int GetBaseDamage()
     {
         return baseDamage;

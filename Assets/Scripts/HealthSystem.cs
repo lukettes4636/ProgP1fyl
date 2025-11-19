@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-// Comentario: Sistema de salud genérico con eventos para daño, curación y muerte
-// Comentario: Mantiene los mismos parámetros y comportamiento actual
 
 public class HealthSystem : MonoBehaviour
 {
@@ -22,13 +20,11 @@ public class HealthSystem : MonoBehaviour
     public bool IsDead => isDead;
     public float HealthPercentage => (float)currentHealth / maxHealth;
     
-    // Comentario: Inicializa la salud al valor máximo al iniciar
     private void Awake()
     {
         currentHealth = maxHealth;
     }
     
-    // Comentario: Aplica daño y dispara eventos asociados
     public void TakeDamage(int damage)
     {
         if (isDead || damage <= 0) return;
@@ -44,7 +40,6 @@ public class HealthSystem : MonoBehaviour
         }
     }
     
-    // Comentario: Cura una cantidad y dispara eventos si cambia la salud
     public void Heal(int amount)
     {
         if (isDead || amount <= 0) return;
@@ -59,7 +54,6 @@ public class HealthSystem : MonoBehaviour
         }
     }
     
-    // Comentario: Establece la salud a un valor concreto dentro de límites
     public void SetHealth(int newHealth)
     {
         if (isDead) return;
@@ -73,7 +67,6 @@ public class HealthSystem : MonoBehaviour
         }
     }
     
-    // Comentario: Restaura salud completa si no está muerto
     public void RestoreFullHealth()
     {
         if (isDead) return;
@@ -82,7 +75,6 @@ public class HealthSystem : MonoBehaviour
         OnHealthChanged?.Invoke(currentHealth);
     }
     
-    // Comentario: Marca el estado de muerte y dispara el evento de muerte
     private void Die()
     {
         if (isDead) return;
@@ -96,7 +88,6 @@ public class HealthSystem : MonoBehaviour
         }
     }
     
-    // Comentario: Revive al objeto restaurando salud máxima
     public void Revive()
     {
         isDead = false;

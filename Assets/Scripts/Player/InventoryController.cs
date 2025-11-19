@@ -26,7 +26,6 @@ public class InventoryController : MonoBehaviour
 
     private void Update()
     {
-        // Usa el botón "Inventory" definido en el Input Manager clásico
         if (Input.GetButtonDown("Inventory"))
         {
             ToggleInventory();

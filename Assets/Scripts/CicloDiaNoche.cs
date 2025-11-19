@@ -11,7 +11,7 @@ public class CicloDiaNoche : MonoBehaviour
     public float horaInicial = 6f;
 
     [Header("Colores")]
-    public Color colorNoche = new Color(0f, 0f, 0f, 0.5f); // Negro semitransparente
+    public Color colorNoche = new Color(0f, 0f, 0f, 0.5f); 
 
     [Header("Referencias")]
     [Tooltip("Asigna el SpriteRenderer que hará de overlay")]

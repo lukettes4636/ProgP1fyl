@@ -33,7 +33,6 @@ public class JoystickVibration : MonoBehaviour
 
     private void Update()
     {
-        // Este bloque es opcional — en caso de querer detener vibraciones manualmente por tiempo
         if (isVibrating)
         {
             vibrationTimer -= Time.deltaTime;
@@ -54,14 +53,8 @@ public class JoystickVibration : MonoBehaviour
     {
         if (!enableVibration) return;
 
-        // Nota: Unity no tiene vibración nativa sin InputSystem,
-        // pero se puede integrar fácilmente con XInputDotNet si lo usas.
-        // Aquí simplemente marcamos un estado de vibración activo.
         isVibrating = true;
         vibrationTimer = duration;
-
-        //  Si más adelante agregas XInputDotNet, aquí podrías hacer:
-        // XInputDotNetPure.GamePad.SetVibration(0, lowFreq, highFreq);
 
         Debug.Log($"[VIBRATION] Low: {lowFreq} | High: {highFreq} | Duration: {duration}");
     }
@@ -70,9 +63,6 @@ public class JoystickVibration : MonoBehaviour
     {
         isVibrating = false;
         vibrationTimer = 0f;
-
-        // Si usas XInputDotNet:
-        // XInputDotNetPure.GamePad.SetVibration(0, 0, 0);
     }
 
     public void SetVibrationEnabled(bool enabled)

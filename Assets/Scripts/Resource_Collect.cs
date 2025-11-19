@@ -16,14 +16,13 @@ public class Resource_Collect : MonoBehaviour
     [SerializeField] private float shakeMagnitude = 0.05f;
     private Vector3 originalPosition;
 
-    private JoystickVibration joystickVibration; //  referencia al sistema de vibración
+    private JoystickVibration joystickVibration; 
 
     private void Start()
     {
         current_Health = max_Health;
         originalPosition = transform.position;
 
-        // Busca automáticamente el componente de vibración en el jugador
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -38,10 +37,9 @@ public class Resource_Collect : MonoBehaviour
             Instantiate(resoursedrop_Prefab, transform.position, Quaternion.identity);
         }
 
-        //  Vibración al destruir completamente el recurso
         if (joystickVibration != null)
         {
-            joystickVibration.OnMining(); // puedes cambiar a OnAttackTree() o lo que prefieras
+            joystickVibration.OnMining(); 
         }
 
         Destroy(gameObject);
@@ -60,10 +58,9 @@ public class Resource_Collect : MonoBehaviour
 
         StartCoroutine(Shake());
 
-        //  Vibración leve al golpear aunque no se destruya
         if (joystickVibration != null)
         {
-            joystickVibration.OnMining(); // usa vibración de minado / corte
+            joystickVibration.OnMining(); 
         }
 
         if (current_Health <= 0)

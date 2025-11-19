@@ -41,17 +41,14 @@ public class TileCursorController : MonoBehaviour
 
     private void Update()
     {
-        // El Update llama a la misma función pública para obtener la posición y actualizar la visualización
         Vector3Int targetCell = GetCurrentCellPosition();
 
-        // Muestra u oculta el cursor y lo posiciona.
         if (targetCell.x != 999)
         {
             if (!spriteRenderer.enabled) spriteRenderer.enabled = true;
 
-            // Posiciona el cursor en el centro del tile objetivo
             Vector3 targetWorldPos = targetTilemap.CellToWorld(targetCell);
-            targetWorldPos += targetTilemap.cellSize / 2f; // Centrar
+            targetWorldPos += targetTilemap.cellSize / 2f; 
 
             transform.position = targetWorldPos + offset;
         }
@@ -61,9 +58,6 @@ public class TileCursorController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    ///  MÉTODO PÚBLICO CORREGIDO. Calcula la posición de la celda objetivo y la limita a 4 direcciones.
-    /// </summary>
     public Vector3Int GetCurrentCellPosition()
     {
         if (targetTilemap == null || playerTransform == null || playerActionController == null || playerMovement == null)
@@ -73,7 +67,6 @@ public class TileCursorController : MonoBehaviour
 
         var equip = playerActionController.GetCurrentEquip();
 
-        // La compatibilidad con PlayerActionController.EquipType se mantiene:
         bool isToolActive = equip == PlayerActionController.EquipType.Hacha ||
                             equip == PlayerActionController.EquipType.Pico ||
                             equip == PlayerActionController.EquipType.Arado ||
@@ -93,32 +86,26 @@ public class TileCursorController : MonoBehaviour
             return Vector3Int.one * 999;
         }
 
-        // -------------------------------------------------------------------
-        // LÓGICA DE 4 DIRECCIONES CARDINALES (SOLUCIÓN)
-        // -------------------------------------------------------------------
         float angle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
 
-        // Normalizar el ángulo a 0-360
         if (angle < 0) angle += 360;
 
-        // Forzamos la dirección a la más cercana (Arriba: 45-135, Izquierda: 135-225, Abajo: 225-315, Derecha: 315-45)
         if (angle >= 45 && angle < 135)
         {
-            aimDir = Vector2.up;    // Arriba
+            aimDir = Vector2.up;    
         }
         else if (angle >= 135 && angle < 225)
         {
-            aimDir = Vector2.left;  // Izquierda
+            aimDir = Vector2.left;  
         }
         else if (angle >= 225 && angle < 315)
         {
-            aimDir = Vector2.down;  // Abajo
+            aimDir = Vector2.down;  
         }
         else
         {
-            aimDir = Vector2.right; // Derecha 
+            aimDir = Vector2.right; 
         }
-        // -------------------------------------------------------------------
 
         aimDir.Normalize();
 
@@ -134,10 +121,8 @@ public class TileCursorController : MonoBehaviour
 
         float effectiveDistance = distanceTiles * tileSize;
 
-        // Ajustamos la posición objetivo usando la dirección forzada (aimDir)
         Vector3 targetWorldPos = playerTransform.position + (Vector3)(aimDir * effectiveDistance);
 
-        // Convertir la posición del mundo a celda
         Vector3Int cellPosition = targetTilemap.WorldToCell(targetWorldPos);
 
         return cellPosition;
