@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3a89983df82e63645b0b7f766c8dd6c8
+guid: f1e1002a0f286c341a5195073fbb4621
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,127 +123,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Idle_Izq_0
+      name: Talar_Izq 1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 13
-        height: 20
+        width: 18
+        height: 28
       alignment: 9
-      pivot: {x: 0.4942293, y: 0.12489647}
+      pivot: {x: 0.3509534, y: 0.37285942}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c988c4d72a3231f489ce5e092169230c
-      internalID: -300536188
+      spriteID: 1b6afb9f6a6b94f4b9fef8a7393c2768
+      internalID: 363671463
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_1
+      name: Talar_Izq 1_1
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 13
-        height: 20
+        x: 57
+        y: 3
+        width: 20
+        height: 25
       alignment: 9
-      pivot: {x: 0.49422926, y: 0.12114543}
+      pivot: {x: 0.69089544, y: 0.29775432}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6c79218ddca46554d940b3ffee744bb0
-      internalID: -535493028
+      spriteID: 8e3f557b622bbcf47a08175c57ab1f51
+      internalID: 1077248264
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_2
+      name: Talar_Izq 1_2
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 13
+        x: 117
+        y: 8
+        width: 24
         height: 19
       alignment: 9
-      pivot: {x: 0.50628895, y: 0.12987155}
+      pivot: {x: 0.7290599, y: 0.13374831}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7dfa9dd61373eb245a26985c95c88d55
-      internalID: -518355694
+      spriteID: 758095a74f25f1b46a41906937560733
+      internalID: 1038468546
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_3
+      name: Talar_Izq 1_3
       rect:
         serializedVersion: 2
-        x: 192
-        y: 0
-        width: 13
+        x: 180
+        y: 3
+        width: 32
+        height: 23
+      alignment: 9
+      pivot: {x: 0.6009965, y: 0.31849977}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dacd193f70768a340ac7c6e40fa39db5
+      internalID: -1443140946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Talar_Izq 1_4
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 2
+        width: 37
+        height: 23
+      alignment: 9
+      pivot: {x: 0.53038067, y: 0.37083098}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c319c1d5221504e448113cc1bb233164
+      internalID: -1546980847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Talar_Izq 1_5
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 8
+        width: 24
         height: 19
       alignment: 9
-      pivot: {x: 0.49999884, y: 0.13417536}
+      pivot: {x: 0.23301823, y: 0.12726296}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b450b3c910e12e2479211a5cfe239073
-      internalID: 341505410
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle_Izq_4
-      rect:
-        serializedVersion: 2
-        x: 256
-        y: 0
-        width: 13
-        height: 20
-      alignment: 9
-      pivot: {x: 0.50628895, y: 0.12384625}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 58c24201dfc6e094abea33bc9a9936a4
-      internalID: -447521001
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle_Izq_5
-      rect:
-        serializedVersion: 2
-        x: 320
-        y: 0
-        width: 13
-        height: 20
-      alignment: 9
-      pivot: {x: 0.5, y: 0.11975763}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 95cafcc44a789a54f8f692d0fd547002
-      internalID: 1274186853
+      spriteID: c2ffa59baa79db84dbd3a4dc7ea6184c
+      internalID: 1708232096
       vertices: []
       indices: 
       edges: []
@@ -259,12 +259,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Idle_Izq_0: -300536188
-      Idle_Izq_1: -535493028
-      Idle_Izq_2: -518355694
-      Idle_Izq_3: 341505410
-      Idle_Izq_4: -447521001
-      Idle_Izq_5: 1274186853
+      Talar_Izq 1_0: 363671463
+      Talar_Izq 1_1: 1077248264
+      Talar_Izq 1_2: 1038468546
+      Talar_Izq 1_3: -1443140946
+      Talar_Izq 1_4: -1546980847
+      Talar_Izq 1_5: 1708232096
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

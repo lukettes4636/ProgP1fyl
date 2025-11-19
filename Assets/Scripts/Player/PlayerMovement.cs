@@ -6,13 +6,13 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Configuración de movimiento")]
-    [SerializeField] private float moveSpeed = 5f;    
-    [SerializeField] private float runSpeed = 8f;     
-    [SerializeField] private float spriteScale = 2f;  
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float runSpeed = 8f;
+    [SerializeField] private float spriteScale = 2f;
 
-    private Vector2 moveInput;       
-    private Vector2 aimInput;        
-    private Vector2 lastDirection = Vector2.down; 
+    private Vector2 moveInput;
+    private Vector2 aimInput;
+    private Vector2 lastDirection = Vector2.down;
 
     [Header("Configuración de dash")]
     [SerializeField] private float dashSpeed = 15f;
@@ -62,6 +62,9 @@ public class PlayerMovement : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+
+        // IMPORTANTE: Establecer escala fija sin flip
+        transform.localScale = new Vector3(spriteScale, spriteScale, spriteScale);
     }
 
     private void Update()
@@ -92,14 +95,8 @@ public class PlayerMovement : MonoBehaviour
             lastDirection = moveInput.normalized;
         }
 
-        if (lastDirection.x != 0)
-        {
-            spriteRenderer.transform.localScale = new Vector3(
-                lastDirection.x < 0 ? -spriteScale : spriteScale,
-                spriteScale,
-                spriteScale
-            );
-        }
+        // ✅ REMOVIDO: Ya no flipeamos el sprite por código
+        // El Animator controlará la dirección visual
 
         isRunning = Input.GetButton("Run");
     }
@@ -166,11 +163,33 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("IsMoving", isMoving);
         animator.SetBool("IsRunning", isRunning);
 
-        animator.SetFloat("MoveX", lastDirection.x);
-        animator.SetFloat("MoveY", lastDirection.y);
+        // Normalizar dirección a las 4 cardinales para animaciones claras
+        Vector2 animDirection = GetCardinalDirection(lastDirection);
 
-        animator.SetFloat("LastMoveX", lastDirection.x);
-        animator.SetFloat("LastMoveY", lastDirection.y);
+        animator.SetFloat("MoveX", animDirection.x);
+        animator.SetFloat("MoveY", animDirection.y);
+
+        animator.SetFloat("LastMoveX", animDirection.x);
+        animator.SetFloat("LastMoveY", animDirection.y);
+    }
+
+    // ✅ NUEVO: Obtener dirección cardinal para animaciones limpias
+    private Vector2 GetCardinalDirection(Vector2 direction)
+    {
+        if (direction.sqrMagnitude < 0.01f)
+            return Vector2.down;
+
+        direction.Normalize();
+
+        // Horizontal tiene prioridad (izquierda/derecha)
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        {
+            return new Vector2(Mathf.Sign(direction.x), 0);
+        }
+        else // Vertical (arriba/abajo)
+        {
+            return new Vector2(0, Mathf.Sign(direction.y));
+        }
     }
 
     private void HandleFootsteps()
@@ -220,7 +239,7 @@ public class PlayerMovement : MonoBehaviour
 
     public Vector2 GetLastDirection()
     {
-        return lastDirection;
+        return GetCardinalDirection(lastDirection);
     }
 
     public SpriteRenderer GetSpriteRenderer()

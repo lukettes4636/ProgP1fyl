@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3a89983df82e63645b0b7f766c8dd6c8
+guid: d4b1a4d456aba864cb2fa59a21603108
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,127 +123,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Idle_Izq_0
+      name: Minar_Izq_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 13
+        y: 2
+        width: 15
+        height: 28
+      alignment: 9
+      pivot: {x: 0.4310371, y: 0.090248995}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a60ddbd27b561f241b6223e2375b0529
+      internalID: -1370677997
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minar_Izq_1
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 2
+        width: 24
+        height: 25
+      alignment: 9
+      pivot: {x: 0.73118466, y: 0.10502695}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c90aa99a3c5ae540b3d58bac0b8806f
+      internalID: -489195618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Minar_Izq_2
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 1
+        width: 22
         height: 20
       alignment: 9
-      pivot: {x: 0.4942293, y: 0.12489647}
+      pivot: {x: 0.7009062, y: 0.18496189}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c988c4d72a3231f489ce5e092169230c
-      internalID: -300536188
+      spriteID: a8ecb310bb226d743a82f8ce849b3249
+      internalID: -1122573882
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_1
+      name: Minar_Izq_3
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 13
-        height: 20
+        x: 181
+        y: 1
+        width: 24
+        height: 26
       alignment: 9
-      pivot: {x: 0.49422926, y: 0.12114543}
+      pivot: {x: 0.731184, y: 0.13830301}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6c79218ddca46554d940b3ffee744bb0
-      internalID: -535493028
+      spriteID: e1ea82b780e397b4ea9236a16fe27250
+      internalID: 1338640462
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_2
+      name: Minar_Izq_4
       rect:
         serializedVersion: 2
-        x: 128
+        x: 243
         y: 0
-        width: 13
-        height: 19
+        width: 30
+        height: 27
       alignment: 9
-      pivot: {x: 0.50628895, y: 0.12987155}
+      pivot: {x: 0.65360004, y: 0.16563128}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7dfa9dd61373eb245a26985c95c88d55
-      internalID: -518355694
+      spriteID: d6792c909d5fe7c44a6046789e4a9185
+      internalID: 1919189325
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_3
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 0
-        width: 13
-        height: 19
-      alignment: 9
-      pivot: {x: 0.49999884, y: 0.13417536}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b450b3c910e12e2479211a5cfe239073
-      internalID: 341505410
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle_Izq_4
-      rect:
-        serializedVersion: 2
-        x: 256
-        y: 0
-        width: 13
-        height: 20
-      alignment: 9
-      pivot: {x: 0.50628895, y: 0.12384625}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 58c24201dfc6e094abea33bc9a9936a4
-      internalID: -447521001
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle_Izq_5
+      name: Minar_Izq_5
       rect:
         serializedVersion: 2
         x: 320
-        y: 0
-        width: 13
-        height: 20
+        y: 2
+        width: 24
+        height: 21
       alignment: 9
-      pivot: {x: 0.5, y: 0.11975763}
+      pivot: {x: 0.27273306, y: 0.12831333}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 95cafcc44a789a54f8f692d0fd547002
-      internalID: 1274186853
+      spriteID: 5fd7ff0e90bbb52478335609d0fd82a8
+      internalID: 2138693406
       vertices: []
       indices: 
       edges: []
@@ -259,12 +259,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Idle_Izq_0: -300536188
-      Idle_Izq_1: -535493028
-      Idle_Izq_2: -518355694
-      Idle_Izq_3: 341505410
-      Idle_Izq_4: -447521001
-      Idle_Izq_5: 1274186853
+      Minar_Izq_0: -1370677997
+      Minar_Izq_1: -489195618
+      Minar_Izq_2: -1122573882
+      Minar_Izq_3: 1338640462
+      Minar_Izq_4: 1919189325
+      Minar_Izq_5: 2138693406
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

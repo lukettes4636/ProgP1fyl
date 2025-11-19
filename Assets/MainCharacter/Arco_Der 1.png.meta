@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3a89983df82e63645b0b7f766c8dd6c8
+guid: 4625c0431dd902e44b40271c8b5e4609
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,127 +123,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Idle_Izq_0
+      name: Arco_Der 1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 13
+        width: 17
         height: 20
       alignment: 9
-      pivot: {x: 0.4942293, y: 0.12489647}
+      pivot: {x: 0.64705884, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c988c4d72a3231f489ce5e092169230c
-      internalID: -300536188
+      spriteID: d80c5507e5ba41b499fc269b94cffb31
+      internalID: 473924899
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_1
+      name: Arco_Der 1_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 63
         y: 0
-        width: 13
+        width: 19
         height: 20
       alignment: 9
-      pivot: {x: 0.49422926, y: 0.12114543}
+      pivot: {x: 0.6315789, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6c79218ddca46554d940b3ffee744bb0
-      internalID: -535493028
+      spriteID: c34665ddb30131540b09a431552d1bee
+      internalID: 1572568426
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_2
+      name: Arco_Der 1_2
       rect:
         serializedVersion: 2
-        x: 128
+        x: 127
         y: 0
-        width: 13
-        height: 19
+        width: 20
+        height: 20
       alignment: 9
-      pivot: {x: 0.50628895, y: 0.12987155}
+      pivot: {x: 0.6, y: 0.15}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7dfa9dd61373eb245a26985c95c88d55
-      internalID: -518355694
+      spriteID: 78801ef40b742f544989938e63b9c802
+      internalID: 1284103177
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_3
+      name: Arco_Der 1_3
       rect:
         serializedVersion: 2
         x: 192
         y: 0
-        width: 13
+        width: 18
         height: 19
       alignment: 9
-      pivot: {x: 0.49999884, y: 0.13417536}
+      pivot: {x: 0.6111111, y: 0.15789473}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b450b3c910e12e2479211a5cfe239073
-      internalID: 341505410
+      spriteID: 374150d2b69588543aa6e6341fd94cb2
+      internalID: 1362291858
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_4
+      name: Arco_Der 1_4
       rect:
         serializedVersion: 2
-        x: 256
+        x: 254
         y: 0
-        width: 13
-        height: 20
+        width: 19
+        height: 19
       alignment: 9
-      pivot: {x: 0.50628895, y: 0.12384625}
+      pivot: {x: 0.68421054, y: 0.15789473}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 58c24201dfc6e094abea33bc9a9936a4
-      internalID: -447521001
+      spriteID: e5d4fd1d31d0a7f4c8cb8b503719151e
+      internalID: -1102890294
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_5
+      name: Arco_Der 1_5
       rect:
         serializedVersion: 2
-        x: 320
+        x: 314
         y: 0
-        width: 13
-        height: 20
+        width: 23
+        height: 19
       alignment: 9
-      pivot: {x: 0.5, y: 0.11975763}
+      pivot: {x: 0.73913044, y: 0.15789473}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 95cafcc44a789a54f8f692d0fd547002
-      internalID: 1274186853
+      spriteID: fa583ed027739994181ad9545b6294cc
+      internalID: 1117855641
       vertices: []
       indices: 
       edges: []
@@ -259,12 +259,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Idle_Izq_0: -300536188
-      Idle_Izq_1: -535493028
-      Idle_Izq_2: -518355694
-      Idle_Izq_3: 341505410
-      Idle_Izq_4: -447521001
-      Idle_Izq_5: 1274186853
+      Arco_Der 1_0: 473924899
+      Arco_Der 1_1: 1572568426
+      Arco_Der 1_2: 1284103177
+      Arco_Der 1_3: 1362291858
+      Arco_Der 1_4: -1102890294
+      Arco_Der 1_5: 1117855641
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

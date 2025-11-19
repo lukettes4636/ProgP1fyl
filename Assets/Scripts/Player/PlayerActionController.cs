@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Animator))]
@@ -26,7 +25,7 @@ public class PlayerActionController : MonoBehaviour
 
     private Animator animator;
     private PlayerMovement playerMovement;
-    private SpriteRenderer spriteRenderer;
+    private DamageHitbox hitboxScript;
 
     [SerializeField] private PlowManager plowManager;
     [SerializeField] private TileCursorController tileCursorController;
@@ -42,12 +41,7 @@ public class PlayerActionController : MonoBehaviour
     [SerializeField] private bool enAccion = false;
 
     [Header("Configuración de acción")]
-    [SerializeField] private float actionRange = 1.2f;
-    [SerializeField] private LayerMask resourceLayer;
-
-    [Tooltip("Duración máxima de una acción antes de desbloquear automáticamente (seguridad).")]
     [SerializeField] private float maxActionDuration = 0.6f;
-
     private float actionTimer = 0f;
 
     private void Awake()
@@ -58,17 +52,17 @@ public class PlayerActionController : MonoBehaviour
 
         animator = GetComponent<Animator>();
         playerMovement = GetComponent<PlayerMovement>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (damageHitbox != null)
+            hitboxScript = damageHitbox.GetComponent<DamageHitbox>();
 
         plowManager = PlowManager.Instance;
-
         if (plowManager == null)
-        {
             plowManager = FindObjectOfType<PlowManager>();
-        }
 
         tileCursorController = FindObjectOfType<TileCursorController>();
 
+        // Inicializar inventario
         foreach (var item in SeedItemNames)
         {
             inventory.Add(item.Value, 10);
@@ -78,9 +72,9 @@ public class PlayerActionController : MonoBehaviour
         UpdateInventoryDisplay();
 
         if (plowManager == null)
-            Debug.LogError("PlayerActionController: PlowManager.Instance es nulo.");
+            Debug.LogWarning("PlayerActionController: PlowManager no encontrado.");
         if (tileCursorController == null)
-            Debug.LogError("PlayerActionController: No se encontró TileCursorController.");
+            Debug.LogWarning("PlayerActionController: TileCursorController no encontrado.");
     }
 
     private void Update()
@@ -121,20 +115,11 @@ public class PlayerActionController : MonoBehaviour
 
         Vector2 actionDirection = playerMovement.GetLastDirection();
 
+        // Actualizar parámetros del animator
         animator.SetFloat("MoveX", actionDirection.x);
         animator.SetFloat("MoveY", actionDirection.y);
         animator.SetFloat("LastMoveX", actionDirection.x);
         animator.SetFloat("LastMoveY", actionDirection.y);
-
-        if (actionDirection.x != 0)
-        {
-            float baseScale = playerMovement.GetSpriteRenderer().transform.localScale.y;
-            spriteRenderer.transform.localScale = new Vector3(
-                actionDirection.x < 0 ? -baseScale : baseScale,
-                baseScale,
-                baseScale
-            );
-        }
 
         switch (equipActual)
         {
@@ -171,8 +156,6 @@ public class PlayerActionController : MonoBehaviour
                 Debug.Log("Usar Antorcha");
                 break;
         }
-
-        TryHitResource(actionDirection);
     }
 
     private void ExecuteSeedActionInstant()
@@ -190,7 +173,6 @@ public class PlayerActionController : MonoBehaviour
         }
 
         int seedIndex = (int)equipActual - (int)EquipType.Semilla1;
-
         bool wasPlanted = plowManager.PlantSeedAt(cellPos, seedIndex);
 
         if (wasPlanted)
@@ -200,44 +182,122 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
+    // ========== MÉTODOS LLAMADOS POR ANIMATION EVENTS ==========
+
+    /// <summary>
+    /// Activa el hitbox de daño. Llamar desde Animation Event.
+    /// </summary>
+    public void ActivateHitbox()
+    {
+        if (hitboxScript != null)
+        {
+            hitboxScript.ActivateHitbox();
+        }
+        else
+        {
+            Debug.LogWarning("ActivateHitbox: hitboxScript es null");
+        }
+    }
+
+    /// <summary>
+    /// Desactiva el hitbox de daño. Llamar desde Animation Event.
+    /// </summary>
+    public void DisableHitbox()
+    {
+        if (hitboxScript != null)
+        {
+            hitboxScript.DeactivateHitbox();
+        }
+    }
+
+    /// <summary>
+    /// Ejecuta acción de arado. Llamar desde Animation Event.
+    /// </summary>
     public void ExecutePlowAction()
     {
         if (equipActual != EquipType.Arado || plowManager == null || tileCursorController == null)
         {
-            Debug.LogWarning("Plow/Harvest Action fallida: Manager(s) null o herramienta incorrecta.");
+            Debug.LogWarning("ExecutePlowAction: Requisitos no cumplidos");
             return;
         }
 
         Vector3Int cellPos = tileCursorController.GetCurrentCellPosition();
-
         if (cellPos.x == 999) return;
 
         bool isReadyToHarvest = plowManager.IsCropReadyToHarvest(cellPos);
 
         if (isReadyToHarvest)
-        {
             plowManager.HarvestAt(cellPos);
-        }
         else
-        {
             plowManager.PlowAt(cellPos);
-        }
     }
 
+    /// <summary>
+    /// Ejecuta acción de regar. Llamar desde Animation Event.
+    /// </summary>
     public void ExecuteWaterAction()
     {
         if (equipActual != EquipType.Regadera || plowManager == null || tileCursorController == null)
         {
-            Debug.LogWarning("WaterAction fallida: Manager(s) null o herramienta incorrecta.");
+            Debug.LogWarning("ExecuteWaterAction: Requisitos no cumplidos");
             return;
         }
 
         Vector3Int cellPos = tileCursorController.GetCurrentCellPosition();
-
         if (cellPos.x == 999) return;
 
         plowManager.WaterAt(cellPos);
     }
+
+    /// <summary>
+    /// Finaliza el estado de acción. Llamar desde Animation Event.
+    /// </summary>
+    public void EndActionState()
+    {
+        enAccion = false;
+
+        animator.SetBool("Atacando", false);
+        animator.SetBool("Talar", false);
+        animator.SetBool("Minar", false);
+        animator.SetBool("Arar", false);
+        animator.SetBool("Regar", false);
+        animator.SetBool("Disparar", false);
+        animator.SetBool("UsarAntorcha", false);
+        animator.SetInteger("AttackIndex", 0);
+    }
+
+    // ========== MÉTODOS DE AUDIO ==========
+
+    private void PlayAttackSound()
+    {
+        if (attackSounds != null && attackSounds.Length > 0 && audioSource != null)
+        {
+            AudioClip clip = attackSounds[UnityEngine.Random.Range(0, attackSounds.Length)];
+            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
+            audioSource.PlayOneShot(clip, audioVolume);
+        }
+    }
+
+    private void PlayTreeCuttingSound()
+    {
+        if (treeCuttingSounds != null && treeCuttingSounds.Length > 0 && audioSource != null)
+        {
+            AudioClip clip = treeCuttingSounds[UnityEngine.Random.Range(0, treeCuttingSounds.Length)];
+            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
+            audioSource.PlayOneShot(clip, audioVolume);
+        }
+    }
+
+    public void PlayDashSound()
+    {
+        if (dashSound != null && audioSource != null)
+        {
+            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
+            audioSource.PlayOneShot(dashSound, audioVolume);
+        }
+    }
+
+    // ========== MÉTODOS DE INVENTARIO ==========
 
     public void CollectResource(string resourceName, int amount)
     {
@@ -269,87 +329,11 @@ public class PlayerActionController : MonoBehaviour
             inventoryDisplay.Add($"{item.Key}: {item.Value}");
     }
 
-    private void TryHitResource(Vector2 direction)
-    {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, actionRange, resourceLayer);
-        if (hit.collider != null)
-        {
-            Resource_Collect resource = hit.collider.GetComponent<Resource_Collect>();
-            if (resource != null)
-            {
-                resource.TakeHit(equipActual, baseDamage);
-            }
-        }
-    }
-
-    public void ActivateHitbox()
-    {
-        Vector2 lastDirection = playerMovement.GetLastDirection();
-        DamageHitbox hitboxScript = damageHitbox.GetComponent<DamageHitbox>();
-
-        if (hitboxScript != null)
-            hitboxScript.Initialize(equipActual, baseDamage);
-
-        damageHitbox.transform.localPosition = lastDirection * 0.4f;
-        float angle = Mathf.Atan2(lastDirection.y, lastDirection.x) * Mathf.Rad2Deg;
-        damageHitbox.transform.rotation = Quaternion.Euler(0, 0, angle + 90f);
-        damageHitbox.SetActive(true);
-    }
-
-    public void DisableHitbox()
-    {
-        damageHitbox.SetActive(false);
-        damageHitbox.transform.localPosition = Vector3.zero;
-        damageHitbox.transform.localRotation = Quaternion.identity;
-    }
-
-    public void EndActionState()
-    {
-        enAccion = false;
-
-        animator.SetBool("Atacando", false);
-        animator.SetBool("Talar", false);
-        animator.SetBool("Minar", false);
-        animator.SetBool("Arar", false);
-        animator.SetBool("Regar", false);
-        animator.SetBool("Disparar", false);
-        animator.SetBool("UsarAntorcha", false);
-        animator.SetInteger("AttackIndex", 0);
-    }
-
-    private void PlayAttackSound()
-    {
-        if (attackSounds != null && attackSounds.Length > 0 && audioSource != null)
-        {
-            AudioClip clip = attackSounds[UnityEngine.Random.Range(0, attackSounds.Length)];
-            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
-            audioSource.PlayOneShot(clip, audioVolume);
-        }
-    }
-
-    private void PlayTreeCuttingSound()
-    {
-        if (treeCuttingSounds != null && treeCuttingSounds.Length > 0 && audioSource != null)
-        {
-            AudioClip clip = treeCuttingSounds[UnityEngine.Random.Range(0, treeCuttingSounds.Length)];
-            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
-            audioSource.PlayOneShot(clip, audioVolume);
-        }
-    }
-
-    public void PlayDashSound()
-    {
-        if (dashSound != null && audioSource != null)
-        {
-            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
-            audioSource.PlayOneShot(dashSound, audioVolume);
-        }
-    }
+    // ========== GETTERS Y SETTERS ==========
 
     public void SetEquip(EquipType newEquip)
     {
         if (enAccion) return;
-
         equipActual = newEquip;
         Debug.Log("Equipo cambiado a: " + equipActual);
     }

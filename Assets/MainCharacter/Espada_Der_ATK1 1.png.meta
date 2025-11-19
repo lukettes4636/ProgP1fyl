@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3a89983df82e63645b0b7f766c8dd6c8
+guid: 3e8cdcf97a9f7254abe73fbd368f3132
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -94,7 +94,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Windows Store Apps
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -119,131 +119,102 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Idle_Izq_0
+      name: Espada_Der_ATK1_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 13
-        height: 20
-      alignment: 9
-      pivot: {x: 0.4942293, y: 0.12489647}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c988c4d72a3231f489ce5e092169230c
-      internalID: -300536188
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle_Izq_1
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 13
-        height: 20
-      alignment: 9
-      pivot: {x: 0.49422926, y: 0.12114543}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6c79218ddca46554d940b3ffee744bb0
-      internalID: -535493028
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle_Izq_2
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 13
+        y: 6
+        width: 17
         height: 19
       alignment: 9
-      pivot: {x: 0.50628895, y: 0.12987155}
+      pivot: {x: 0.32939282, y: 0.12614903}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7dfa9dd61373eb245a26985c95c88d55
-      internalID: -518355694
+      spriteID: 405eafdd318f0b847ae826fcf0ca4c54
+      internalID: -1089810909
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_3
+      name: Espada_Der_ATK1_1
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 0
+        width: 32
+        height: 25
+      alignment: 9
+      pivot: {x: 0.48532772, y: 0.34000984}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83b32e27c8e42664f831e6b3a1bb6d1c
+      internalID: 18825173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Espada_Der_ATK1_2
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 3
+        width: 19
+        height: 22
+      alignment: 9
+      pivot: {x: 0.65312755, y: 0.24766077}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3ae6e9de747546d499b378cbab0d4a85
+      internalID: 340828799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Espada_Der_ATK1_3
       rect:
         serializedVersion: 2
         x: 192
-        y: 0
-        width: 13
-        height: 19
-      alignment: 9
-      pivot: {x: 0.49999884, y: 0.13417536}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b450b3c910e12e2479211a5cfe239073
-      internalID: 341505410
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle_Izq_4
-      rect:
-        serializedVersion: 2
-        x: 256
-        y: 0
+        y: 6
         width: 13
         height: 20
       alignment: 9
-      pivot: {x: 0.50628895, y: 0.12384625}
+      pivot: {x: 0.51, y: 0.14}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 58c24201dfc6e094abea33bc9a9936a4
-      internalID: -447521001
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle_Izq_5
-      rect:
-        serializedVersion: 2
-        x: 320
-        y: 0
-        width: 13
-        height: 20
-      alignment: 9
-      pivot: {x: 0.5, y: 0.11975763}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 95cafcc44a789a54f8f692d0fd547002
-      internalID: 1274186853
+      spriteID: 82a1d575e9538d64bb58111c1b73d63e
+      internalID: -55106864
       vertices: []
       indices: 
       edges: []
@@ -259,12 +230,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Idle_Izq_0: -300536188
-      Idle_Izq_1: -535493028
-      Idle_Izq_2: -518355694
-      Idle_Izq_3: 341505410
-      Idle_Izq_4: -447521001
-      Idle_Izq_5: 1274186853
+      Espada_Der_ATK1_0: -1089810909
+      Espada_Der_ATK1_1: 18825173
+      Espada_Der_ATK1_2: 340828799
+      Espada_Der_ATK1_3: -55106864
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

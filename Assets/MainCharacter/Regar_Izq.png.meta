@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3a89983df82e63645b0b7f766c8dd6c8
+guid: b374b4e2255b7f948afbc51fd339fc23
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -123,127 +123,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Idle_Izq_0
+      name: Regar_Izq_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 13
+        y: 2
+        width: 26
         height: 20
       alignment: 9
-      pivot: {x: 0.4942293, y: 0.12489647}
+      pivot: {x: 0.75613797, y: 0.12320755}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c988c4d72a3231f489ce5e092169230c
-      internalID: -300536188
+      spriteID: ad20a229f3d60274f844c3068d1c57dc
+      internalID: -1724527786
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_1
+      name: Regar_Izq_1
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
-        width: 13
+        x: 63
+        y: 2
+        width: 27
         height: 20
       alignment: 9
-      pivot: {x: 0.49422926, y: 0.12114543}
+      pivot: {x: 0.7563875, y: 0.12758884}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6c79218ddca46554d940b3ffee744bb0
-      internalID: -535493028
+      spriteID: 3236d2151560ee141ae8bc8fbb4c1b42
+      internalID: 1571835784
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_2
+      name: Regar_Izq_2
       rect:
         serializedVersion: 2
-        x: 128
-        y: 0
-        width: 13
+        x: 130
+        y: 2
+        width: 24
+        height: 20
+      alignment: 9
+      pivot: {x: 0.73001796, y: 0.13635147}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32afb031e4b1ddd41827e00adb9e0447
+      internalID: 194689113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Regar_Izq_3
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 2
+        width: 20
         height: 19
       alignment: 9
-      pivot: {x: 0.50628895, y: 0.12987155}
+      pivot: {x: 0.6883949, y: 0.1356597}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7dfa9dd61373eb245a26985c95c88d55
-      internalID: -518355694
+      spriteID: 9e14a8f33fa0f8447a7ace0abbf11181
+      internalID: 1097385486
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_3
+      name: Regar_Izq_4
       rect:
         serializedVersion: 2
-        x: 192
+        x: 262
         y: 0
-        width: 13
+        width: 20
         height: 19
       alignment: 9
-      pivot: {x: 0.49999884, y: 0.13417536}
+      pivot: {x: 0.7584961, y: 0.23250973}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b450b3c910e12e2479211a5cfe239073
-      internalID: 341505410
+      spriteID: 61197f141c0e8cf479fe98db371e1308
+      internalID: -692489977
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Idle_Izq_4
+      name: Regar_Izq_5
       rect:
         serializedVersion: 2
-        x: 256
-        y: 0
-        width: 13
+        x: 326
+        y: 2
+        width: 21
         height: 20
       alignment: 9
-      pivot: {x: 0.50628895, y: 0.12384625}
+      pivot: {x: 0.69140625, y: 0.13824067}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 58c24201dfc6e094abea33bc9a9936a4
-      internalID: -447521001
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Idle_Izq_5
-      rect:
-        serializedVersion: 2
-        x: 320
-        y: 0
-        width: 13
-        height: 20
-      alignment: 9
-      pivot: {x: 0.5, y: 0.11975763}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 95cafcc44a789a54f8f692d0fd547002
-      internalID: 1274186853
+      spriteID: 65d06c707038ab14cb1f79e0f7b4783c
+      internalID: 1079382938
       vertices: []
       indices: 
       edges: []
@@ -259,12 +259,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Idle_Izq_0: -300536188
-      Idle_Izq_1: -535493028
-      Idle_Izq_2: -518355694
-      Idle_Izq_3: 341505410
-      Idle_Izq_4: -447521001
-      Idle_Izq_5: 1274186853
+      Regar_Izq_0: -1724527786
+      Regar_Izq_1: 1571835784
+      Regar_Izq_2: 194689113
+      Regar_Izq_3: 1097385486
+      Regar_Izq_4: -692489977
+      Regar_Izq_5: 1079382938
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

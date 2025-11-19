@@ -1,184 +1,144 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(HealthSystem))]
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Player Health Settings")]
-    public bool showHealthInConsole = true;
-    
-    [Header("Damage Effects")]
-    public bool enableDamageFlash = false;
-    public Color damageFlashColor = Color.red;
-    public float damageFlashDuration = 0.2f;
-    
-    [Header("Audio Settings")]
+    [Header("Configuración de Vida")]
+    public int maxHealth = 100;
+
+    [Header("Sonidos")]
     public AudioClip damageSound;
-    public AudioClip healSound;
     public AudioClip deathSound;
-    [Range(0f, 1f)]
-    public float audioVolume = 1f;
-    
-    private HealthSystem healthSystem;
-    private PlayerMovement playerMovement;
-    private SpriteRenderer spriteRenderer;
+
+    [Header("Efectos visuales")]
+    public float damageFlashDuration = 0.1f;
+    public Color damageFlashColor = Color.red;
+
+    private int currentHealth;
+    private bool isDead = false;
     private AudioSource audioSource;
-    private bool isDamageFlashing = false;
-    private float damageFlashTimer = 0f;
-    private Color originalSpriteColor;
-    
-    private void Awake()
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
+
+    void Start()
     {
-        healthSystem = GetComponent<HealthSystem>();
-        playerMovement = GetComponent<PlayerMovement>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        currentHealth = maxHealth;
+
         audioSource = GetComponent<AudioSource>();
-        
-        healthSystem.OnDamageTaken.AddListener(OnPlayerDamageTaken);
-        healthSystem.OnDeath.AddListener(OnPlayerDeath);
-        healthSystem.OnHealed.AddListener(OnPlayerHealed);
-        healthSystem.OnHealthChanged.AddListener(OnPlayerHealthChanged);
-    }
-
-    
-    private void OnPlayerDamageTaken(int damage)
-    {
-        if (showHealthInConsole)
+        if (audioSource == null)
         {
-            Debug.Log($"Player took {damage} damage. Current Health: {healthSystem.CurrentHealth}/{healthSystem.maxHealth}");
-        }
-        
-        PlayAudioClip(damageSound);
-        
-        if (enableDamageFlash)
-        {
-            StartDamageFlash();
-        }
-    }
-    
-    private void OnPlayerDeath()
-    {
-        if (showHealthInConsole)
-        {
-            Debug.Log("Player has died!");
+            audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        PlayAudioClip(deathSound);
-        SceneManager.LoadScene(2); 
-    }
-    
-    private void OnPlayerHealed(int amount)
-    {
-        if (showHealthInConsole)
+        // Obtener el SpriteRenderer para efectos visuales
+        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+        if (playerMovement != null)
         {
-            Debug.Log($"Player healed {amount} HP. Current Health: {healthSystem.CurrentHealth}/{healthSystem.maxHealth}");
-        }
-        
-        PlayAudioClip(healSound);
-    }
-    
-    private void OnPlayerHealthChanged(int newHealth)
-    {
-        if (newHealth <= 0)
-        {
-            return;
-        }
-        
-        if (!playerMovement.enabled && !healthSystem.IsDead)
-        {
-            playerMovement.enabled = true;
-            
-            PlayerActionController actionController = GetComponent<PlayerActionController>();
-            if (actionController != null)
+            spriteRenderer = playerMovement.GetSpriteRenderer();
+            if (spriteRenderer != null)
             {
-                actionController.enabled = true;
+                originalColor = spriteRenderer.color;
             }
         }
     }
-    
-    public void TakeDamage(int damage)
+
+    // Método para recibir daño
+    public void TakeDamage(int amount)
     {
-        healthSystem.TakeDamage(damage);
+        if (isDead) return;
+
+        currentHealth -= amount;
+        if (currentHealth < 0) currentHealth = 0;
+
+        Debug.Log($"Jugador recibió {amount} de daño. Vida: {currentHealth}/{maxHealth}");
+
+        PlaySound(damageSound);
+        StartCoroutine(DamageFlash());
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
     }
-    
-    public void Heal(int amount)
+
+    private void Die()
     {
-        healthSystem.Heal(amount);
-    }
-    
-    public void RestoreFullHealth()
-    {
-        healthSystem.RestoreFullHealth();
-    }
-    
-    public void Revive()
-    {
-        healthSystem.Revive();
-        
+        isDead = true;
+        Debug.Log("¡El jugador ha muerto!");
+
+        PlaySound(deathSound);
+
+        // Desactivar movimiento del jugador
+        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if (playerMovement != null)
         {
-            playerMovement.enabled = true;
+            playerMovement.SetCanMove(false);
         }
-        
+
+        // Desactivar acciones del jugador
         PlayerActionController actionController = GetComponent<PlayerActionController>();
         if (actionController != null)
         {
-            actionController.enabled = true;
+            actionController.enabled = false;
         }
-        
 
-    }
-    
-    public int GetCurrentHealth()
-    {
-        return healthSystem.CurrentHealth;
-    }
-    
-    public int GetMaxHealth()
-    {
-        return healthSystem.maxHealth;
-    }
-    
-    public bool IsAlive()
-    {
-        return !healthSystem.IsDead;
-    }
-    
-    public float GetHealthPercentage()
-    {
-        return healthSystem.HealthPercentage;
+        // Aquí puedes agregar:
+        // - Mostrar pantalla de Game Over
+        // - Reiniciar nivel después de unos segundos
+        // Invoke("RestartLevel", 2f);
     }
 
-
-    private void StartDamageFlash()
+    // Efecto visual cuando recibe daño
+    private System.Collections.IEnumerator DamageFlash()
     {
         if (spriteRenderer != null)
         {
-            originalSpriteColor = spriteRenderer.color;
             spriteRenderer.color = damageFlashColor;
-            isDamageFlashing = true;
-            damageFlashTimer = damageFlashDuration;
+            yield return new WaitForSeconds(damageFlashDuration);
+            spriteRenderer.color = originalColor;
         }
     }
 
-    private void Update()
-    {
-        if (isDamageFlashing)
-        {
-            damageFlashTimer -= Time.deltaTime;
-            if (damageFlashTimer <= 0f)
-            {
-                spriteRenderer.color = originalSpriteColor;
-                isDamageFlashing = false;
-            }
-        }
-    }
-    
-    private void PlayAudioClip(AudioClip clip)
+    private void PlaySound(AudioClip clip)
     {
         if (audioSource != null && clip != null)
         {
-            audioSource.PlayOneShot(clip, audioVolume);
+            audioSource.PlayOneShot(clip);
         }
     }
+
+    // Métodos útiles
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+
+    public int GetMaxHealth()
+    {
+        return maxHealth;
+    }
+
+    public bool IsAlive()
+    {
+        return !isDead;
+    }
+
+    public void Heal(int amount)
+    {
+        if (isDead) return;
+
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
+
+        Debug.Log($"Jugador curado +{amount}. Vida: {currentHealth}/{maxHealth}");
+    }
+
+    // Método para reiniciar el nivel (opcional)
+    /*
+    private void RestartLevel()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
+        );
+    }
+    */
 }
