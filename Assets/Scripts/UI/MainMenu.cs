@@ -5,20 +5,20 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour
 {
-    [Header("Sprites para Botones")]
+    [Header("Button Sprites")]
     public Sprite startButtonSprite;
     public Sprite exitButtonSprite;
     public Sprite creditsButtonSprite;
     public Sprite backgroundSprite;
     
-    [Header("Referencias a Botones")]
+    [Header("Button References")]
     public Button startButton;
     public Button exitButton;
     public Button creditsButton;
     public Image backgroundImage;
     public CanvasGroup menuCanvasGroup;
     
-    [Header("Configuración de Transiciones")]
+    [Header("Transition Settings")]
     public float fadeInDuration = 1.2f;
     public float buttonFadeDuration = 1.2f;
     public float fadeOutDuration = 1.0f;
@@ -30,7 +30,7 @@ public class MainMenu : MonoBehaviour
     
     private bool isTransitioning = false;
     
-    [Header("Sonido")]
+    [Header("Sound")]
     public AudioClip ambientClip;
     [Range(0f,1f)] public float ambientVolume = 0.5f;
     private AudioSource ambientSource;
@@ -86,7 +86,7 @@ public class MainMenu : MonoBehaviour
 
     public void ShowCredits()
     {
-        Debug.Log("Mostrando créditos del juego");
+        Debug.Log("Showing game credits");
     }
     
     private IEnumerator FadeIn()

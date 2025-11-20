@@ -22,6 +22,9 @@ public class JoystickVibration : MonoBehaviour
     [SerializeField] private float dashLowFreq = 0.4f;
     [SerializeField] private float dashHighFreq = 0.6f;
     [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] private float runLowFreq = 0.2f;
+    [SerializeField] private float runHighFreq = 0.3f;
+    [SerializeField] private float runDuration = 0.08f;
 
     [Header("Collection Vibrations")]
     [SerializeField] private float collectItemLowFreq = 0.2f;
@@ -47,6 +50,7 @@ public class JoystickVibration : MonoBehaviour
     public void OnAttackEnemy() => Vibrate(attackEnemyLowFreq, attackEnemyHighFreq, attackEnemyDuration);
     public void OnMining() => Vibrate(miningLowFreq, miningHighFreq, miningDuration);
     public void OnDash() => Vibrate(dashLowFreq, dashHighFreq, dashDuration);
+    public void OnRun() => Vibrate(runLowFreq, runHighFreq, runDuration);
     public void OnCollectItem() => Vibrate(collectItemLowFreq, collectItemHighFreq, collectItemDuration);
 
     public void Vibrate(float lowFreq, float highFreq, float duration)

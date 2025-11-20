@@ -2,14 +2,14 @@ using UnityEngine;
 
 public class InventoryController : MonoBehaviour
 {
-    [Header("UI Settings")]
-    [Tooltip("Arrastra aquí el GameObject del Canvas que quieres mostrar/ocultar.")]
+[Header("UI Settings")]
+[Tooltip("Drag the inventory Canvas GameObject here.")]
     [SerializeField] private GameObject inventoryCanvas;
 
-    [Header("Audio Settings")]
-    [Tooltip("Sonido al abrir el inventario.")]
+[Header("Audio Settings")]
+[Tooltip("Sound when opening inventory.")]
     [SerializeField] private AudioClip openSound;
-    [Tooltip("Sonido al cerrar el inventario.")]
+[Tooltip("Sound when closing inventory.")]
     [SerializeField] private AudioClip closeSound;
 
     private AudioSource audioSource;
@@ -36,7 +36,7 @@ public class InventoryController : MonoBehaviour
     {
         if (inventoryCanvas == null)
         {
-            Debug.LogWarning("El Canvas del inventario no está asignado en el InventoryController.");
+            Debug.LogWarning("Inventory Canvas is not assigned in InventoryController.");
             return;
         }
 

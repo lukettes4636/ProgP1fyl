@@ -53,7 +53,7 @@ public class PlowManager : MonoBehaviour
         playerActionController = FindObjectOfType<PlayerActionController>();
         if (playerActionController == null)
         {
-            Debug.LogError("[PlowManager] No se encontr� el PlayerActionController. Asegura que est� activo en la escena.");
+            Debug.LogError("[PlowManager] PlayerActionController not found. Ensure it is active in the scene.");
         }
     }
 
@@ -136,7 +136,7 @@ public class PlowManager : MonoBehaviour
         bool isInitiallyMoist = waterTilemap.GetTile(cellPosition) == wateredTile;
         if (!isInitiallyMoist)
         {
-            Debug.Log($"[PlowManager] Siembra fallida. La celda {cellPosition} no es tierra mojada.");
+            Debug.Log($"[PlowManager] Planting failed. Cell {cellPosition} is not wet soil.");
             return false;
         }
 
@@ -174,7 +174,7 @@ public class PlowManager : MonoBehaviour
     {
         if (!activeCrops.ContainsKey(cellPosition) || !activeCropObjects.ContainsKey(cellPosition) || lootPrefab == null)
         {
-            Debug.LogWarning("[PlowManager] Cosecha fallida: Revisa la celda, el GameObject del cultivo o la asignaci�n de lootPrefab.");
+            Debug.LogWarning("[PlowManager] Harvest failed: Check the cell, the crop GameObject or lootPrefab assignment.");
             return;
         }
 
@@ -183,7 +183,7 @@ public class PlowManager : MonoBehaviour
 
         if (!cropInstance.IsReadyToHarvest())
         {
-            Debug.LogWarning($"[PlowManager] La planta {cropInstance.cropName} a�n no est� lista.");
+            Debug.LogWarning($"[PlowManager] Plant {cropInstance.cropName} is not ready.");
             return;
         }
 
@@ -202,7 +202,7 @@ public class PlowManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"[PlowManager] Cosechado {dropAmount} de {cropInstance.harvestItemName}.");
+        Debug.Log($"[PlowManager] Harvested {dropAmount} of {cropInstance.harvestItemName}.");
 
         Destroy(cropGO);
 

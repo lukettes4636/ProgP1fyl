@@ -2,43 +2,44 @@ using UnityEngine;
 
 public class CicloDiaNoche : MonoBehaviour
 {
-    [Header("Configuración del Ciclo")]
-    [Tooltip("Duración del ciclo completo en segundos")]
+    [Header("Cycle Settings")]
+    [Tooltip("Full cycle duration in seconds")]
     public float duracionCiclo = 120f;
 
-    [Tooltip("Hora inicial (0-24)")]
+    [Tooltip("Initial hour (0-24)")]
     [Range(0, 24)]
     public float horaInicial = 6f;
 
-    [Header("Colores")]
+    [Header("Colors")]
     public Color colorNoche = new Color(0f, 0f, 0f, 0.5f); 
 
-    [Header("Referencias")]
-    [Tooltip("Asigna el SpriteRenderer que hará de overlay")]
+    [Header("References")]
+    [Tooltip("Assign the SpriteRenderer used as overlay")]
     public SpriteRenderer overlayNoche;
 
-    [Header("Configuración de Capas")]
-    [Tooltip("Sorting Layer del overlay")]
+    [Header("Layer Settings")]
+    [Tooltip("Overlay sorting layer")]
     public string sortingLayerName = "Roofs";
     
-    [Tooltip("Order in Layer del overlay")]
+    [Tooltip("Overlay order in layer")]
     public int orderInLayer = 1000;
 
-    [Tooltip("Layers que serán afectadas por el ciclo día/noche")]
+    [Tooltip("Layers affected by the day/night cycle")]
     public LayerMask affectedLayers = -1;
 
-    [Header("Luces Nocturnas")]
-    [Tooltip("Luces que se activarán durante la noche")]
+    [Header("Night Lights")]
+    [Tooltip("Lights activated at night")]
     public GameObject[] lucesNocturnas;
 
-    [Header("Sonidos Ambientales")]
-    [Tooltip("Sonido que se reproduce durante el día")]
+    [Header("Ambient Sounds")]
+    [Tooltip("Sound played during day")]
     public AudioClip sonidoDia;
 
-    [Tooltip("Sonido que se reproduce durante la noche (grillos, lobos, etc.)")]
+    [Tooltip("Sound played at night (crickets, wolves, etc.)")]
     public AudioClip sonidoNoche;
 
     private float tiempoActual;
+    [SerializeField] private bool controlAudio = false;
     private AudioSource audioSource;
 
     void Start()
@@ -48,11 +49,14 @@ public class CicloDiaNoche : MonoBehaviour
             CrearOverlay();
         }
 
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
+        if (controlAudio)
         {
-            audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.loop = true;
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.loop = true;
+            }
         }
 
         tiempoActual = horaInicial;
@@ -112,26 +116,24 @@ public class CicloDiaNoche : MonoBehaviour
             }
         }
 
-        if (esNoche)
+        if (controlAudio && audioSource != null)
         {
-            if (audioSource.clip != sonidoNoche)
+            if (esNoche)
             {
-                audioSource.clip = sonidoNoche;
-                if (sonidoNoche != null) audioSource.Play();
+                if (audioSource.clip != sonidoNoche)
+                {
+                    audioSource.clip = sonidoNoche;
+                    if (sonidoNoche != null) audioSource.Play();
+                }
             }
-        }
-        else
-        {
-            if (audioSource.clip != sonidoDia)
+            else
             {
-                audioSource.clip = sonidoDia;
-                if (sonidoDia != null) audioSource.Play();
+                if (audioSource.clip != sonidoDia)
+                {
+                    audioSource.clip = sonidoDia;
+                    if (sonidoDia != null) audioSource.Play();
+                }
             }
-        }
-
-        if (audioSource.clip == null)
-        {
-            audioSource.Stop();
         }
     }
 
@@ -162,7 +164,7 @@ public class CicloDiaNoche : MonoBehaviour
         overlayNoche.sortingLayerName = sortingLayerName;
         overlayNoche.sortingOrder = orderInLayer;
 
-        Debug.Log("Overlay de noche creado automáticamente");
+        Debug.Log("Night overlay created automatically");
     }
 
     public string ObtenerHoraActual()

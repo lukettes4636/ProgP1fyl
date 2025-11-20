@@ -9,7 +9,7 @@ public class CropVisualController : MonoBehaviour
     private bool isInitialized = false;
 
     [Header("Sorting Config")]
-    [Tooltip("Debe coincidir con el Sorting Factor del Player.")]
+    [Tooltip("Must match Player Sorting Factor.")]
     [SerializeField] private int sortingFactor = 100;
 
     private const int BaseDrawOffset = 50000;

@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
-    [Header("Configuración de Escala")]
+    [Header("Scale Settings")]
     public float scaleFactor = 1.1f; 
     public float animationDuration = 0.2f; 
     
-    [Header("Sonido")]
+    [Header("Sound")]
     public AudioClip hoverSound;
     [Range(0f,1f)] public float hoverVolume = 0.8f;
     public AudioClip clickSound;

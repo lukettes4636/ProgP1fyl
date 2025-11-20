@@ -25,7 +25,7 @@ public class EnemyAI : MonoBehaviour
     public float moveSpeed = 2f;
     public float stopDistance = 0.5f; 
 
-    [Header("Avoidance (Separación de otros enemigos)")]
+    [Header("Avoidance (separation from other enemies)")]
     public bool avoidOtherEnemies = true;   
     public float separationRadius = 1.0f;   
     public float separationForce = 0.6f;    

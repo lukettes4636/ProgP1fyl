@@ -31,7 +31,7 @@ public class DamageHitbox : MonoBehaviour
 
         transform.localPosition = attackDirection * hitboxDistance;
 
-        Debug.Log($"✓ Hitbox activado - Dirección: {attackDirection}, Posición: {transform.localPosition}");
+        Debug.Log($"Hitbox activated - Direction: {attackDirection}, Position: {transform.localPosition}");
 
 
         gameObject.SetActive(true);
@@ -64,7 +64,7 @@ public class DamageHitbox : MonoBehaviour
             EnemyHealth enemy = other.GetComponent<EnemyHealth>();
             if (enemy != null)
             {
-                Debug.Log($"⚔️ ¡Golpe! {currentDamage} de daño a {enemy.gameObject.name}");
+                Debug.Log($"Hit! {currentDamage} damage to {enemy.gameObject.name}");
                 enemy.TakeDamage(currentDamage);
             }
         }

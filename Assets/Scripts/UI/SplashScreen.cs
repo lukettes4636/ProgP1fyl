@@ -5,20 +5,20 @@ using System.Collections;
 
 public class SplashScreen : MonoBehaviour
 {
-    [Header("Configuración del Splash Screen")]
-    [Tooltip("Arrastra aquí la imagen del logo para el splash screen")]
+[Header("Splash Screen Settings")]
+[Tooltip("Drag the logo image for the splash screen")]
     [SerializeField] private Image splashImage;
     
-    [Tooltip("Duración del fade in del logo (segundos)")]
+[Tooltip("Logo fade-in duration (seconds)")]
     [SerializeField] private float fadeInDuration = 2f;
     
-    [Tooltip("Tiempo que se muestra el logo (segundos)")]
+[Tooltip("Time the logo is displayed (seconds)")]
     [SerializeField] private float displayDuration = 3f;
     
-    [Tooltip("Duración del fade out del logo (segundos)")]
+[Tooltip("Logo fade-out duration (seconds)")]
     [SerializeField] private float fadeOutDuration = 2f;
     
-    [Tooltip("Nombre de la escena del menú principal a cargar")]
+[Tooltip("Main menu scene name to load")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     
     private CanvasGroup canvasGroup;
@@ -27,7 +27,7 @@ public class SplashScreen : MonoBehaviour
     {
         if (splashImage == null)
         {
-            Debug.LogError("No se asignó una imagen de splash screen");
+            Debug.LogError("Splash image not assigned");
             return;
         }
         

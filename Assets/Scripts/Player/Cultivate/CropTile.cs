@@ -3,27 +3,27 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Crop Data", menuName = "Crops/Crop Data")]
 public class CropTile : ScriptableObject
 {
-    [Header("Configuraci�n del Cultivo")]
-    public string cropName = "NuevoCultivo";
+[Header("Crop Settings")]
+    public string cropName = "NewCrop";
     public Sprite[] growthStages;
     public float[] stageScaleMultipliers;
 
-    [Header("Tiempos de Crecimiento")]
+[Header("Growth Times")]
     public float timePerStage = 60f;
 
-    [Header("Configuraci�n de Cosecha (Loot)")]
-    [Tooltip("El Sprite del �tem final que se mostrar� al caer en el mundo.")]
+[Header("Harvest Settings (Loot)")]
+[Tooltip("Sprite of the final item shown when it drops.")]
     public Sprite harvestItemSprite; 
 
-    [Tooltip("Nombre del recurso final que se a�ade al inventario del jugador.")]
-    public string harvestItemName = "Tomate";
+[Tooltip("Name of the final resource added to player inventory.")]
+    public string harvestItemName = "Tomato";
 
-    [Tooltip("Cantidad m�nima de �tems que caen al cosechar.")]
+[Tooltip("Minimum items dropped when harvesting.")]
     public int minDropAmount = 1;
-    [Tooltip("Cantidad m�xima de �tems que caen al cosechar.")]
+[Tooltip("Maximum items dropped when harvesting.")]
     public int maxDropAmount = 3;
 
-    [Header("Estado Interno del Cultivo (Runtime)")]
+[Header("Internal Crop State (Runtime)")]
     [SerializeField] private int currentStage = 0;
     [SerializeField] private float timeGrown = 0f;
     [SerializeField] private bool isReadyToHarvest = false;

@@ -12,7 +12,7 @@ public class Resource_Collect : MonoBehaviour
     [SerializeField] private int drop_Amount;
     [SerializeField] private string drop_Name = "Madera";
 
-    [Header("Efecto de Temblor")]
+    [Header("Shake Effect")]
     [SerializeField] private float shakeDuration = 0.1f;
     [SerializeField] private float shakeMagnitude = 0.05f;
     private Vector3 originalPosition;

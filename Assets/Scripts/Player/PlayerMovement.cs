@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Configuración de movimiento")]
+    [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float runSpeed = 8f;
     [SerializeField] private float spriteScale = 2f;
@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 aimInput;
     private Vector2 lastDirection = Vector2.down;
 
-    [Header("Configuración de dash")]
+    [Header("Dash Settings")]
     [SerializeField] private float dashSpeed = 15f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
     private float dashCooldownTimer = 0f;
     private Vector2 dashDirection;
 
-    [Header("Configuración de sonidos")]
+    [Header("Sound Settings")]
     [SerializeField] private AudioClip[] footstepSounds;
     [SerializeField] private AudioClip[] runFootstepSounds;
     [SerializeField] private float footstepVolume = 0.5f;
@@ -42,8 +42,8 @@ public class PlayerMovement : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    [Header("Configuración de apuntado")]
-    [Tooltip("Magnitud mínima del stick derecho para considerarse apuntando.")]
+    [Header("Aim Settings")]
+    [Tooltip("Minimum right-stick magnitude to be considered aiming.")]
     [SerializeField] private float aimThreshold = 0.2f;
 
     private void Awake()
@@ -228,6 +228,11 @@ public class PlayerMovement : MonoBehaviour
                 float randomPitch = 1f + Random.Range(-pitchVariation, pitchVariation);
                 audioSource.pitch = randomPitch;
                 audioSource.PlayOneShot(clipToPlay, footstepVolume);
+                if (isRunning)
+                {
+                    var vib = GetComponent<JoystickVibration>();
+                    if (vib != null) vib.OnRun();
+                }
             }
         }
     }
