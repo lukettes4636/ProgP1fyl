@@ -96,15 +96,17 @@ public class MainMenu : MonoBehaviour
         }
         
         menuCanvasGroup.alpha = 0f;
-        float elapsedTime = 0f;
+        menuCanvasGroup.interactable = false;
+        menuCanvasGroup.blocksRaycasts = false;
         
-        while (elapsedTime < fadeInDuration)
+        float t = 0f;
+        while (t < fadeInDuration)
         {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / fadeInDuration);
-            float v = menuFadeCurve != null ? menuFadeCurve.Evaluate(t) : t;
-            v = Mathf.Pow(v, menuFadeExponent);
-            menuCanvasGroup.alpha = v;
+            t += Time.deltaTime;
+            float tt = Mathf.Clamp01(t / fadeInDuration);
+            float e = menuFadeCurve.Evaluate(tt);
+            e = Mathf.Pow(e, menuFadeExponent);
+            menuCanvasGroup.alpha = e;
             yield return null;
         }
         
