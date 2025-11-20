@@ -24,13 +24,13 @@ AnimationClip:
       value: {fileID: 424604166, guid: f42a479eea79a7f4ab332a8db7b97965, type: 3}
     - time: 0.083333336
       value: {fileID: 1191159268, guid: f42a479eea79a7f4ab332a8db7b97965, type: 3}
-    - time: 0.25
+    - time: 0.16666667
       value: {fileID: -821302406, guid: f42a479eea79a7f4ab332a8db7b97965, type: 3}
-    - time: 0.33333334
+    - time: 0.25
       value: {fileID: -495700699, guid: f42a479eea79a7f4ab332a8db7b97965, type: 3}
-    - time: 0.41666666
+    - time: 0.33333334
       value: {fileID: 651806325, guid: f42a479eea79a7f4ab332a8db7b97965, type: 3}
-    - time: 0.5833333
+    - time: 0.5
       value: {fileID: -675546156, guid: f42a479eea79a7f4ab332a8db7b97965, type: 3}
     attribute: m_Sprite
     path: 
@@ -65,7 +65,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.6666666
+    m_StopTime: 0.5833333
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -92,14 +92,21 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.33333334
+  - time: 0.083333336
+    functionName: PlayTreeCuttingSound
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.25
     functionName: DisableHitbox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.5833333
+  - time: 0.5
     functionName: EndActionState
     data: 
     objectReferenceParameter: {fileID: 0}

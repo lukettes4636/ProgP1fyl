@@ -22,11 +22,11 @@ AnimationClip:
     curve:
     - time: 0
       value: {fileID: -2102998206, guid: 9370cde851634174b8e34f5ad2a430c0, type: 3}
-    - time: 0.083333336
-      value: {fileID: -54663442, guid: 9370cde851634174b8e34f5ad2a430c0, type: 3}
     - time: 0.16666667
-      value: {fileID: 1411636306, guid: 9370cde851634174b8e34f5ad2a430c0, type: 3}
+      value: {fileID: -54663442, guid: 9370cde851634174b8e34f5ad2a430c0, type: 3}
     - time: 0.25
+      value: {fileID: 1411636306, guid: 9370cde851634174b8e34f5ad2a430c0, type: 3}
+    - time: 0.33333334
       value: {fileID: -664156594, guid: 9370cde851634174b8e34f5ad2a430c0, type: 3}
     - time: 0.41666666
       value: {fileID: -1612006956, guid: 9370cde851634174b8e34f5ad2a430c0, type: 3}
@@ -85,7 +85,14 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 0.083333336
+  - time: 0.16666667
+    functionName: ExecutePlowAction
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.5
     functionName: EndActionState
     data: 
     objectReferenceParameter: {fileID: 0}

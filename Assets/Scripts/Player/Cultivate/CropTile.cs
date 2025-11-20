@@ -6,6 +6,7 @@ public class CropTile : ScriptableObject
     [Header("Configuraci�n del Cultivo")]
     public string cropName = "NuevoCultivo";
     public Sprite[] growthStages;
+    public float[] stageScaleMultipliers;
 
     [Header("Tiempos de Crecimiento")]
     public float timePerStage = 60f;
@@ -50,6 +51,13 @@ public class CropTile : ScriptableObject
         if (growthStages == null || growthStages.Length == 0) return null;
         int stage = Mathf.Clamp(currentStage, 0, growthStages.Length - 1);
         return growthStages[stage];
+    }
+
+    public float GetCurrentScale()
+    {
+        if (stageScaleMultipliers == null || stageScaleMultipliers.Length == 0) return 1f;
+        int stage = Mathf.Clamp(currentStage, 0, stageScaleMultipliers.Length - 1);
+        return stageScaleMultipliers[stage];
     }
 
     public bool AdvanceGrowth(float deltaTime)

@@ -10,6 +10,7 @@ public class Resource_Collect : MonoBehaviour
 
     [SerializeField] private GameObject resoursedrop_Prefab;
     [SerializeField] private int drop_Amount;
+    [SerializeField] private string drop_Name = "Madera";
 
     [Header("Efecto de Temblor")]
     [SerializeField] private float shakeDuration = 0.1f;
@@ -34,7 +35,17 @@ public class Resource_Collect : MonoBehaviour
     {
         for (int i = 0; i < drop_Amount; i++)
         {
-            Instantiate(resoursedrop_Prefab, transform.position, Quaternion.identity);
+            GameObject obj = Instantiate(resoursedrop_Prefab, transform.position, Quaternion.identity);
+            LootDrop loot = obj.GetComponent<LootDrop>();
+            if (loot != null)
+            {
+                loot.SetResourceName(drop_Name);
+            }
+            CollectableItem col = obj.GetComponent<CollectableItem>();
+            if (col != null)
+            {
+                col.Initialize(drop_Name, 1, null);
+            }
         }
 
         if (joystickVibration != null)

@@ -18,11 +18,16 @@ MonoBehaviour:
   - {fileID: -336539070, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
   - {fileID: -77594568, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
   - {fileID: -1457907525, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
-  timePerStage: 5
+  stageScaleMultipliers:
+  - 1.2
+  - 1.2
+  - 1.2
+  - 1.2
+  timePerStage: 10
   harvestItemSprite: {fileID: 336850518, guid: 26ae2ad309ffa6948be42e04deecd706, type: 3}
   harvestItemName: Girasol
   minDropAmount: 1
-  maxDropAmount: 3
+  maxDropAmount: 2
   currentStage: 0
   timeGrown: 0
   isReadyToHarvest: 0

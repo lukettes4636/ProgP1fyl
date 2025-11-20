@@ -40,6 +40,9 @@ public class CropVisualController : MonoBehaviour
         spriteRenderer.sprite = cropDataState.GetCurrentSprite();
 
         spriteRenderer.color = cropDataState.IsMoist() ? Color.white : new Color(0.7f, 0.7f, 0.7f, 1f);
+
+        float s = cropDataState.GetCurrentScale();
+        transform.localScale = new Vector3(s, s, 1f);
     }
 
     private void UpdateSorting()

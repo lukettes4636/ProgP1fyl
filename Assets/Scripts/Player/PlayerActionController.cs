@@ -20,7 +20,7 @@ public class PlayerActionController : MonoBehaviour
     private readonly Dictionary<EquipType, string> SeedItemNames = new Dictionary<EquipType, string>
     {
         { EquipType.Semilla1, "SemillasDeGirasol" },
-        { EquipType.Semilla2, "SemillasDeCebolla" }
+        { EquipType.Semilla2, "SemillasDeUva" }
     };
 
     private Animator animator;
@@ -351,5 +351,10 @@ public class PlayerActionController : MonoBehaviour
     public bool HasItem(string itemName)
     {
         return inventory.ContainsKey(itemName) && inventory[itemName] > 0;
+    }
+
+    public int GetItemCount(string itemName)
+    {
+        return inventory.TryGetValue(itemName, out var count) ? count : 0;
     }
 }

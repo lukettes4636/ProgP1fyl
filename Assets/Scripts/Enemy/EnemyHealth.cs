@@ -2,15 +2,16 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [Header("Configuración de Vida")]
+    [Header("Configuraciï¿½n de Vida")]
     public int vidaMaxima = 50;
 
     [Header("Loot (Objetos que suelta)")]
     public GameObject objetoQueSuelta;
     public int cantidadASoltar = 3;
+    [SerializeField] private string dropName = "Mineral";
 
     [Header("Sonidos")]
-    public AudioClip sonidoDaño;
+    public AudioClip sonidoDaÃ‘o;
     public AudioClip sonidoMuerte;
 
     private int vidaActual;
@@ -27,7 +28,7 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    // MÉTODO CORREGIDO - Ahora se llama TakeDamage
+    // Mï¿½TODO CORREGIDO - Ahora se llama TakeDamage
     public void TakeDamage(int cantidad)
     {
         if (estaMuerto) return;
@@ -35,8 +36,8 @@ public class EnemyHealth : MonoBehaviour
         vidaActual -= cantidad;
         if (vidaActual < 0) vidaActual = 0;
 
-        Debug.Log($"{gameObject.name} recibió {cantidad} de daño. Vida: {vidaActual}/{vidaMaxima}");
-        ReproducirSonido(sonidoDaño);
+        Debug.Log($"{gameObject.name} recibiï¿½ {cantidad} de daï¿½o. Vida: {vidaActual}/{vidaMaxima}");
+        ReproducirSonido(sonidoDaÃ‘o);
 
         if (vidaActual <= 0)
         {
@@ -72,7 +73,17 @@ public class EnemyHealth : MonoBehaviour
                     0f
                 );
 
-                Instantiate(objetoQueSuelta, posicionAleatoria, Quaternion.identity);
+                GameObject obj = Instantiate(objetoQueSuelta, posicionAleatoria, Quaternion.identity);
+                LootDrop loot = obj.GetComponent<LootDrop>();
+                if (loot != null)
+                {
+                    loot.SetResourceName(dropName);
+                }
+                CollectableItem col = obj.GetComponent<CollectableItem>();
+                if (col != null)
+                {
+                    col.Initialize(dropName, 1, null);
+                }
             }
         }
     }

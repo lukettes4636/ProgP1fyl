@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5973409204307552054}
   - component: {fileID: 7206845106220811822}
   - component: {fileID: 5100504774419546728}
-  - component: {fileID: 7968860372824100455}
   m_Layer: 0
   m_Name: Agua
   m_TagString: Water
@@ -321569,20 +321568,3 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
---- !u!114 &7968860372824100455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6142678235844141217}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IsGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 1
-  sharedProfile: {fileID: 11400000, guid: e03851c5611114147950bc742d7ec3cb, type: 2}

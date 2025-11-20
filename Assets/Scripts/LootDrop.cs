@@ -5,6 +5,11 @@ public class LootDrop : MonoBehaviour
     
     [SerializeField] private string resourceName = "Item Desconocido";
 
+    public void SetResourceName(string name)
+    {
+        resourceName = name;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         PlayerActionController playerAction = other.GetComponent<PlayerActionController>();
