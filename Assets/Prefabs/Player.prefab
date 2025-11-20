@@ -90,6 +90,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a757fe6782a495649b9771e482e08dab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitboxDistance: 0.6
+  hitboxLifetime: 0.2
 --- !u!1 &3258567345104229992
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,8 +213,6 @@ GameObject:
   - component: {fileID: 6168014285639349253}
   - component: {fileID: 5574588633738027638}
   - component: {fileID: 2617772862540240461}
-  - component: {fileID: 8384441798595287184}
-  - component: {fileID: 5284687667613488765}
   - component: {fileID: 4910887840170003880}
   m_Layer: 0
   m_Name: Player
@@ -325,7 +325,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   runSpeed: 8
-  crouchSpeedMultiplier: 0.5
   spriteScale: 2
   dashSpeed: 15
   dashDuration: 0.2
@@ -337,6 +336,7 @@ MonoBehaviour:
   walkStepInterval: 0.5
   runStepInterval: 0.3
   canMove: 1
+  aimThreshold: 0.2
 --- !u!114 &6168014285639349253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,12 +353,18 @@ MonoBehaviour:
   baseDamage: 1
   damageHitbox: {fileID: 1045380195764910929}
   inventoryDisplay: []
+  plowManager: {fileID: 0}
+  tileCursorController: {fileID: 0}
   attackSounds: []
   treeCuttingSounds: []
   dashSound: {fileID: 0}
   audioVolume: 1
   pitchVariation: 0.1
   enAccion: 0
+  maxActionDuration: 0.6
+  lightPlayer: {fileID: 0}
+  torchSprite: {fileID: 0}
+  cicloDiaNoche: {fileID: 0}
 --- !u!50 &5574588633738027638
 Rigidbody2D:
   serializedVersion: 4
@@ -431,94 +437,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.4659996, y: 0.13331795}
   m_EdgeRadius: 0
---- !u!114 &8384441798595287184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5824600039365575497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 1c4567299b1979e4fbb32ef05343e394, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerController_NewInput, Assembly-CSharp
-        m_MethodName: OnMove
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 10d6a4db-06b3-4902-ba77-b9a87470db05
-    m_ActionName: Player/Move[/XInputControllerWindows/leftStick,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerController_NewInput, Assembly-CSharp
-        m_MethodName: OnAction
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: fe4c6222-b229-4fa9-812c-10d56abacf4d
-    m_ActionName: Player/Action[/XInputControllerWindows/buttonSouth,/Keyboard/e]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: New control scheme
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
---- !u!114 &5284687667613488765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5824600039365575497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 885c7e9b29a514743bb357d243a9ebdf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  destroyOnDeath: 1
-  OnHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamageTaken:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHealed:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &4910887840170003880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -531,11 +449,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1cc4ef5297d8b54b83f324f9bd1b76b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showHealthInConsole: 1
-  enableDamageFlash: 0
-  damageFlashColor: {r: 1, g: 0, b: 0, a: 1}
-  damageFlashDuration: 0.2
+  maxHealth: 100
   damageSound: {fileID: 0}
-  healSound: {fileID: 0}
   deathSound: {fileID: 0}
-  audioVolume: 1
+  damageFlashDuration: 0.2
+  damageFlashColor: {r: 1, g: 0, b: 0, a: 1}

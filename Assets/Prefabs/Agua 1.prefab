@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 246207634161051427}
   - component: {fileID: 336152703876612493}
   - component: {fileID: 7463567410237424846}
-  - component: {fileID: 6820689246716518216}
-  - component: {fileID: 8823249678701542506}
   m_Layer: 0
   m_Name: Agua 1
   m_TagString: Untagged
@@ -114,33 +112,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6820689246716518216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4279146967105255710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 674ed7027cea3954ea502bf5fa2820fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localPosition: {x: 0, y: -0.25, z: 0}
-  localRotation: {x: 0, y: 0, z: -180}
-  sprite: {fileID: 0}
-  spriteLayer: Default
-  spriteLayerOrder: -5
---- !u!114 &8823249678701542506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4279146967105255710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8829f965957cc3046a2feba774f2db42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: {x: 0.01, y: 0}

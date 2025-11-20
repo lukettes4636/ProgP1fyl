@@ -44,6 +44,18 @@ public class PlayerActionController : MonoBehaviour
     [SerializeField] private float maxActionDuration = 0.6f;
     private float actionTimer = 0f;
 
+    [Header("Configuración de Luz - Antorcha")]
+    [Tooltip("Arrastra aquí el GameObject de la luz del jugador (LightPlayer)")]
+    [SerializeField] private GameObject lightPlayer;
+    
+    [Tooltip("Arrastra aquí el GameObject del sprite de la antorcha (Torch)")]
+    [SerializeField] private GameObject torchSprite;
+    
+
+    
+    [Tooltip("Arrastra aquí el GameObject que tiene el script CicloDiaNoche")]
+    [SerializeField] private CicloDiaNoche cicloDiaNoche;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -62,7 +74,7 @@ public class PlayerActionController : MonoBehaviour
 
         tileCursorController = FindObjectOfType<TileCursorController>();
 
-        // Inicializar inventario
+
         foreach (var item in SeedItemNames)
         {
             inventory.Add(item.Value, 10);
@@ -91,6 +103,9 @@ public class PlayerActionController : MonoBehaviour
 
         if (Input.GetButtonDown("Action"))
             HandleAction();
+            
+
+        UpdateLightPlayerVisibilityContinuous();
     }
 
     private void HandleAction()
@@ -115,7 +130,7 @@ public class PlayerActionController : MonoBehaviour
 
         Vector2 actionDirection = playerMovement.GetLastDirection();
 
-        // Actualizar parámetros del animator
+
         animator.SetFloat("MoveX", actionDirection.x);
         animator.SetFloat("MoveY", actionDirection.y);
         animator.SetFloat("LastMoveX", actionDirection.x);
@@ -152,7 +167,6 @@ public class PlayerActionController : MonoBehaviour
                 break;
 
             case EquipType.Antorcha:
-                animator.SetBool("UsarAntorcha", true);
                 Debug.Log("Usar Antorcha");
                 break;
         }
@@ -182,11 +196,9 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // ========== MÉTODOS LLAMADOS POR ANIMATION EVENTS ==========
 
-    /// <summary>
-    /// Activa el hitbox de daño. Llamar desde Animation Event.
-    /// </summary>
+
+    
     public void ActivateHitbox()
     {
         if (hitboxScript != null)
@@ -199,9 +211,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Desactiva el hitbox de daño. Llamar desde Animation Event.
-    /// </summary>
+    
     public void DisableHitbox()
     {
         if (hitboxScript != null)
@@ -210,9 +220,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Ejecuta acción de arado. Llamar desde Animation Event.
-    /// </summary>
+    
     public void ExecutePlowAction()
     {
         if (equipActual != EquipType.Arado || plowManager == null || tileCursorController == null)
@@ -232,9 +240,7 @@ public class PlayerActionController : MonoBehaviour
             plowManager.PlowAt(cellPos);
     }
 
-    /// <summary>
-    /// Ejecuta acción de regar. Llamar desde Animation Event.
-    /// </summary>
+    
     public void ExecuteWaterAction()
     {
         if (equipActual != EquipType.Regadera || plowManager == null || tileCursorController == null)
@@ -249,9 +255,7 @@ public class PlayerActionController : MonoBehaviour
         plowManager.WaterAt(cellPos);
     }
 
-    /// <summary>
-    /// Finaliza el estado de acción. Llamar desde Animation Event.
-    /// </summary>
+    
     public void EndActionState()
     {
         enAccion = false;
@@ -262,11 +266,10 @@ public class PlayerActionController : MonoBehaviour
         animator.SetBool("Arar", false);
         animator.SetBool("Regar", false);
         animator.SetBool("Disparar", false);
-        animator.SetBool("UsarAntorcha", false);
         animator.SetInteger("AttackIndex", 0);
     }
 
-    // ========== MÉTODOS DE AUDIO ==========
+
 
     private void PlayAttackSound()
     {
@@ -297,7 +300,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // ========== MÉTODOS DE INVENTARIO ==========
+
 
     public void CollectResource(string resourceName, int amount)
     {
@@ -329,13 +332,15 @@ public class PlayerActionController : MonoBehaviour
             inventoryDisplay.Add($"{item.Key}: {item.Value}");
     }
 
-    // ========== GETTERS Y SETTERS ==========
+
 
     public void SetEquip(EquipType newEquip)
     {
         if (enAccion) return;
         equipActual = newEquip;
         Debug.Log("Equipo cambiado a: " + equipActual);
+        
+        UpdateLightPlayerVisibility();
     }
 
     public int GetBaseDamage()
@@ -356,5 +361,105 @@ public class PlayerActionController : MonoBehaviour
     public int GetItemCount(string itemName)
     {
         return inventory.TryGetValue(itemName, out var count) ? count : 0;
+    }
+
+    private void UpdateLightPlayerVisibility()
+    {
+        bool tieneAntorchaEquipada = equipActual == EquipType.Antorcha;
+        bool esDeNoche = EsDeNoche();
+        
+
+        bool deberiaEstarEncendida = tieneAntorchaEquipada && esDeNoche;
+        
+
+        if (torchSprite != null)
+        {
+            torchSprite.SetActive(tieneAntorchaEquipada);
+        }
+        
+
+
+        
+
+        if (lightPlayer != null)
+        {
+            if (lightPlayer.activeSelf != deberiaEstarEncendida)
+            {
+                lightPlayer.SetActive(deberiaEstarEncendida);
+                
+                if (deberiaEstarEncendida)
+                {
+                    Debug.Log("Antorcha equipada y es de noche - Luz ENCENDIDA");
+                }
+                else if (tieneAntorchaEquipada)
+                {
+                    Debug.Log("Antorcha equipada pero es de día - Luz APAGADA");
+                }
+                else
+                {
+                    Debug.Log("Antorcha no equipada - Luz APAGADA");
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("LightPlayer no está asignado en PlayerActionController");
+        }
+    }
+    
+    private void UpdateLightPlayerVisibilityContinuous()
+    {
+        bool tieneAntorchaEquipada = equipActual == EquipType.Antorcha;
+        
+
+        if (torchSprite != null)
+        {
+            torchSprite.SetActive(tieneAntorchaEquipada);
+        }
+        
+
+
+        
+
+        if (lightPlayer != null && cicloDiaNoche != null)
+        {
+            bool esDeNoche = cicloDiaNoche.EsDeNoche();
+            
+
+            bool deberiaEstarEncendida = tieneAntorchaEquipada && esDeNoche;
+            
+
+            if (lightPlayer.activeSelf != deberiaEstarEncendida)
+            {
+                lightPlayer.SetActive(deberiaEstarEncendida);
+                
+                if (deberiaEstarEncendida)
+                {
+                    Debug.Log("🕯️ Luz de antorcha ENCENDIDA (Noche + Antorcha equipada)");
+                }
+                else if (tieneAntorchaEquipada)
+                {
+                    Debug.Log("☀️ Luz de antorcha APAGADA (Día + Antorcha equipada)");
+                }
+            }
+        }
+    }
+    
+    private bool EsDeNoche()
+    {
+        if (cicloDiaNoche == null)
+        {
+
+            cicloDiaNoche = FindObjectOfType<CicloDiaNoche>();
+            
+            if (cicloDiaNoche == null)
+            {
+                Debug.LogWarning("CicloDiaNoche no encontrado. Asume que es de día.");
+                return false;
+            }
+        }
+        
+
+        return cicloDiaNoche.EsDeNoche();
     }
 }

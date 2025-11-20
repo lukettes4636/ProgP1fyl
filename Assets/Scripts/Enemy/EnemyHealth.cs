@@ -28,7 +28,7 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    // M�TODO CORREGIDO - Ahora se llama TakeDamage
+
     public void TakeDamage(int cantidad)
     {
         if (estaMuerto) return;

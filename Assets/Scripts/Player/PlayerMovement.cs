@@ -63,7 +63,7 @@ public class PlayerMovement : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        // IMPORTANTE: Establecer escala fija sin flip
+
         transform.localScale = new Vector3(spriteScale, spriteScale, spriteScale);
     }
 
@@ -95,8 +95,8 @@ public class PlayerMovement : MonoBehaviour
             lastDirection = moveInput.normalized;
         }
 
-        // ✅ REMOVIDO: Ya no flipeamos el sprite por código
-        // El Animator controlará la dirección visual
+
+
 
         isRunning = Input.GetButton("Run");
     }
@@ -163,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("IsMoving", isMoving);
         animator.SetBool("IsRunning", isRunning);
 
-        // Normalizar dirección a las 4 cardinales para animaciones claras
+
         Vector2 animDirection = GetCardinalDirection(lastDirection);
 
         animator.SetFloat("MoveX", animDirection.x);
@@ -173,7 +173,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("LastMoveY", animDirection.y);
     }
 
-    // ✅ NUEVO: Obtener dirección cardinal para animaciones limpias
+
     private Vector2 GetCardinalDirection(Vector2 direction)
     {
         if (direction.sqrMagnitude < 0.01f)
@@ -181,12 +181,12 @@ public class PlayerMovement : MonoBehaviour
 
         direction.Normalize();
 
-        // Horizontal tiene prioridad (izquierda/derecha)
+
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
         {
             return new Vector2(Mathf.Sign(direction.x), 0);
         }
-        else // Vertical (arriba/abajo)
+        else
         {
             return new Vector2(0, Mathf.Sign(direction.y));
         }

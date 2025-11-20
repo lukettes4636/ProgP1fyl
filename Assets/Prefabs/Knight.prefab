@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 593821716666842964}
   - component: {fileID: 4357238282869754717}
   - component: {fileID: 5314042461701183863}
-  - component: {fileID: 426957310095141765}
   - component: {fileID: 2362878928235851140}
   - component: {fileID: 6050321151955132459}
   - component: {fileID: 7650596816995993754}
@@ -111,32 +110,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &426957310095141765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6042338793639508647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 885c7e9b29a514743bb357d243a9ebdf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  destroyOnDeath: 1
-  OnHealthChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDeath:
-    m_PersistentCalls:
-      m_Calls: []
-  OnDamageTaken:
-    m_PersistentCalls:
-      m_Calls: []
-  OnHealed:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &2362878928235851140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,39 +122,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 336ddd1e7b69d8d42b4b4c90cbb78bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showHealthInConsole: 1
-  dropLootOnDeath: 1
-  lootPrefab: {fileID: 0}
-  lootAmount: 1
-  lootDropForce: 5
-  lootSpreadRadius: 1
-  deathDelay: 0
-  disableColliderOnDeath: 1
-  disableMovementOnDeath: 1
-  enableDeathAnimation: 0
-  deathAnimationTrigger: Death
-  enableDeathParticles: 0
-  deathParticlesPrefab: {fileID: 0}
-  enableScreenShake: 0
-  screenShakeIntensity: 0.5
-  screenShakeDuration: 0.3
-  damageSound: {fileID: 0}
-  deathSound: {fileID: 0}
-  healSound: {fileID: 0}
-  audioVolume: 1
-  enableDamageFlash: 1
-  damageFlashColor: {r: 1, g: 0, b: 0, a: 1}
-  damageFlashDuration: 0.1
-  healthBarEnabled: 0
-  damageFlashEnabled: 0
-  healthBarPrefab: {fileID: 0}
-  disableAIOnDeath: 1
-  enableRagdollOnDeath: 0
-  fadeOutOnDeath: 0
-  fadeOutDuration: 2
-  canRespawn: 0
-  respawnDelay: 5
-  respawnOffset: {x: 0, y: 0, z: 0}
+  vidaMaxima: 50
+  objetoQueSuelta: {fileID: 0}
+  cantidadASoltar: 3
+  dropName: Mineral
+  "sonidoDa\xD1o": {fileID: 0}
+  sonidoMuerte: {fileID: 0}
 --- !u!114 &6050321151955132459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,17 +143,14 @@ MonoBehaviour:
   target: {fileID: 0}
   detectionRange: 5
   followRange: 8
+  attackRange: 1.2
   moveSpeed: 2
   stopDistance: 0.5
-  attackRange: 1.2
-  attackCooldown: 1.3
+  avoidOtherEnemies: 1
+  separationRadius: 1
+  separationForce: 0.6
   attackDamage: 1
-  usePatrol: 0
-  patrolPoints: []
-  patrolWaitTime: 2
-  showGizmos: 1
-  enableLogs: 0
-  currentState: 0
+  attackCooldown: 1.3
 --- !u!50 &7650596816995993754
 Rigidbody2D:
   serializedVersion: 4

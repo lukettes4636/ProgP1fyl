@@ -135,6 +135,11 @@ public class CicloDiaNoche : MonoBehaviour
         }
     }
 
+    public bool EsDeNoche()
+    {
+        return tiempoActual < 4f || tiempoActual >= 20f;
+    }
+
     void CrearOverlay()
     {
         GameObject overlayObj = new GameObject("Overlay Noche");

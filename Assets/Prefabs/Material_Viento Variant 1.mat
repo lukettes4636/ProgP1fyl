@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Material_Viento Variant
+  m_Name: Material_Viento Variant 1
   m_Shader: {fileID: -6465566751694194690, guid: fb1c60e42ef76ba4992484e7f3845df6, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -42,7 +42,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _PixelationAmount: 1111
-    - _WindSpeed: 5
+    - _WindSpeed: 15.48
     - _blend: 0.01
     - _voronoiddensity: 2
     m_Colors: []

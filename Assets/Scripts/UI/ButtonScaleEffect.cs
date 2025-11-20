@@ -16,7 +16,8 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private AudioSource audioSource;
 
     private Vector3 originalScale;
-    private bool isHoveredOrSelected = false;
+    private bool isHoveredOrSelected;
+
 
     private void Start()
     {

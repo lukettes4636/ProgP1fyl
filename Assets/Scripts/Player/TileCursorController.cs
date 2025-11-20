@@ -26,7 +26,7 @@ public class TileCursorController : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField] private Vector3 offset = new Vector3(0, 0.05f, 0);
-    [SerializeField] private bool snapToGrid = true;
+
 
     private SpriteRenderer spriteRenderer;
 
