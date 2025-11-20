@@ -59,7 +59,7 @@ public class CicloDiaNoche : MonoBehaviour
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 32766;
         canvasGO.AddComponent<CanvasScaler>();
-        canvasGO.AddComponent<GraphicRaycaster>();
+        
         var overlayGO = new GameObject("VignetteOverlay");
         overlayGO.transform.SetParent(canvasGO.transform);
         vignetteImage = overlayGO.AddComponent<Image>();
