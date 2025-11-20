@@ -18134,7 +18134,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 1
   m_Color: {r: 1, g: 0.98294306, b: 0.36320752, a: 0.62352943}
-  m_Intensity: 80
+  m_Intensity: 72.7
   m_LightVolumeIntensity: 0.0001
   m_LightVolumeIntensityEnabled: 1
   m_ApplyToSortingLayers: ebbde5dbb117df78
@@ -21555,9 +21555,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 0.032
+  m_audioClip: {fileID: 8300000, guid: 3733e1517ea6d4f4db6e8ee84e181adf, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.346
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -21654,8 +21654,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ambientClip: {fileID: 8300000, guid: 3733e1517ea6d4f4db6e8ee84e181adf, type: 3}
-  ambientVolume: 0.001
-  playOnStart: 0
+  ambientVolume: 0.0001
+  playOnStart: 1
 --- !u!1 &1436414463
 GameObject:
   m_ObjectHideFlags: 0
@@ -72101,8 +72101,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 2063588394756425525, guid: f8ffd70b2d89ff4428bf3cc57139399c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -34.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 2063588394756425525, guid: f8ffd70b2d89ff4428bf3cc57139399c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.73
+      value: 3.81
       objectReference: {fileID: 0}
     - target: {fileID: 2235612002299404884, guid: f8ffd70b2d89ff4428bf3cc57139399c, type: 3}
       propertyPath: max_Health

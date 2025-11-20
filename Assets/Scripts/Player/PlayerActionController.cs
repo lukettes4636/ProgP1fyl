@@ -34,6 +34,9 @@ public class PlayerActionController : MonoBehaviour
     [SerializeField] private AudioClip[] treeCuttingSounds;
     [SerializeField] private AudioClip dashSound;
     [SerializeField] private float audioVolume = 1.0f;
+    [SerializeField] private float attackVolume = 1.0f;
+    [SerializeField] private float treeCuttingVolume = 1.0f;
+    [SerializeField] private float dashVolume = 1.0f;
     [SerializeField] private float pitchVariation = 0.1f;
 
     private AudioSource audioSource;
@@ -264,7 +267,7 @@ public class PlayerActionController : MonoBehaviour
         {
             AudioClip clip = attackSounds[UnityEngine.Random.Range(0, attackSounds.Length)];
             audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
-            audioSource.PlayOneShot(clip, audioVolume);
+            audioSource.PlayOneShot(clip, audioVolume * attackVolume);
         }
     }
 
@@ -274,7 +277,7 @@ public class PlayerActionController : MonoBehaviour
         {
             AudioClip clip = treeCuttingSounds[UnityEngine.Random.Range(0, treeCuttingSounds.Length)];
             audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
-            audioSource.PlayOneShot(clip, audioVolume);
+            audioSource.PlayOneShot(clip, audioVolume * treeCuttingVolume);
         }
     }
 
@@ -283,7 +286,7 @@ public class PlayerActionController : MonoBehaviour
         if (dashSound != null && audioSource != null)
         {
             audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
-            audioSource.PlayOneShot(dashSound, audioVolume);
+            audioSource.PlayOneShot(dashSound, audioVolume * dashVolume);
         }
     }
 

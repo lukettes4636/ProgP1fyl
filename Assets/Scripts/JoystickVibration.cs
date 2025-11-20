@@ -26,7 +26,6 @@ public class JoystickVibration : MonoBehaviour
     [SerializeField] private float collectItemLowFreq = 0.2f;
     [SerializeField] private float collectItemHighFreq = 0.4f;
     [SerializeField] private float collectItemDuration = 0.16f;
-}
 
     private bool isVibrating = false;
     private float vibrationTimer = 0f;
