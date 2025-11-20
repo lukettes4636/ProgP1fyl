@@ -12,7 +12,6 @@ public class Resource_Collect : MonoBehaviour
     [SerializeField] private int drop_Amount;
     [SerializeField] private string drop_Name = "Madera";
 
-    [Header("Shake Effect")]
     [SerializeField] private float shakeDuration = 0.1f;
     [SerializeField] private float shakeMagnitude = 0.05f;
     private Vector3 originalPosition;
@@ -60,12 +59,10 @@ public class Resource_Collect : MonoBehaviour
     {
         if (toolUsed != requiredtool)
         {
-            Debug.Log(gameObject.name + ": Incorrect tool. Required: " + requiredtool.ToString());
             return false;
         }
 
         current_Health -= damage;
-        Debug.Log(gameObject.name + ": Hit. Remaining Health: " + current_Health);
 
         StartCoroutine(Shake());
 
@@ -76,7 +73,6 @@ public class Resource_Collect : MonoBehaviour
 
         if (current_Health <= 0)
         {
-            Debug.Log($"{gameObject.name} has been destroyed");
             DestroyResourse();
         }
 

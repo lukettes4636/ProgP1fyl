@@ -30,7 +30,6 @@ public class PlayerActionController : MonoBehaviour
     [SerializeField] private PlowManager plowManager;
     [SerializeField] private TileCursorController tileCursorController;
 
-    [Header("Audio Settings")]
     [SerializeField] private AudioClip[] attackSounds;
     [SerializeField] private AudioClip[] treeCuttingSounds;
     [SerializeField] private AudioClip dashSound;
@@ -40,20 +39,14 @@ public class PlayerActionController : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private bool enAccion = false;
 
-    [Header("Action Settings")]
     [SerializeField] private float maxActionDuration = 0.6f;
     private float actionTimer = 0f;
 
-    [Header("Light Settings - Torch")]
-    [Tooltip("Drag the player's light GameObject (LightPlayer)")]
     [SerializeField] private GameObject lightPlayer;
-    
-    [Tooltip("Drag the torch sprite GameObject (Torch)")]
     [SerializeField] private GameObject torchSprite;
     
 
     
-    [Tooltip("Drag the GameObject with the CicloDiaNoche script")]
     [SerializeField] private CicloDiaNoche cicloDiaNoche;
 
     private void Awake()
@@ -84,9 +77,9 @@ public class PlayerActionController : MonoBehaviour
         UpdateInventoryDisplay();
 
         if (plowManager == null)
-            Debug.LogWarning("PlayerActionController: PlowManager not found.");
+            plowManager = FindObjectOfType<PlowManager>();
         if (tileCursorController == null)
-            Debug.LogWarning("PlayerActionController: TileCursorController not found.");
+            tileCursorController = FindObjectOfType<TileCursorController>();
     }
 
     private void Update()
@@ -118,7 +111,6 @@ public class PlayerActionController : MonoBehaviour
         {
             if (!HasItem(SeedItemNames[equipActual]))
             {
-                Debug.Log($"You do not have {SeedItemNames[equipActual]} to plant.");
                 return;
             }
             ExecuteSeedActionInstant();
@@ -142,6 +134,7 @@ public class PlayerActionController : MonoBehaviour
                 PlayAttackSound();
                 animator.SetInteger("AttackIndex", UnityEngine.Random.Range(1, 4));
                 animator.SetBool("Atacando", true);
+                ActivateHitbox();
                 break;
 
             case EquipType.Hacha:
@@ -163,11 +156,9 @@ public class PlayerActionController : MonoBehaviour
 
             case EquipType.Arco:
                 animator.SetBool("Disparar", true);
-                Debug.Log("Shoot Bow");
                 break;
 
             case EquipType.Antorcha:
-                Debug.Log("Use Torch");
                 break;
         }
     }
@@ -182,7 +173,6 @@ public class PlayerActionController : MonoBehaviour
 
         if (cellPos.x == 999)
         {
-            Debug.LogWarning("Planting failed: Cursor is not pointing to a valid tile.");
             return;
         }
 
@@ -207,7 +197,6 @@ public class PlayerActionController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("ActivateHitbox: hitboxScript is null");
         }
     }
 
@@ -225,7 +214,6 @@ public class PlayerActionController : MonoBehaviour
     {
         if (equipActual != EquipType.Arado || plowManager == null || tileCursorController == null)
         {
-            Debug.LogWarning("ExecutePlowAction: Requirements not met");
             return;
         }
 
@@ -245,7 +233,6 @@ public class PlayerActionController : MonoBehaviour
     {
         if (equipActual != EquipType.Regadera || plowManager == null || tileCursorController == null)
         {
-            Debug.LogWarning("ExecuteWaterAction: Requirements not met");
             return;
         }
 
@@ -310,7 +297,6 @@ public class PlayerActionController : MonoBehaviour
             inventory.Add(resourceName, amount);
 
         UpdateInventoryDisplay();
-        Debug.Log($"¡Recogido! {amount} de {resourceName}.");
     }
 
     public void RemoveItem(string itemName, int amount)
@@ -338,7 +324,6 @@ public class PlayerActionController : MonoBehaviour
     {
         if (enAccion) return;
         equipActual = newEquip;
-        Debug.Log("Equipment changed to: " + equipActual);
         
         UpdateLightPlayerVisibility();
     }
@@ -389,21 +374,17 @@ public class PlayerActionController : MonoBehaviour
                 
                 if (deberiaEstarEncendida)
                 {
-                    Debug.Log("Torch equipped at night - Light ON");
                 }
                 else if (tieneAntorchaEquipada)
                 {
-                    Debug.Log("Torch equipped but daytime - Light OFF");
                 }
                 else
                 {
-                    Debug.Log("Torch not equipped - Light OFF");
                 }
             }
         }
         else
         {
-            Debug.LogWarning("LightPlayer is not assigned in PlayerActionController");
         }
     }
     
@@ -435,11 +416,9 @@ public class PlayerActionController : MonoBehaviour
                 
                 if (deberiaEstarEncendida)
                 {
-                    Debug.Log("🕯️ Luz de antorcha ENCENDIDA (Noche + Antorcha equipada)");
                 }
                 else if (tieneAntorchaEquipada)
                 {
-                    Debug.Log("☀️ Luz de antorcha APAGADA (Día + Antorcha equipada)");
                 }
             }
         }
@@ -454,7 +433,6 @@ public class PlayerActionController : MonoBehaviour
             
             if (cicloDiaNoche == null)
             {
-                Debug.LogWarning("CicloDiaNoche no encontrado. Asume que es de día.");
                 return false;
             }
         }

@@ -2,15 +2,12 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [Header("Configuraci�n de Vida")]
     public int vidaMaxima = 50;
 
-    [Header("Loot (Objetos que suelta)")]
     public GameObject objetoQueSuelta;
     public int cantidadASoltar = 3;
     [SerializeField] private string dropName = "Mineral";
 
-    [Header("Sonidos")]
     public AudioClip sonidoDaÑo;
     public AudioClip sonidoMuerte;
 
@@ -36,7 +33,6 @@ public class EnemyHealth : MonoBehaviour
         vidaActual -= cantidad;
         if (vidaActual < 0) vidaActual = 0;
 
-        Debug.Log($"{gameObject.name} received {cantidad} damage. Health: {vidaActual}/{vidaMaxima}");
         ReproducirSonido(sonidoDaÑo);
 
         if (vidaActual <= 0)
@@ -48,7 +44,6 @@ public class EnemyHealth : MonoBehaviour
     private void Morir()
     {
         estaMuerto = true;
-        Debug.Log($"{gameObject.name} has died!");
 
         ReproducirSonido(sonidoMuerte);
         SoltarObjetos();

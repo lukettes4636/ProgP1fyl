@@ -2606,7 +2606,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -3074,7 +3074,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -7287,7 +7287,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -31.97, y: 13.72, z: 0}
+  m_LocalPosition: {x: -35.07, y: 20.87, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11411,7 +11411,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -11984,7 +11984,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -12036,8 +12036,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59cd144349f70604bb351fc7810ded6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duracionCiclo: 3.9
-  horaInicial: 6
+  duracionCiclo: 20
+  horaInicial: 12
   colorNoche: {r: 0, g: 0, b: 0, a: 0.94509804}
   overlayNoche: {fileID: 0}
   sortingLayerName: Roofs
@@ -12092,7 +12092,11 @@ MonoBehaviour:
   - {fileID: 1203240312}
   sonidoDia: {fileID: 8300000, guid: d95471b9a6cedec418c246e7548bde16, type: 3}
   sonidoNoche: {fileID: 8300000, guid: 4daf971cf1769af419e5f8c82079e3f3, type: 3}
-  controlAudio: 0
+  controlAudio: 1
+  vignetteDuration: 0.6
+  vignetteAlpha: 0.4
+  vignetteSize: 256
+  vignettePower: 6.92
 --- !u!4 &708883197 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8856062937961490577, guid: 09c7a60fc71034e49a7fbeac92f07b5e, type: 3}
@@ -12623,7 +12627,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -15898,7 +15902,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -18021,8 +18025,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1135035444}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.237, y: -0.198, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0.010464073, w: 0.9999453}
+  m_LocalPosition: {x: -0.02, y: 0.05, z: 0}
   m_LocalScale: {x: 1.3622154, y: 1.5498985, z: 3.1630578}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18130,7 +18134,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 1
   m_Color: {r: 1, g: 0.98294306, b: 0.36320752, a: 0.62352943}
-  m_Intensity: 8.06
+  m_Intensity: 80
   m_LightVolumeIntensity: 0.0001
   m_LightVolumeIntensityEnabled: 1
   m_ApplyToSortingLayers: ebbde5dbb117df78
@@ -18152,7 +18156,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0.49712002
-  m_PointLightOuterRadius: 1.25
+  m_PointLightOuterRadius: 1.8807598
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -19006,7 +19010,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -19504,7 +19508,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -21565,9 +21569,9 @@ AudioSource:
   MaxDistance: 28.711823
   Pan2D: 0.01
   rolloffMode: 0
-  BypassEffects: 1
-  BypassListenerEffects: 1
-  BypassReverbZones: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -22366,7 +22370,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -22637,7 +22641,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.447
   m_Color: {r: 0.41568628, g: 0.14901961, b: 0.039215688, a: 1}
-  m_Intensity: 573.45
+  m_Intensity: 411.02
   m_LightVolumeIntensity: 0.00015
   m_LightVolumeIntensityEnabled: 1
   m_ApplyToSortingLayers: ebbde5dbb117df78
@@ -23565,7 +23569,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -25239,7 +25243,7 @@ GameObject:
   - component: {fileID: 1693336958}
   - component: {fileID: 1693336961}
   m_Layer: 0
-  m_Name: Horse_04_54
+  m_Name: Horse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26428,7 +26432,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -28456,7 +28460,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -29410,7 +29414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6050321151955132459, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: currentState
@@ -72990,11 +72994,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3506481144874522897, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -31.97
+      value: -35.07
       objectReference: {fileID: 0}
     - target: {fileID: 3506481144874522897, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.72
+      value: 20.87
       objectReference: {fileID: 0}
     - target: {fileID: 3506481144874522897, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -73722,7 +73726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2044782220711786436, guid: 204d925562b7e6b418d450bc3358f314, type: 3}
       propertyPath: attackDamage
-      value: 5
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2044782220711786436, guid: 204d925562b7e6b418d450bc3358f314, type: 3}
       propertyPath: attackCooldown

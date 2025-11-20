@@ -4,11 +4,9 @@ using UnityEngine.UI;
 
 public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
-    [Header("Scale Settings")]
     public float scaleFactor = 1.1f; 
     public float animationDuration = 0.2f; 
     
-    [Header("Sound")]
     public AudioClip hoverSound;
     [Range(0f,1f)] public float hoverVolume = 0.8f;
     public AudioClip clickSound;
@@ -16,7 +14,6 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private AudioSource audioSource;
 
     private Vector3 originalScale;
-    private bool isHoveredOrSelected;
 
 
     private void Start()
@@ -38,7 +35,6 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        isHoveredOrSelected = true;
         StopAllCoroutines();
         StartCoroutine(ScaleTo(scaleFactor));
         PlayHoverSound();
@@ -46,14 +42,12 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        isHoveredOrSelected = false;
         StopAllCoroutines();
         StartCoroutine(ScaleTo(1f));
     }
 
     public void OnSelect(BaseEventData eventData)
     {
-        isHoveredOrSelected = true;
         StopAllCoroutines();
         StartCoroutine(ScaleTo(scaleFactor));
         PlayHoverSound();
@@ -61,7 +55,6 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnDeselect(BaseEventData eventData)
     {
-        isHoveredOrSelected = false;
         StopAllCoroutines();
         StartCoroutine(ScaleTo(1f));
     }

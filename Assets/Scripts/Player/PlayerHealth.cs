@@ -1,15 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Configuración de Vida")]
     public int maxHealth = 100;
-
-    [Header("Sonidos")]
     public AudioClip damageSound;
     public AudioClip deathSound;
-
-    [Header("Efectos visuales")]
     public float damageFlashDuration = 0.1f;
     public Color damageFlashColor = Color.red;
 
@@ -18,6 +14,7 @@ public class PlayerHealth : MonoBehaviour
     private AudioSource audioSource;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
+    public float deathFadeDuration = 1.2f;
 
     void Start()
     {
@@ -29,7 +26,6 @@ public class PlayerHealth : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        // Obtener el SpriteRenderer para efectos visuales
         PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if (playerMovement != null)
         {
@@ -41,15 +37,12 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // Método para recibir daño
     public void TakeDamage(int amount)
     {
         if (isDead) return;
 
         currentHealth -= amount;
         if (currentHealth < 0) currentHealth = 0;
-
-        Debug.Log($"Jugador recibió {amount} de daño. Vida: {currentHealth}/{maxHealth}");
 
         PlaySound(damageSound);
         StartCoroutine(DamageFlash());
@@ -63,31 +56,29 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         isDead = true;
-        Debug.Log("¡El jugador ha muerto!");
 
         PlaySound(deathSound);
 
-        // Desactivar movimiento del jugador
+        var am = FindObjectOfType<AudioManager>();
+        if (am != null) am.FadeOutAmbient(deathFadeDuration);
+
+        var enemies = FindObjectsOfType<EnemyAI>();
+        for (int i = 0; i < enemies.Length; i++) enemies[i].enabled = false;
+
         PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if (playerMovement != null)
         {
             playerMovement.SetCanMove(false);
         }
-
-        // Desactivar acciones del jugador
         PlayerActionController actionController = GetComponent<PlayerActionController>();
         if (actionController != null)
         {
             actionController.enabled = false;
         }
 
-        // Aquí puedes agregar:
-        // - Mostrar pantalla de Game Over
-        // - Reiniciar nivel después de unos segundos
-        // Invoke("RestartLevel", 2f);
+        StartCoroutine(FadeOutOnDeath());
     }
 
-    // Efecto visual cuando recibe daño
     private System.Collections.IEnumerator DamageFlash()
     {
         if (spriteRenderer != null)
@@ -95,6 +86,36 @@ public class PlayerHealth : MonoBehaviour
             spriteRenderer.color = damageFlashColor;
             yield return new WaitForSeconds(damageFlashDuration);
             spriteRenderer.color = originalColor;
+        }
+    }
+
+    private System.Collections.IEnumerator FadeOutOnDeath()
+    {
+        var canvasGO = new GameObject("DeathFadeCanvas");
+        var canvas = canvasGO.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 32767;
+        canvasGO.AddComponent<CanvasScaler>();
+        canvasGO.AddComponent<GraphicRaycaster>();
+
+        var overlayGO = new GameObject("Overlay");
+        overlayGO.transform.SetParent(canvasGO.transform);
+        var img = overlayGO.AddComponent<Image>();
+        var rt = overlayGO.GetComponent<RectTransform>();
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+        img.color = new Color(0f, 0f, 0f, 0f);
+
+        float t = 0f;
+        while (t < deathFadeDuration)
+        {
+            t += Time.deltaTime;
+            float a = Mathf.Clamp01(t / deathFadeDuration);
+            var c = img.color;
+            img.color = new Color(c.r, c.g, c.b, a);
+            yield return null;
         }
     }
 
@@ -106,7 +127,6 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // Métodos útiles
     public int GetCurrentHealth()
     {
         return currentHealth;
@@ -128,17 +148,5 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth += amount;
         if (currentHealth > maxHealth) currentHealth = maxHealth;
-
-        Debug.Log($"Jugador curado +{amount}. Vida: {currentHealth}/{maxHealth}");
     }
-
-    // Método para reiniciar el nivel (opcional)
-    /*
-    private void RestartLevel()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
-        );
-    }
-    */
 }

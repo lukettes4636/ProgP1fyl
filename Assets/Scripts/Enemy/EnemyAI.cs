@@ -13,24 +13,19 @@ public class EnemyAI : MonoBehaviour
     }
 
     
-    [Header("Target")]
     public Transform target;
 
-    [Header("Detection")]
     public float detectionRange = 5f;
     public float followRange = 8f;
     public float attackRange = 1.2f;
 
-    [Header("Movement")]
     public float moveSpeed = 2f;
     public float stopDistance = 0.5f; 
 
-    [Header("Avoidance (separation from other enemies)")]
     public bool avoidOtherEnemies = true;   
     public float separationRadius = 1.0f;   
     public float separationForce = 0.6f;    
 
-    [Header("Attack")]
     public float attackDamage = 10f;
     public float attackCooldown = 1.2f;
     private float lastAttackTime;

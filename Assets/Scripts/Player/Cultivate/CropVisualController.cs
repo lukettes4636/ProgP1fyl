@@ -8,8 +8,6 @@ public class CropVisualController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private bool isInitialized = false;
 
-    [Header("Sorting Config")]
-    [Tooltip("Must match Player Sorting Factor.")]
     [SerializeField] private int sortingFactor = 100;
 
     private const int BaseDrawOffset = 50000;

@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class HotbarUI : MonoBehaviour
 {
-[Header("Slots - Icons (drag the 9 icons in order)")]
     [SerializeField] private Image slot1Icon;
     [SerializeField] private Image slot2Icon;
     [SerializeField] private Image slot3Icon;
@@ -14,7 +13,6 @@ public class HotbarUI : MonoBehaviour
     [SerializeField] private Image slot8Icon;
     [SerializeField] private Image slot9Icon;
 
-[Header("Slots - Selection frames (drag the 9 frames in order)")]
     [SerializeField] private GameObject slot1Selection;
     [SerializeField] private GameObject slot2Selection;
     [SerializeField] private GameObject slot3Selection;
@@ -25,7 +23,6 @@ public class HotbarUI : MonoBehaviour
     [SerializeField] private GameObject slot8Selection;
     [SerializeField] private GameObject slot9Selection;
 
-[Header("Tool Sprites (order: Sword, Axe, Pickaxe, Plow, WateringCan, Bow, Torch, Seed1, Seed2)")]
     [SerializeField] private Sprite espadaSprite;
     [SerializeField] private Sprite hachaSprite;
     [SerializeField] private Sprite picoSprite;
@@ -48,7 +45,6 @@ public class HotbarUI : MonoBehaviour
 
         if (playerController == null)
         {
-            Debug.LogError("PlayerActionController not found!");
             return;
         }
 

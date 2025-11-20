@@ -5,20 +5,14 @@ using System.Collections;
 
 public class SplashScreen : MonoBehaviour
 {
-[Header("Splash Screen Settings")]
-[Tooltip("Drag the logo image for the splash screen")]
     [SerializeField] private Image splashImage;
     
-[Tooltip("Logo fade-in duration (seconds)")]
     [SerializeField] private float fadeInDuration = 2f;
     
-[Tooltip("Time the logo is displayed (seconds)")]
     [SerializeField] private float displayDuration = 3f;
     
-[Tooltip("Logo fade-out duration (seconds)")]
     [SerializeField] private float fadeOutDuration = 2f;
     
-[Tooltip("Main menu scene name to load")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     
     private CanvasGroup canvasGroup;
@@ -27,7 +21,6 @@ public class SplashScreen : MonoBehaviour
     {
         if (splashImage == null)
         {
-            Debug.LogError("Splash image not assigned");
             return;
         }
         

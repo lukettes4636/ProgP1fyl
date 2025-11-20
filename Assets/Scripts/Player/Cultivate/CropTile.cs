@@ -3,27 +3,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Crop Data", menuName = "Crops/Crop Data")]
 public class CropTile : ScriptableObject
 {
-[Header("Crop Settings")]
     public string cropName = "NewCrop";
     public Sprite[] growthStages;
     public float[] stageScaleMultipliers;
 
-[Header("Growth Times")]
     public float timePerStage = 60f;
 
-[Header("Harvest Settings (Loot)")]
-[Tooltip("Sprite of the final item shown when it drops.")]
     public Sprite harvestItemSprite; 
 
-[Tooltip("Name of the final resource added to player inventory.")]
     public string harvestItemName = "Tomato";
 
-[Tooltip("Minimum items dropped when harvesting.")]
     public int minDropAmount = 1;
-[Tooltip("Maximum items dropped when harvesting.")]
     public int maxDropAmount = 3;
 
-[Header("Internal Crop State (Runtime)")]
     [SerializeField] private int currentStage = 0;
     [SerializeField] private float timeGrown = 0f;
     [SerializeField] private bool isReadyToHarvest = false;

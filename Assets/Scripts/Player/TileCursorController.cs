@@ -4,27 +4,19 @@ using UnityEngine.Tilemaps;
 [RequireComponent(typeof(SpriteRenderer))]
 public class TileCursorController : MonoBehaviour
 {
-[Header("References")]
     [SerializeField] private Tilemap targetTilemap;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private PlayerActionController playerActionController;
 
-[Header("Distance Settings")]
-[Tooltip("Tile size in world units (usually 1).")]
     [SerializeField] private float tileSize = 1.0f;
 
-[Tooltip("Minimum tiles away from player (e.g., 1 to avoid feet).")]
     [SerializeField] private int minTileDistance = 1;
 
-[Tooltip("Maximum tiles the cursor can reach.")]
     [SerializeField] private int maxTileDistance = 3;
 
-[Header("Cursor Sensitivity")]
-[Tooltip("Threshold (0.0 to 1.0) to jump to max distance.")]
     [SerializeField] private float maxDistanceThreshold = 0.8f;
 
-[Header("Visual")]
     [SerializeField] private Vector3 offset = new Vector3(0, 0.05f, 0);
 
 
@@ -35,7 +27,6 @@ public class TileCursorController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
-            Debug.LogError("TileCursorController requires a SpriteRenderer.");
         }
     }
 

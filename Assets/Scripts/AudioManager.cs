@@ -1,8 +1,8 @@
 using UnityEngine;
+using System.Collections;
 
 public class AudioManager : MonoBehaviour
 {
-    [Header("Ambient Audio")]
     public AudioClip ambientClip;
     public float ambientVolume = 0.5f;
     public bool playOnStart = true;
@@ -49,5 +49,27 @@ public class AudioManager : MonoBehaviour
         {
             ambientSource.volume = ambientVolume;
         }
+    }
+
+    public void FadeOutAmbient(float duration)
+    {
+        if (ambientSource == null) return;
+        StopAllCoroutines();
+        StartCoroutine(AmbientFadeOut(duration));
+    }
+
+    private IEnumerator AmbientFadeOut(float duration)
+    {
+        float startVol = ambientSource.volume;
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / duration);
+            ambientSource.volume = Mathf.Lerp(startVol, 0f, k);
+            yield return null;
+        }
+        ambientSource.Stop();
+        ambientSource.volume = ambientVolume;
     }
 }

@@ -6,30 +6,18 @@ public class PlowManager : MonoBehaviour
 {
     public static PlowManager Instance { get; private set; }
 
-    [Header("Tilemaps")]
-    [Tooltip("La capa m�s baja (ej: hierba/tierra com�n).")]
     [SerializeField] private Tilemap groundTilemap;
-    [Tooltip("Capa de cultivo. Aqu� se coloca la tierra arada seca.")]
     [SerializeField] private Tilemap plowTilemap;
-    [Tooltip("Capa que muestra el efecto de agua/mojado (DEBAJO del cultivo).")]
     [SerializeField] private Tilemap waterTilemap;
-    [Tooltip("Capa superior que usamos para mapear los GameObjects de cultivos.")]
     [SerializeField] private Tilemap cropTilemap;
     [SerializeField] private TileBase plowedTile;
     [SerializeField] private TileBase wateredTile;
 
-    [Header("Configuraci�n de Cultivos")]
-    [Tooltip("El Prefab que contiene CropVisualController.cs")]
     [SerializeField] private GameObject cropPrefab;
-    [Tooltip("ScriptableObjects con la data de cada tipo de semilla.")]
     [SerializeField] private CropTile[] cropTiles;
 
-    [Header("Configuraci�n de Loot")]
-    [Tooltip("El Prefab con el script CollectableItem.cs (debe tener un SpriteRenderer).")]
     [SerializeField] private GameObject lootPrefab; 
 
-    [Header("Control de Secado")]
-    [Tooltip("Tiempo (en segundos) que tarda el suelo/cultivo en secarse por completo.")]
     [SerializeField] private float dryingCycleIntervalSeconds = 60f;
     private float dryTimer = 0f;
 
@@ -53,7 +41,6 @@ public class PlowManager : MonoBehaviour
         playerActionController = FindObjectOfType<PlayerActionController>();
         if (playerActionController == null)
         {
-            Debug.LogError("[PlowManager] PlayerActionController not found. Ensure it is active in the scene.");
         }
     }
 
@@ -136,7 +123,6 @@ public class PlowManager : MonoBehaviour
         bool isInitiallyMoist = waterTilemap.GetTile(cellPosition) == wateredTile;
         if (!isInitiallyMoist)
         {
-            Debug.Log($"[PlowManager] Planting failed. Cell {cellPosition} is not wet soil.");
             return false;
         }
 
@@ -174,7 +160,6 @@ public class PlowManager : MonoBehaviour
     {
         if (!activeCrops.ContainsKey(cellPosition) || !activeCropObjects.ContainsKey(cellPosition) || lootPrefab == null)
         {
-            Debug.LogWarning("[PlowManager] Harvest failed: Check the cell, the crop GameObject or lootPrefab assignment.");
             return;
         }
 
@@ -183,7 +168,6 @@ public class PlowManager : MonoBehaviour
 
         if (!cropInstance.IsReadyToHarvest())
         {
-            Debug.LogWarning($"[PlowManager] Plant {cropInstance.cropName} is not ready.");
             return;
         }
 
@@ -202,7 +186,6 @@ public class PlowManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"[PlowManager] Harvested {dropAmount} of {cropInstance.harvestItemName}.");
 
         Destroy(cropGO);
 

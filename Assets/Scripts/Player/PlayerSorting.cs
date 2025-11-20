@@ -5,7 +5,6 @@ public class PlayerSorting : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
 
-    [Tooltip("Factor de multiplicaci�n para el Sorting Order.")]
     [SerializeField] private int sortingFactor = 100;
 
     private const int BaseDrawOffset = 50000;
@@ -15,7 +14,6 @@ public class PlayerSorting : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
-            Debug.LogError("PlayerSorting requiere un SpriteRenderer.");
         }
     }
 

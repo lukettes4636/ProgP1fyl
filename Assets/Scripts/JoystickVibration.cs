@@ -2,10 +2,8 @@ using UnityEngine;
 
 public class JoystickVibration : MonoBehaviour
 {
-    [Header("General Settings")]
     [SerializeField] private bool enableVibration = true;
 
-    [Header("Combat Vibrations")]
     [SerializeField] private float attackTreeLowFreq = 0.6f;
     [SerializeField] private float attackTreeHighFreq = 0.8f;
     [SerializeField] private float attackTreeDuration = 0.3f;
@@ -18,7 +16,6 @@ public class JoystickVibration : MonoBehaviour
     [SerializeField] private float miningHighFreq = 0.6f;
     [SerializeField] private float miningDuration = 0.36f;
 
-    [Header("Movement Vibrations")]
     [SerializeField] private float dashLowFreq = 0.4f;
     [SerializeField] private float dashHighFreq = 0.6f;
     [SerializeField] private float dashDuration = 0.2f;
@@ -26,10 +23,10 @@ public class JoystickVibration : MonoBehaviour
     [SerializeField] private float runHighFreq = 0.3f;
     [SerializeField] private float runDuration = 0.08f;
 
-    [Header("Collection Vibrations")]
     [SerializeField] private float collectItemLowFreq = 0.2f;
     [SerializeField] private float collectItemHighFreq = 0.4f;
     [SerializeField] private float collectItemDuration = 0.16f;
+}
 
     private bool isVibrating = false;
     private float vibrationTimer = 0f;
@@ -60,7 +57,6 @@ public class JoystickVibration : MonoBehaviour
         isVibrating = true;
         vibrationTimer = duration;
 
-        Debug.Log($"[VIBRATION] Low: {lowFreq} | High: {highFreq} | Duration: {duration}");
     }
 
     public void StopVibration()

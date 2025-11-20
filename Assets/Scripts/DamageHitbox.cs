@@ -2,14 +2,15 @@ using UnityEngine;
 
 public class DamageHitbox : MonoBehaviour
 {
-    [Header("Configuración")]
     [SerializeField] private float hitboxDistance = 0.6f;
     [SerializeField] private float hitboxLifetime = 0.2f;
+    [SerializeField] private float hitRadius = 0.3f;
 
     private PlayerActionController actionController;
     private PlayerMovement playerMovement;
     private int currentDamage;
     private PlayerActionController.EquipType currentTool;
+    private bool appliedDamage;
 
     private void Awake()
     {
@@ -31,10 +32,12 @@ public class DamageHitbox : MonoBehaviour
 
         transform.localPosition = attackDirection * hitboxDistance;
 
-        Debug.Log($"Hitbox activated - Direction: {attackDirection}, Position: {transform.localPosition}");
 
 
         gameObject.SetActive(true);
+        appliedDamage = false;
+
+        TryImmediateHit();
 
 
         Invoke(nameof(DeactivateHitbox), hitboxLifetime);
@@ -46,15 +49,18 @@ public class DamageHitbox : MonoBehaviour
         CancelInvoke(nameof(DeactivateHitbox));
         gameObject.SetActive(false);
         transform.localPosition = Vector3.zero;
+        appliedDamage = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (appliedDamage) return;
 
         Resource_Collect resource = other.GetComponent<Resource_Collect>();
         if (resource != null)
         {
             resource.TakeHit(currentTool, currentDamage);
+            appliedDamage = true;
             return;
         }
 
@@ -64,8 +70,8 @@ public class DamageHitbox : MonoBehaviour
             EnemyHealth enemy = other.GetComponent<EnemyHealth>();
             if (enemy != null)
             {
-                Debug.Log($"Hit! {currentDamage} damage to {enemy.gameObject.name}");
                 enemy.TakeDamage(currentDamage);
+                appliedDamage = true;
             }
         }
     }
@@ -82,13 +88,41 @@ public class DamageHitbox : MonoBehaviour
         {
 
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, 0.3f);
+            Gizmos.DrawWireSphere(transform.position, hitRadius);
 
 
             if (transform.parent != null)
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(transform.parent.position, transform.position);
+            }
+        }
+    }
+
+    private void TryImmediateHit()
+    {
+        var cols = Physics2D.OverlapCircleAll(transform.position, hitRadius);
+        for (int i = 0; i < cols.Length; i++)
+        {
+            var c = cols[i];
+            if (actionController != null && c.gameObject == actionController.gameObject) continue;
+
+            var resource = c.GetComponent<Resource_Collect>();
+            if (resource != null)
+            {
+                resource.TakeHit(currentTool, currentDamage);
+                appliedDamage = true;
+                continue;
+            }
+
+            if (currentTool == PlayerActionController.EquipType.Espada)
+            {
+                var enemy = c.GetComponent<EnemyHealth>();
+                if (enemy != null)
+                {
+                    enemy.TakeDamage(currentDamage);
+                    appliedDamage = true;
+                }
             }
         }
     }

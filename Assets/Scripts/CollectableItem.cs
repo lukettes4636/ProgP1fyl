@@ -5,10 +5,9 @@ using System.Collections;
 [RequireComponent(typeof(SpriteRenderer))]
 public class CollectableItem : MonoBehaviour
 {
-    private string itemName = "Recurso";
+    private string itemName = "Resource";
     private int itemAmount = 1;
 
-    [Header("Configuración de Recolección")]
     [SerializeField] private float initialDelay = 0.2f;
     [SerializeField] private float attractionSpeed = 5f;
 
