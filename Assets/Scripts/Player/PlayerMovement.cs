@@ -281,4 +281,14 @@ public class PlayerMovement : MonoBehaviour
             canMove = true;
         }
     }
+    
+    public bool IsRunning()
+    {
+        return isRunning;
+    }
+    
+    public float GetRunSpeed()
+    {
+        return runSpeed;
+    }
 }
