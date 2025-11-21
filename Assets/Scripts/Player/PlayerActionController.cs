@@ -14,13 +14,17 @@ public class PlayerActionController : MonoBehaviour
     [SerializeField] private int baseDamage = 20;
     [SerializeField] private GameObject damageHitbox;
 
+    [Header("Configuración del Arco")]
+    [SerializeField] private GameObject arrowPrefab; // Prefab de la flecha
+    [SerializeField] private Transform arrowSpawnPoint; // Punto de spawn (opcional)
+
     private Dictionary<string, int> inventory = new Dictionary<string, int>();
     [SerializeField] private List<string> inventoryDisplay = new List<string>();
 
     private readonly Dictionary<EquipType, string> SeedItemNames = new Dictionary<EquipType, string>
     {
         { EquipType.Semilla1, "SemillasDeGirasol" },
-        { EquipType.Semilla2, "SemillasDeUva" }
+        { EquipType.Semilla2, "SemillasDeCebolla" }
     };
 
     private Animator animator;
@@ -47,9 +51,7 @@ public class PlayerActionController : MonoBehaviour
 
     [SerializeField] private GameObject lightPlayer;
     [SerializeField] private GameObject torchSprite;
-    
 
-    
     [SerializeField] private CicloDiaNoche cicloDiaNoche;
 
     private void Awake()
@@ -69,7 +71,6 @@ public class PlayerActionController : MonoBehaviour
             plowManager = FindObjectOfType<PlowManager>();
 
         tileCursorController = FindObjectOfType<TileCursorController>();
-
 
         foreach (var item in SeedItemNames)
         {
@@ -99,7 +100,6 @@ public class PlayerActionController : MonoBehaviour
 
         if (Input.GetButtonDown("Action"))
             HandleAction();
-            
 
         UpdateLightPlayerVisibilityContinuous();
     }
@@ -124,7 +124,6 @@ public class PlayerActionController : MonoBehaviour
         actionTimer = maxActionDuration;
 
         Vector2 actionDirection = playerMovement.GetLastDirection();
-
 
         animator.SetFloat("MoveX", actionDirection.x);
         animator.SetFloat("MoveY", actionDirection.y);
@@ -159,6 +158,7 @@ public class PlayerActionController : MonoBehaviour
 
             case EquipType.Arco:
                 animator.SetBool("Disparar", true);
+                // La flecha se dispara desde el Animation Event
                 break;
 
             case EquipType.Antorcha:
@@ -189,21 +189,16 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
+    // ========== MÉTODOS LLAMADOS POR ANIMATION EVENTS ==========
 
-
-    
     public void ActivateHitbox()
     {
         if (hitboxScript != null)
         {
             hitboxScript.ActivateHitbox();
         }
-        else
-        {
-        }
     }
 
-    
     public void DisableHitbox()
     {
         if (hitboxScript != null)
@@ -212,7 +207,50 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    
+    /// <summary>
+    /// Dispara una flecha. Llamar desde Animation Event.
+    /// </summary>
+    public void ShootArrow()
+    {
+        if (arrowPrefab == null)
+        {
+            Debug.LogWarning("ShootArrow: No hay prefab de flecha asignado en el Inspector");
+            return;
+        }
+
+        // Obtener dirección del disparo
+        Vector2 shootDirection = playerMovement.GetLastDirection();
+
+        // Determinar posición de spawn
+        Vector3 spawnPosition;
+        if (arrowSpawnPoint != null)
+        {
+            // Usar el spawn point si existe
+            spawnPosition = arrowSpawnPoint.position;
+        }
+        else
+        {
+            // Si no hay spawn point, crear cerca del jugador
+            spawnPosition = transform.position + (Vector3)shootDirection * 0.5f;
+        }
+
+        // Crear la flecha
+        GameObject arrowObject = Instantiate(arrowPrefab, spawnPosition, Quaternion.identity);
+
+        // Lanzar la flecha
+        Arrow arrowScript = arrowObject.GetComponent<Arrow>();
+        if (arrowScript != null)
+        {
+            arrowScript.Launch(shootDirection);
+        }
+        else
+        {
+            Debug.LogError("El prefab de flecha no tiene el script Arrow.cs");
+        }
+
+        Debug.Log($" Flecha disparada hacia: {shootDirection}");
+    }
+
     public void ExecutePlowAction()
     {
         if (equipActual != EquipType.Arado || plowManager == null || tileCursorController == null)
@@ -231,7 +269,6 @@ public class PlayerActionController : MonoBehaviour
             plowManager.PlowAt(cellPos);
     }
 
-    
     public void ExecuteWaterAction()
     {
         if (equipActual != EquipType.Regadera || plowManager == null || tileCursorController == null)
@@ -245,7 +282,6 @@ public class PlayerActionController : MonoBehaviour
         plowManager.WaterAt(cellPos);
     }
 
-    
     public void EndActionState()
     {
         enAccion = false;
@@ -259,7 +295,7 @@ public class PlayerActionController : MonoBehaviour
         animator.SetInteger("AttackIndex", 0);
     }
 
-
+    // ========== MÉTODOS DE AUDIO ==========
 
     private void PlayAttackSound()
     {
@@ -290,7 +326,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-
+    // ========== MÉTODOS DE INVENTARIO ==========
 
     public void CollectResource(string resourceName, int amount)
     {
@@ -321,13 +357,13 @@ public class PlayerActionController : MonoBehaviour
             inventoryDisplay.Add($"{item.Key}: {item.Value}");
     }
 
-
+    // ========== GETTERS Y SETTERS ==========
 
     public void SetEquip(EquipType newEquip)
     {
         if (enAccion) return;
         equipActual = newEquip;
-        
+
         UpdateLightPlayerVisibility();
     }
 
@@ -351,95 +387,61 @@ public class PlayerActionController : MonoBehaviour
         return inventory.TryGetValue(itemName, out var count) ? count : 0;
     }
 
+    // ========== SISTEMA DE ANTORCHA ==========
+
     private void UpdateLightPlayerVisibility()
     {
         bool tieneAntorchaEquipada = equipActual == EquipType.Antorcha;
         bool esDeNoche = EsDeNoche();
-        
 
         bool deberiaEstarEncendida = tieneAntorchaEquipada && esDeNoche;
-        
 
         if (torchSprite != null)
         {
             torchSprite.SetActive(tieneAntorchaEquipada);
         }
-        
-
-
-        
 
         if (lightPlayer != null)
         {
             if (lightPlayer.activeSelf != deberiaEstarEncendida)
             {
                 lightPlayer.SetActive(deberiaEstarEncendida);
-                
-                if (deberiaEstarEncendida)
-                {
-                }
-                else if (tieneAntorchaEquipada)
-                {
-                }
-                else
-                {
-                }
             }
         }
-        else
-        {
-        }
     }
-    
+
     private void UpdateLightPlayerVisibilityContinuous()
     {
         bool tieneAntorchaEquipada = equipActual == EquipType.Antorcha;
-        
 
         if (torchSprite != null)
         {
             torchSprite.SetActive(tieneAntorchaEquipada);
         }
-        
-
-
-        
 
         if (lightPlayer != null && cicloDiaNoche != null)
         {
             bool esDeNoche = cicloDiaNoche.EsDeNoche();
-            
-
             bool deberiaEstarEncendida = tieneAntorchaEquipada && esDeNoche;
-            
 
             if (lightPlayer.activeSelf != deberiaEstarEncendida)
             {
                 lightPlayer.SetActive(deberiaEstarEncendida);
-                
-                if (deberiaEstarEncendida)
-                {
-                }
-                else if (tieneAntorchaEquipada)
-                {
-                }
             }
         }
     }
-    
+
     private bool EsDeNoche()
     {
         if (cicloDiaNoche == null)
         {
-
             cicloDiaNoche = FindObjectOfType<CicloDiaNoche>();
-            
+
             if (cicloDiaNoche == null)
             {
                 return false;
             }
         }
-        
 
         return cicloDiaNoche.EsDeNoche();
     }

@@ -374,6 +374,132 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: UI_Buttons_12
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 129
+        width: 30
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0dc15bd5c202b86448a0400b93dbed86
+      internalID: 133004881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Buttons_13
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 129
+        width: 30
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5fbd7553989bc24ba04e123228ea511
+      internalID: -1337011241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Buttons_14
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 129
+        width: 30
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a6da6b88e23f33543aea9fb484370e8a
+      internalID: -213457221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Buttons_15
+      rect:
+        serializedVersion: 2
+        x: 720
+        y: 17
+        width: 47
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d083d504c6d949b43a22b18c59a4e66f
+      internalID: 1116321711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Buttons_16
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 17
+        width: 47
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0b9b42f169752e540aad3e7d1a6d20c8
+      internalID: -67100521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Buttons_17
+      rect:
+        serializedVersion: 2
+        x: 816
+        y: 17
+        width: 47
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7002366887d8a0a47bb816f5e0d3e01b
+      internalID: 1736131774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -389,6 +515,12 @@ TextureImporter:
       UI_Buttons_1: -32487452
       UI_Buttons_10: -2077296046
       UI_Buttons_11: -1474095592
+      UI_Buttons_12: 133004881
+      UI_Buttons_13: -1337011241
+      UI_Buttons_14: -213457221
+      UI_Buttons_15: 1116321711
+      UI_Buttons_16: -67100521
+      UI_Buttons_17: 1736131774
       UI_Buttons_2: -395152933
       UI_Buttons_3: 1539586956
       UI_Buttons_4: 1202168663

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
-    
     public enum EnemyState
     {
         Idle,
@@ -12,30 +11,33 @@ public class EnemyAI : MonoBehaviour
         Returning
     }
 
-    
+    [Header("Target")]
     public Transform target;
 
+    [Header("Detection")]
     public float detectionRange = 5f;
     public float followRange = 8f;
     public float attackRange = 1.2f;
 
+    [Header("Movement")]
     public float moveSpeed = 2f;
-    public float stopDistance = 0.5f; 
+    public float stopDistance = 0.5f;
 
-    public bool avoidOtherEnemies = true;   
-    public float separationRadius = 1.0f;   
-    public float separationForce = 0.6f;    
+    [Header("Avoidance")]
+    public bool avoidOtherEnemies = true;
+    public float separationRadius = 1.0f;
+    public float separationForce = 0.6f;
 
+    [Header("Attack")]
     public float attackDamage = 10f;
     public float attackCooldown = 1.2f;
     private float lastAttackTime;
 
-    
     private EnemyState currentState = EnemyState.Idle;
     private Vector3 startPosition;
     private Rigidbody2D rb;
     private Animator animator;
-    
+
     private readonly Vector3 spriteScale = new Vector3(1.8f, 1.8f, 1.8f);
     private float lastMoveX = 0f;
     private float lastMoveY = -1f;
@@ -43,12 +45,12 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        
+
         rb.mass = 3.0f;
         rb.drag = 5.0f;
         rb.angularDrag = 0.05f;
         rb.gravityScale = 0.0f;
-        
+
         animator = GetComponent<Animator>();
         startPosition = transform.position;
 
@@ -68,7 +70,6 @@ public class EnemyAI : MonoBehaviour
         if (target == null) return;
 
         HandleStateLogic();
-
         UpdateAnimator();
     }
 
@@ -86,22 +87,36 @@ public class EnemyAI : MonoBehaviour
         switch (currentState)
         {
             case EnemyState.Idle:
-                if (distanceToTarget <= detectionRange) currentState = EnemyState.Chasing;
+                if (distanceToTarget <= detectionRange)
+                    currentState = EnemyState.Chasing;
                 break;
 
             case EnemyState.Chasing:
-                if (distanceToTarget > followRange) currentState = EnemyState.Returning;
-                else if (canAttackDistance) currentState = EnemyState.Attacking;
+                if (distanceToTarget > followRange)
+                    currentState = EnemyState.Returning;
+                else if (canAttackDistance)
+                    currentState = EnemyState.Attacking;
                 break;
 
             case EnemyState.Attacking:
-                if (!canAttackDistance) { currentState = EnemyState.Chasing; break; }
+                if (!canAttackDistance)
+                {
+                    currentState = EnemyState.Chasing;
+                    break;
+                }
+
                 FaceTarget();
-                if (Time.time >= lastAttackTime + attackCooldown) Attack();
+
+                // Solo atacar cuando pase el cooldown
+                if (Time.time >= lastAttackTime + attackCooldown)
+                {
+                    Attack();
+                }
                 break;
 
             case EnemyState.Returning:
-                if (distanceToTarget <= detectionRange) currentState = EnemyState.Chasing;
+                if (distanceToTarget <= detectionRange)
+                    currentState = EnemyState.Chasing;
                 else if (distanceToStart <= stopDistance + 0.1f)
                 {
                     currentState = EnemyState.Idle;
@@ -128,6 +143,13 @@ public class EnemyAI : MonoBehaviour
 
     void HandleMovement()
     {
+        // No moverse cuando está atacando
+        if (currentState == EnemyState.Attacking)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
         Vector3 destination = transform.position;
         float distance = 0f;
         bool shouldMove = false;
@@ -147,7 +169,6 @@ public class EnemyAI : MonoBehaviour
                 break;
 
             case EnemyState.Idle:
-            case EnemyState.Attacking:
                 rb.velocity = Vector2.zero;
                 return;
         }
@@ -172,7 +193,7 @@ public class EnemyAI : MonoBehaviour
                 {
                     Vector2 away = (Vector2)(transform.position - col.transform.position);
                     float dist = Mathf.Max(away.magnitude, 0.01f);
-                    separation += away.normalized / dist; 
+                    separation += away.normalized / dist;
                 }
             }
             direction = (direction + separation * separationForce).normalized;
@@ -221,12 +242,17 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    // Inicia el ataque (activa animación)
     void Attack()
     {
         lastAttackTime = Time.time;
-        DealDamageToPlayer();
+
+        // Activar animación de ataque
+        animator.SetTrigger("Attack");
     }
 
+    // ===== MÉTODO LLAMADO POR ANIMATION EVENT =====
+    // Hacer daño al jugador (llamar desde el frame del golpe)
     public void DealDamageToPlayer()
     {
         if (target == null) return;
@@ -238,7 +264,18 @@ public class EnemyAI : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage((int)attackDamage);
+                Debug.Log($" Enemigo golpeó al jugador por {attackDamage} de daño");
             }
+        }
+    }
+
+    // ===== MÉTODO LLAMADO DESDE ENEMYHEALTH =====
+    // Reproducir animación de hit cuando recibe daño
+    public void PlayHitAnimation()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("Hit");
         }
     }
 
@@ -247,8 +284,7 @@ public class EnemyAI : MonoBehaviour
         if (animator == null) return;
 
         Vector2 velocity = rb.velocity;
-
-        bool isMoving = (rb.velocity.sqrMagnitude > 0.01f);
+        bool isMoving = (velocity.sqrMagnitude > 0.01f);
 
         animator.SetBool("IsMoving", isMoving);
         animator.SetBool("IsAttacking", currentState == EnemyState.Attacking);

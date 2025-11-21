@@ -126,8 +126,9 @@ MonoBehaviour:
   objetoQueSuelta: {fileID: 0}
   cantidadASoltar: 3
   dropName: Mineral
-  "sonidoDa\xD1o": {fileID: 0}
+  "sonidoDa\xF1o": {fileID: 0}
   sonidoMuerte: {fileID: 0}
+  tiempoAntesDeDestruir: 0.5
 --- !u!114 &6050321151955132459
 MonoBehaviour:
   m_ObjectHideFlags: 0
