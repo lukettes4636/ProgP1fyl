@@ -1,5 +1,7 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
+
 public class DamageHitbox : MonoBehaviour
 {
     [SerializeField] private float hitboxDistance = 0.6f;
@@ -16,6 +18,8 @@ public class DamageHitbox : MonoBehaviour
     {
         actionController = GetComponentInParent<PlayerActionController>();
         playerMovement = GetComponentInParent<PlayerMovement>();
+        var col = GetComponent<Collider2D>();
+        if (col != null) col.isTrigger = true;
         gameObject.SetActive(false);
     }
 
@@ -65,13 +69,25 @@ public class DamageHitbox : MonoBehaviour
         }
 
 
-        if (currentTool == PlayerActionController.EquipType.Espada)
+        if (currentTool == PlayerActionController.EquipType.Espada ||
+            currentTool == PlayerActionController.EquipType.Hacha ||
+            currentTool == PlayerActionController.EquipType.Pico)
         {
             EnemyHealth enemy = other.GetComponent<EnemyHealth>();
             if (enemy != null)
             {
                 enemy.TakeDamage(currentDamage);
                 appliedDamage = true;
+            }
+
+            if (!appliedDamage)
+            {
+                AngelBoss boss = other.GetComponent<AngelBoss>();
+                if (boss != null)
+                {
+                    boss.TakeDamage(currentDamage);
+                    appliedDamage = true;
+                }
             }
         }
     }
@@ -115,12 +131,22 @@ public class DamageHitbox : MonoBehaviour
                 continue;
             }
 
-            if (currentTool == PlayerActionController.EquipType.Espada)
+            if (currentTool == PlayerActionController.EquipType.Espada ||
+                currentTool == PlayerActionController.EquipType.Hacha ||
+                currentTool == PlayerActionController.EquipType.Pico)
             {
                 var enemy = c.GetComponent<EnemyHealth>();
                 if (enemy != null)
                 {
                     enemy.TakeDamage(currentDamage);
+                    appliedDamage = true;
+                    continue;
+                }
+
+                var boss = c.GetComponent<AngelBoss>();
+                if (boss != null)
+                {
+                    boss.TakeDamage(currentDamage);
                     appliedDamage = true;
                 }
             }

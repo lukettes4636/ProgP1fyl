@@ -2,20 +2,13 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [Header("Configuración de Vida")]
     public int vidaMaxima = 50;
-
-    [Header("Loot")]
     public GameObject objetoQueSuelta;
     public int cantidadASoltar = 3;
     [SerializeField] private string dropName = "Mineral";
-
-    [Header("Sonidos")]
     public AudioClip sonidoDaño;
     public AudioClip sonidoMuerte;
-
-    [Header("Animación de Muerte")]
-    public float tiempoAntesDeDestruir = 0.5f; // Tiempo de la animación de muerte
+    public float tiempoAntesDeDestruir = 0.5f;
 
     private int vidaActual;
     private bool estaMuerto = false;
@@ -44,17 +37,14 @@ public class EnemyHealth : MonoBehaviour
 
         Debug.Log($" {gameObject.name} recibió {cantidad} de daño. Vida: {vidaActual}/{vidaMaxima}");
 
-        // Reproducir sonido
         ReproducirSonido(sonidoDaño);
 
-        // Reproducir animación de hit
         EnemyAI enemyAI = GetComponent<EnemyAI>();
         if (enemyAI != null)
         {
             enemyAI.PlayHitAnimation();
         }
 
-        // Verificar si murió
         if (vidaActual <= 0)
         {
             Morir();
@@ -66,23 +56,19 @@ public class EnemyHealth : MonoBehaviour
         estaMuerto = true;
         Debug.Log($" {gameObject.name} ha muerto!");
 
-        // Reproducir sonido
         ReproducirSonido(sonidoMuerte);
 
-        // Activar animación de muerte
         if (animator != null)
         {
             animator.SetTrigger("Death");
         }
 
-        // Desactivar el AI para que no se mueva
         EnemyAI enemyAI = GetComponent<EnemyAI>();
         if (enemyAI != null)
         {
             enemyAI.enabled = false;
         }
 
-        // Desactivar el Rigidbody para que no se mueva
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
@@ -90,16 +76,13 @@ public class EnemyHealth : MonoBehaviour
             rb.bodyType = RigidbodyType2D.Kinematic;
         }
 
-        // Soltar objetos
         SoltarObjetos();
 
-        // Notificar al GameManager
         if (GameManager.GetInstance() != null)
         {
             GameManager.GetInstance().EnemyDefeated();
         }
 
-        // Destruir después de la animación
         Destroy(gameObject, tiempoAntesDeDestruir);
     }
 

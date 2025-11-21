@@ -57,7 +57,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: fb503f4837a56de48bbcf635634aac2a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -123,12 +123,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vidaMaxima: 50
-  objetoQueSuelta: {fileID: 0}
+  objetoQueSuelta: {fileID: 8013833774173798485, guid: 3f2f611bc79c52a41a9027096887e8cc, type: 3}
   cantidadASoltar: 3
   dropName: Mineral
   "sonidoDa\xF1o": {fileID: 0}
   sonidoMuerte: {fileID: 0}
-  tiempoAntesDeDestruir: 0.5
+  tiempoAntesDeDestruir: 1.5
 --- !u!114 &6050321151955132459
 MonoBehaviour:
   m_ObjectHideFlags: 0

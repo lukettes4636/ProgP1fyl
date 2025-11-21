@@ -3,23 +3,18 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [Header("Configuración de Vida")]
     public int maxHealth = 100;
 
-    [Header("UI")]
     public Slider healthSlider;
-    public GameObject deathCanvas; // Canvas que aparece al morir
+    public GameObject deathCanvas;
 
-    [Header("Sonidos")]
     public AudioClip damageSound;
     public AudioClip deathSound;
 
-    [Header("Efectos")]
     public float damageFlashDuration = 0.1f;
     public Color damageFlashColor = Color.red;
 
-    [Header("Respawn")]
-    public Transform spawnPoint; // Punto donde reaparece
+    public Transform spawnPoint;
 
     private int currentHealth;
     private bool isDead = false;
@@ -27,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private Animator animator;
-    private Vector3 initialSpawnPoint; // Guardar posición inicial
+    private Vector3 initialSpawnPoint;
 
     void Start()
     {
@@ -51,10 +46,7 @@ public class PlayerHealth : MonoBehaviour
             }
         }
 
-        // Guardar posición inicial
         initialSpawnPoint = transform.position;
-
-        // Asegurarse que el canvas de muerte está desactivado
         if (deathCanvas != null)
         {
             deathCanvas.SetActive(false);
@@ -70,7 +62,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= amount;
         if (currentHealth < 0) currentHealth = 0;
 
-        Debug.Log($" Jugador recibió {amount} de daño. Vida: {currentHealth}/{maxHealth}");
+        Debug.Log($" Jugador recibiï¿½ {amount} de daï¿½o. Vida: {currentHealth}/{maxHealth}");
 
         PlaySound(damageSound);
         StartCoroutine(DamageFlash());
@@ -89,57 +81,45 @@ public class PlayerHealth : MonoBehaviour
 
         PlaySound(deathSound);
 
-        // Reproducir animación de muerte
         if (animator != null)
         {
             animator.SetTrigger("Death");
         }
 
-        // Desactivar enemigos
         EnemyAI[] enemies = FindObjectsOfType<EnemyAI>();
         for (int i = 0; i < enemies.Length; i++)
         {
             enemies[i].enabled = false;
         }
 
-        // Desactivar movimiento del jugador
         PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if (playerMovement != null)
         {
             playerMovement.SetCanMove(false);
         }
 
-        // Desactivar acciones del jugador
         PlayerActionController actionController = GetComponent<PlayerActionController>();
         if (actionController != null)
         {
             actionController.enabled = false;
         }
 
-        // Pausar el juego
         Time.timeScale = 0f;
-
-        // Mostrar canvas de muerte
         if (deathCanvas != null)
         {
             deathCanvas.SetActive(true);
         }
     }
 
-    /// <summary>
-    /// Revivir al jugador. Llamar desde el botón.
-    /// </summary>
     public void Respawn()
     {
         Debug.Log(" Reviviendo jugador...");
 
         isDead = false;
 
-        // Restaurar vida completa
         currentHealth = maxHealth;
         UpdateHealthSlider();
 
-        // Reactivar el jugador
         PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if (playerMovement != null)
         {
@@ -152,7 +132,6 @@ public class PlayerHealth : MonoBehaviour
             actionController.enabled = true;
         }
 
-        // Volver a la posición de spawn
         if (spawnPoint != null)
         {
             transform.position = spawnPoint.position;
@@ -162,30 +141,24 @@ public class PlayerHealth : MonoBehaviour
             transform.position = initialSpawnPoint;
         }
 
-        // Resetear animador (volver a idle)
         if (animator != null)
         {
             animator.Rebind();
             animator.Update(0f);
         }
 
-        // Restaurar color del sprite
         if (spriteRenderer != null)
         {
             spriteRenderer.color = originalColor;
         }
 
-        // Reactivar enemigos
         EnemyAI[] enemies = FindObjectsOfType<EnemyAI>();
         for (int i = 0; i < enemies.Length; i++)
         {
             enemies[i].enabled = true;
         }
 
-        // Despausar el juego
         Time.timeScale = 1f;
-
-        // Ocultar canvas de muerte
         if (deathCanvas != null)
         {
             deathCanvas.SetActive(false);

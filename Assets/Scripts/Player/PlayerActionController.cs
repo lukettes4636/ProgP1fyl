@@ -14,9 +14,8 @@ public class PlayerActionController : MonoBehaviour
     [SerializeField] private int baseDamage = 20;
     [SerializeField] private GameObject damageHitbox;
 
-    [Header("Configuración del Arco")]
-    [SerializeField] private GameObject arrowPrefab; // Prefab de la flecha
-    [SerializeField] private Transform arrowSpawnPoint; // Punto de spawn (opcional)
+    [SerializeField] private GameObject arrowPrefab;
+    [SerializeField] private Transform arrowSpawnPoint;
 
     private Dictionary<string, int> inventory = new Dictionary<string, int>();
     [SerializeField] private List<string> inventoryDisplay = new List<string>();
@@ -142,10 +141,12 @@ public class PlayerActionController : MonoBehaviour
             case EquipType.Hacha:
                 PlayTreeCuttingSound();
                 animator.SetBool("Talar", true);
+                ActivateHitbox();
                 break;
 
             case EquipType.Pico:
                 animator.SetBool("Minar", true);
+                ActivateHitbox();
                 break;
 
             case EquipType.Arado:
@@ -158,7 +159,6 @@ public class PlayerActionController : MonoBehaviour
 
             case EquipType.Arco:
                 animator.SetBool("Disparar", true);
-                // La flecha se dispara desde el Animation Event
                 break;
 
             case EquipType.Antorcha:
@@ -189,7 +189,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // ========== MÉTODOS LLAMADOS POR ANIMATION EVENTS ==========
+    // ========== Mï¿½TODOS LLAMADOS POR ANIMATION EVENTS ==========
 
     public void ActivateHitbox()
     {
@@ -207,9 +207,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Dispara una flecha. Llamar desde Animation Event.
-    /// </summary>
     public void ShootArrow()
     {
         if (arrowPrefab == null)
@@ -217,27 +214,17 @@ public class PlayerActionController : MonoBehaviour
             Debug.LogWarning("ShootArrow: No hay prefab de flecha asignado en el Inspector");
             return;
         }
-
-        // Obtener dirección del disparo
         Vector2 shootDirection = playerMovement.GetLastDirection();
-
-        // Determinar posición de spawn
         Vector3 spawnPosition;
         if (arrowSpawnPoint != null)
         {
-            // Usar el spawn point si existe
             spawnPosition = arrowSpawnPoint.position;
         }
         else
         {
-            // Si no hay spawn point, crear cerca del jugador
             spawnPosition = transform.position + (Vector3)shootDirection * 0.5f;
         }
-
-        // Crear la flecha
         GameObject arrowObject = Instantiate(arrowPrefab, spawnPosition, Quaternion.identity);
-
-        // Lanzar la flecha
         Arrow arrowScript = arrowObject.GetComponent<Arrow>();
         if (arrowScript != null)
         {
@@ -247,7 +234,6 @@ public class PlayerActionController : MonoBehaviour
         {
             Debug.LogError("El prefab de flecha no tiene el script Arrow.cs");
         }
-
         Debug.Log($" Flecha disparada hacia: {shootDirection}");
     }
 
@@ -295,7 +281,7 @@ public class PlayerActionController : MonoBehaviour
         animator.SetInteger("AttackIndex", 0);
     }
 
-    // ========== MÉTODOS DE AUDIO ==========
+    // ========== Mï¿½TODOS DE AUDIO ==========
 
     private void PlayAttackSound()
     {
@@ -326,7 +312,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // ========== MÉTODOS DE INVENTARIO ==========
+    // ========== Mï¿½TODOS DE INVENTARIO ==========
 
     public void CollectResource(string resourceName, int amount)
     {

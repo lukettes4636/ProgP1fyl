@@ -3,9 +3,11 @@ using UnityEngine;
 public class MenuManager : MonoBehaviour
 {
     public GameObject menuCanvas;
+    public GameObject gameUIContainer;
+    public GameObject panelCreditos;
+    public GameObject panelControles;
     public GameObject camaraMenu;
     public GameObject camaraJuego;
-    public GameObject gameUIContainer; // <<-- NUEVA VARIABLE PARA TU OBJETO EMPTY CON EL HUD
 
     void Start()
     {
@@ -13,11 +15,10 @@ public class MenuManager : MonoBehaviour
         camaraMenu.SetActive(true);
         camaraJuego.SetActive(false);
 
-        // OCULTAMOS la UI del juego al iniciar
-        if (gameUIContainer != null)
-        {
-            gameUIContainer.SetActive(false);
-        }
+        if (gameUIContainer != null) gameUIContainer.SetActive(false);
+
+        if (panelCreditos != null) panelCreditos.SetActive(false);
+        if (panelControles != null) panelControles.SetActive(false);
     }
 
     public void BotonJugar()
@@ -26,19 +27,34 @@ public class MenuManager : MonoBehaviour
         camaraMenu.SetActive(false);
         camaraJuego.SetActive(true);
 
-        // MOSTRAMOS la UI del juego al empezar a jugar
-        if (gameUIContainer != null)
-        {
-            gameUIContainer.SetActive(true);
-        }
+        if (gameUIContainer != null) gameUIContainer.SetActive(true);
     }
 
     public void BotonSalir()
     {
         Application.Quit();
-
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
+    }
+
+    public void AbrirCreditos()
+    {
+        panelCreditos.SetActive(true);
+    }
+
+    public void CerrarCreditos()
+    {
+        panelCreditos.SetActive(false);
+    }
+
+    public void AbrirControles()
+    {
+        panelControles.SetActive(true);
+    }
+
+    public void CerrarControles()
+    {
+        panelControles.SetActive(false);
     }
 }

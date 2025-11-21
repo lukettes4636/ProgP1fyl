@@ -11,24 +11,19 @@ public class EnemyAI : MonoBehaviour
         Returning
     }
 
-    [Header("Target")]
     public Transform target;
 
-    [Header("Detection")]
     public float detectionRange = 5f;
     public float followRange = 8f;
     public float attackRange = 1.2f;
 
-    [Header("Movement")]
     public float moveSpeed = 2f;
     public float stopDistance = 0.5f;
 
-    [Header("Avoidance")]
     public bool avoidOtherEnemies = true;
     public float separationRadius = 1.0f;
     public float separationForce = 0.6f;
 
-    [Header("Attack")]
     public float attackDamage = 10f;
     public float attackCooldown = 1.2f;
     private float lastAttackTime;
@@ -107,7 +102,6 @@ public class EnemyAI : MonoBehaviour
 
                 FaceTarget();
 
-                // Solo atacar cuando pase el cooldown
                 if (Time.time >= lastAttackTime + attackCooldown)
                 {
                     Attack();
@@ -143,7 +137,6 @@ public class EnemyAI : MonoBehaviour
 
     void HandleMovement()
     {
-        // No moverse cuando está atacando
         if (currentState == EnemyState.Attacking)
         {
             rb.velocity = Vector2.zero;
@@ -242,17 +235,12 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    // Inicia el ataque (activa animación)
     void Attack()
     {
         lastAttackTime = Time.time;
-
-        // Activar animación de ataque
         animator.SetTrigger("Attack");
     }
 
-    // ===== MÉTODO LLAMADO POR ANIMATION EVENT =====
-    // Hacer daño al jugador (llamar desde el frame del golpe)
     public void DealDamageToPlayer()
     {
         if (target == null) return;
@@ -264,13 +252,11 @@ public class EnemyAI : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage((int)attackDamage);
-                Debug.Log($" Enemigo golpeó al jugador por {attackDamage} de daño");
+                Debug.Log($" Enemigo golpeï¿½ al jugador por {attackDamage} de daï¿½o");
             }
         }
     }
 
-    // ===== MÉTODO LLAMADO DESDE ENEMYHEALTH =====
-    // Reproducir animación de hit cuando recibe daño
     public void PlayHitAnimation()
     {
         if (animator != null)
