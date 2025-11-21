@@ -238,7 +238,10 @@ public class EnemyAI : MonoBehaviour
     void Attack()
     {
         lastAttackTime = Time.time;
-        animator.SetTrigger("Attack");
+        if (animator != null)
+        {
+            animator.Play("Attacking", 0, 0f);
+        }
     }
 
     public void DealDamageToPlayer()
