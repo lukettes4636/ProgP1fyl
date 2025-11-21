@@ -40,6 +40,10 @@ public class AltarSummon : MonoBehaviour
 
         if (Input.GetButtonDown("Action"))
         {
+            if (requireWeaponEquipped && player.GetCurrentEquip() == PlayerActionController.EquipType.None)
+            {
+                return;
+            }
             int count = player.GetItemCount(mineralName);
             if (count >= requiredMineralCount && enemyPrefab != null)
             {

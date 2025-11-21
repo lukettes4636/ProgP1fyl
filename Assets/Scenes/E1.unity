@@ -4659,6 +4659,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
       objectReference: {fileID: 0}
@@ -5348,6 +5356,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
@@ -6145,7 +6161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 259760862}
   - component: {fileID: 259760861}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Light 2D (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6168,11 +6184,11 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.804
-  m_Color: {r: 0.33962262, g: 0.14702278, b: 0, a: 1}
-  m_Intensity: 70
-  m_LightVolumeIntensity: 0.00001
+  m_Color: {r: 0.2735849, g: 0.16048422, b: 0, a: 0.8666667}
+  m_Intensity: 200
+  m_LightVolumeIntensity: 0.005
   m_LightVolumeIntensityEnabled: 1
-  m_ApplyToSortingLayers: b117df78
+  m_ApplyToSortingLayers: b117df78ebbde5db
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 1
@@ -6191,7 +6207,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 3.4
+  m_PointLightOuterRadius: 2.5
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -9778,7 +9794,7 @@ GameObject:
   m_Component:
   - component: {fileID: 439619827}
   - component: {fileID: 439619826}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9801,11 +9817,11 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.804
-  m_Color: {r: 0.33962262, g: 0.14702278, b: 0, a: 1}
-  m_Intensity: 70
-  m_LightVolumeIntensity: 0.00001
+  m_Color: {r: 0.2735849, g: 0.16048422, b: 0, a: 0.8666667}
+  m_Intensity: 200
+  m_LightVolumeIntensity: 0.005
   m_LightVolumeIntensityEnabled: 1
-  m_ApplyToSortingLayers: b117df78
+  m_ApplyToSortingLayers: b117df78ebbde5db
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 1
@@ -9824,7 +9840,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 3.4
+  m_PointLightOuterRadius: 2.5
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -10209,7 +10225,6 @@ Transform:
   - {fileID: 1992806399}
   - {fileID: 2074320333}
   - {fileID: 447271282}
-  - {fileID: 1746879328}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &459561288
@@ -17323,6 +17338,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
       objectReference: {fileID: 0}
@@ -18234,6 +18257,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
@@ -20746,6 +20777,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
@@ -25682,6 +25721,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
       objectReference: {fileID: 0}
@@ -28911,7 +28958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59cd144349f70604bb351fc7810ded6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duracionCiclo: 10
+  duracionCiclo: 60
   horaInicial: 12
   colorNoche: {r: 0, g: 0, b: 0, a: 0.9647059}
   overlayNoche: {fileID: 1081162143}
@@ -28978,6 +29025,9 @@ MonoBehaviour:
   - {fileID: 827766946}
   - {fileID: 172278940}
   - {fileID: 1404437733}
+  - {fileID: 439619825}
+  - {fileID: 259760860}
+  - {fileID: 1746879327}
 --- !u!212 &1081162143
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -33576,6 +33626,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
       objectReference: {fileID: 0}
@@ -34563,6 +34621,7 @@ Transform:
   m_Children:
   - {fileID: 439619827}
   - {fileID: 259760862}
+  - {fileID: 1746879328}
   - {fileID: 2081702074}
   - {fileID: 782847255}
   - {fileID: 1147373162}
@@ -34633,6 +34692,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
@@ -39854,6 +39921,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
       objectReference: {fileID: 0}
@@ -41488,6 +41563,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
       objectReference: {fileID: 0}
@@ -42082,6 +42165,8 @@ Transform:
   - {fileID: 824375657}
   - {fileID: 351580834}
   - {fileID: 470038325}
+  - {fileID: 2119608246}
+  - {fileID: 2120946402}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1555661973 stripped
@@ -46412,11 +46497,11 @@ Transform:
   m_GameObject: {fileID: 1746879327}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -249.09, y: 20.125, z: 0}
+  m_LocalPosition: {x: -12.889999, y: 1.8500004, z: 0}
   m_LocalScale: {x: 2.043323, y: 2.3248477, z: 4.744587}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 457165516}
+  m_Father: {fileID: 1274168881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1746879329
 MonoBehaviour:
@@ -46519,11 +46604,11 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.804
-  m_Color: {r: 0.33962262, g: 0.14702278, b: 0, a: 1}
-  m_Intensity: 70
-  m_LightVolumeIntensity: 0.00001
+  m_Color: {r: 0.2735849, g: 0.16048422, b: 0, a: 0.8666667}
+  m_Intensity: 200
+  m_LightVolumeIntensity: 0.005
   m_LightVolumeIntensityEnabled: 1
-  m_ApplyToSortingLayers: b117df78
+  m_ApplyToSortingLayers: b117df78ebbde5db
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 1
@@ -46542,7 +46627,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 3.4
+  m_PointLightOuterRadius: 2.5
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -47561,6 +47646,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
@@ -51015,6 +51108,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
       objectReference: {fileID: 0}
@@ -51976,7 +52077,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6756116845235137031, guid: fc7a5e24cc034b1429a00a62d0b04fec, type: 3}
       propertyPath: m_Name
-      value: CicloDiaNoche
+      value: DayNight
       objectReference: {fileID: 0}
     - target: {fileID: 6756116845235137031, guid: fc7a5e24cc034b1429a00a62d0b04fec, type: 3}
       propertyPath: m_Layer
@@ -52052,6 +52153,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: "sonidoDa\xF1o"
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
+    - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
+      propertyPath: sonidoMuerte
+      value: 
+      objectReference: {fileID: 8300000, guid: 4c4a8a4bec69a92479d829179f0dc0c1, type: 3}
     - target: {fileID: 2362878928235851140, guid: 809d7c90ae35d4a4b8eb225e1f8a06a9, type: 3}
       propertyPath: cantidadASoltar
       value: 1
@@ -52993,7 +53102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1369160020931740030, guid: 39247641ceee2da4fa47b53903949427, type: 3}
       propertyPath: m_SortingLayer
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1369160020931740030, guid: 39247641ceee2da4fa47b53903949427, type: 3}
       propertyPath: m_SortingOrder
@@ -53001,7 +53110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1369160020931740030, guid: 39247641ceee2da4fa47b53903949427, type: 3}
       propertyPath: m_SortingLayerID
-      value: 2027886513
+      value: 483329965
       objectReference: {fileID: 0}
     - target: {fileID: 1369160020931740030, guid: 39247641ceee2da4fa47b53903949427, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -55701,13 +55810,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2119608243}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 178.9, y: -22, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 184.40445, y: -16.068752, z: 5.128071}
   m_LocalScale: {x: 2.4761, y: 2.4761, z: 2.4761}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1753407748}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1550833002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &2119608247
 BoxCollider2D:
@@ -55778,8 +55887,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2120946401}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 167.451, y: -2.4908366, z: -2.3279524}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 172.95546, y: 3.4404101, z: 2.8001184}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -55934,7 +56043,7 @@ Transform:
   - {fileID: 1186582884}
   - {fileID: 1390993805}
   - {fileID: 637150846}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1550833002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2121323875
 PrefabInstance:
@@ -99152,6 +99261,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1203827512903339092, guid: c004e300f7bb9a0438b2457dad4f6f46, type: 3}
+      propertyPath: speed
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 7673539697847317957, guid: c004e300f7bb9a0438b2457dad4f6f46, type: 3}
       propertyPath: m_LocalPosition.x
       value: -36.40783
@@ -100440,7 +100553,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 305999457}
   - {fileID: 7284686815361938805}
   - {fileID: 7805285789379771912}
   - {fileID: 879398363}
@@ -100465,5 +100577,4 @@ SceneRoots:
   - {fileID: 8004427646742858479}
   - {fileID: 255542616}
   - {fileID: 599057669}
-  - {fileID: 2119608246}
-  - {fileID: 2120946402}
+  - {fileID: 305999457}

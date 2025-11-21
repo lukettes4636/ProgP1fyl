@@ -189,7 +189,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // ========== M�TODOS LLAMADOS POR ANIMATION EVENTS ==========
 
     public void ActivateHitbox()
     {
@@ -281,7 +280,6 @@ public class PlayerActionController : MonoBehaviour
         animator.SetInteger("AttackIndex", 0);
     }
 
-    // ========== M�TODOS DE AUDIO ==========
 
     private void PlayAttackSound()
     {
@@ -312,7 +310,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    // ========== M�TODOS DE INVENTARIO ==========
 
     public void CollectResource(string resourceName, int amount)
     {
@@ -343,7 +340,6 @@ public class PlayerActionController : MonoBehaviour
             inventoryDisplay.Add($"{item.Key}: {item.Value}");
     }
 
-    // ========== GETTERS Y SETTERS ==========
 
     public void SetEquip(EquipType newEquip)
     {
@@ -373,7 +369,6 @@ public class PlayerActionController : MonoBehaviour
         return inventory.TryGetValue(itemName, out var count) ? count : 0;
     }
 
-    // ========== SISTEMA DE ANTORCHA ==========
 
     private void UpdateLightPlayerVisibility()
     {

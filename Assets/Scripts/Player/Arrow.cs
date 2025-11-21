@@ -40,9 +40,8 @@ public class Arrow : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        if (other.CompareTag("Wall") || other.CompareTag("Obstacle"))
+        if (!other.CompareTag("Player"))
         {
-            Debug.Log("Flecha choc� con obst�culo");
             Destroy(gameObject);
             return;
         }
