@@ -62,7 +62,7 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= amount;
         if (currentHealth < 0) currentHealth = 0;
 
-        Debug.Log($" Jugador recibi� {amount} de da�o. Vida: {currentHealth}/{maxHealth}");
+
 
         PlaySound(damageSound);
         StartCoroutine(DamageFlash());
@@ -77,7 +77,7 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         isDead = true;
-        Debug.Log("El jugador ha muerto!");
+
 
         PlaySound(deathSound);
 
@@ -108,12 +108,13 @@ public class PlayerHealth : MonoBehaviour
         if (deathCanvas != null)
         {
             deathCanvas.SetActive(true);
+            ApplyDeathCanvasButtonSFX();
         }
     }
 
     public void Respawn()
     {
-        Debug.Log(" Reviviendo jugador...");
+
 
         isDead = false;
 
@@ -164,7 +165,7 @@ public class PlayerHealth : MonoBehaviour
             deathCanvas.SetActive(false);
         }
 
-        Debug.Log(" Jugador revivido!");
+
     }
 
     private void UpdateHealthSlider()
@@ -194,6 +195,22 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    private void ApplyDeathCanvasButtonSFX()
+    {
+        var menu = FindObjectOfType<MenuManager>();
+        var clip = menu != null ? menu.clickSound : null;
+        if (deathCanvas == null) return;
+        var buttons = deathCanvas.GetComponentsInChildren<Button>(true);
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            var btn = buttons[i];
+            var effect = btn.GetComponent<ButtonScaleEffect>();
+            if (effect == null) effect = btn.gameObject.AddComponent<ButtonScaleEffect>();
+            effect.ConfigureSounds(clip);
+            effect.Initialize();
+        }
+    }
+
     public int GetCurrentHealth()
     {
         return currentHealth;
@@ -215,8 +232,6 @@ public class PlayerHealth : MonoBehaviour
 
         currentHealth += amount;
         if (currentHealth > maxHealth) currentHealth = maxHealth;
-
-        Debug.Log($" Jugador curado +{amount}. Vida: {currentHealth}/{maxHealth}");
 
         UpdateHealthSlider();
     }

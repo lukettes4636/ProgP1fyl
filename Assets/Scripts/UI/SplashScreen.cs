@@ -21,7 +21,6 @@ public class SplashScreen : MonoBehaviour
     {
         if (splashImage == null)
         {
-            Debug.LogError("SplashImage no está asignado en el inspector. Por favor arrastra una Image al campo splashImage.");
             return;
         }
         

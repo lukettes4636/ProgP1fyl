@@ -25,7 +25,6 @@ public class Arrow : MonoBehaviour
         rb.velocity = direction * speed;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
-        Debug.Log($"Flecha disparada en direcci�n: {direction}");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -36,7 +35,6 @@ public class Arrow : MonoBehaviour
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
-            Debug.Log($"Flecha impact� a {enemy.gameObject.name}");
             Destroy(gameObject);
             return;
         }

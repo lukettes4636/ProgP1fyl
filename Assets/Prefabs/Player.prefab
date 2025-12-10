@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2067860918705390967}
   - component: {fileID: 7546481063980383658}
   - component: {fileID: 1884787688073649188}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: "Hitbox_Da\xF1o"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 2054382651695498760}
   - component: {fileID: 2869659035901097865}
   - component: {fileID: 1423384818417305414}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Characte_Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,7 +214,7 @@ GameObject:
   - component: {fileID: 5574588633738027638}
   - component: {fileID: 2617772862540240461}
   - component: {fileID: 4910887840170003880}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -435,7 +435,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.4659996, y: 0.13331795}
+  m_Size: {x: 0.5, y: 0.5}
   m_EdgeRadius: 0
 --- !u!114 &4910887840170003880
 MonoBehaviour:

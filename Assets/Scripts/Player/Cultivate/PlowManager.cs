@@ -39,9 +39,6 @@ public class PlowManager : MonoBehaviour
         }
 
         playerActionController = FindObjectOfType<PlayerActionController>();
-        if (playerActionController == null)
-        {
-        }
     }
 
     private void Update()

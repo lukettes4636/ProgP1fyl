@@ -23,16 +23,13 @@ public class DamageHitbox : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    
     public void ActivateHitbox()
     {
         if (actionController == null || playerMovement == null) return;
 
-
         currentDamage = actionController.GetBaseDamage();
         currentTool = actionController.GetCurrentEquip();
         Vector2 attackDirection = playerMovement.GetLastDirection();
-
 
         transform.localPosition = attackDirection * hitboxDistance;
 
@@ -43,11 +40,9 @@ public class DamageHitbox : MonoBehaviour
 
         TryImmediateHit();
 
-
         Invoke(nameof(DeactivateHitbox), hitboxLifetime);
     }
 
-    
     public void DeactivateHitbox()
     {
         CancelInvoke(nameof(DeactivateHitbox));

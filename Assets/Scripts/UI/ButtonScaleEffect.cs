@@ -7,37 +7,53 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public float scaleFactor = 1.1f; 
     public float animationDuration = 0.2f; 
     
-    public AudioClip hoverSound;
-    [Range(0f,1f)] public float hoverVolume = 0.8f;
-    public AudioClip clickSound;
-    [Range(0f,1f)] public float clickVolume = 1.0f;
+    public AudioClip useSound;
+    [Range(0f,1f)] public float hoverVolume = 0.4f;
+    [Range(0f,1f)] public float clickVolume = 0.7f;
+    
     private AudioSource audioSource;
+    private bool isInitialized = false;
 
     private Vector3 originalScale;
 
 
     private void Start()
     {
+        if(!isInitialized) Initialize();
+    }
+
+    public void Initialize()
+    {
         originalScale = transform.localScale;
+        
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
         audioSource.playOnAwake = false;
-        audioSource.loop = false;
+        audioSource.spatialBlend = 0f;
+
         var btn = GetComponent<Button>();
         if (btn != null)
         {
+            btn.onClick.RemoveListener(PlayClickSound);
             btn.onClick.AddListener(PlayClickSound);
         }
+        
+        isInitialized = true;
+    }
+
+    public void ConfigureSounds(AudioClip clip)
+    {
+        useSound = clip;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         StopAllCoroutines();
         StartCoroutine(ScaleTo(scaleFactor));
-        PlayHoverSound();
+        PlaySound(hoverVolume);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -50,7 +66,7 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         StopAllCoroutines();
         StartCoroutine(ScaleTo(scaleFactor));
-        PlayHoverSound();
+        PlaySound(hoverVolume);
     }
 
     public void OnDeselect(BaseEventData eventData)
@@ -75,19 +91,16 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
         transform.localScale = target;
     }
     
-    private void PlayHoverSound()
+    private void PlaySound(float vol)
     {
-        if (hoverSound != null && audioSource != null)
+        if (useSound != null && audioSource != null)
         {
-            audioSource.PlayOneShot(hoverSound, hoverVolume);
+            audioSource.PlayOneShot(useSound, vol);
         }
     }
     
     private void PlayClickSound()
     {
-        if (clickSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(clickSound, clickVolume);
-        }
+        PlaySound(clickVolume);
     }
 }

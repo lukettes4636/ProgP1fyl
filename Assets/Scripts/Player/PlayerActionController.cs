@@ -189,7 +189,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-
     public void ActivateHitbox()
     {
         if (hitboxScript != null)
@@ -210,7 +209,6 @@ public class PlayerActionController : MonoBehaviour
     {
         if (arrowPrefab == null)
         {
-            Debug.LogWarning("ShootArrow: No hay prefab de flecha asignado en el Inspector");
             return;
         }
         Vector2 shootDirection = playerMovement.GetLastDirection();
@@ -229,11 +227,6 @@ public class PlayerActionController : MonoBehaviour
         {
             arrowScript.Launch(shootDirection);
         }
-        else
-        {
-            Debug.LogError("El prefab de flecha no tiene el script Arrow.cs");
-        }
-        Debug.Log($" Flecha disparada hacia: {shootDirection}");
     }
 
     public void ExecutePlowAction()
@@ -285,9 +278,9 @@ public class PlayerActionController : MonoBehaviour
     {
         if (attackSounds != null && attackSounds.Length > 0 && audioSource != null)
         {
+            audioSource.pitch = 1f;
             AudioClip clip = attackSounds[UnityEngine.Random.Range(0, attackSounds.Length)];
-            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
-            audioSource.PlayOneShot(clip, audioVolume * attackVolume);
+            audioSource.PlayOneShot(clip, audioVolume * attackVolume * 0.67f);
         }
     }
 
@@ -309,7 +302,6 @@ public class PlayerActionController : MonoBehaviour
             audioSource.PlayOneShot(dashSound, audioVolume * dashVolume);
         }
     }
-
 
     public void CollectResource(string resourceName, int amount)
     {
@@ -340,7 +332,6 @@ public class PlayerActionController : MonoBehaviour
             inventoryDisplay.Add($"{item.Key}: {item.Value}");
     }
 
-
     public void SetEquip(EquipType newEquip)
     {
         if (enAccion) return;
@@ -368,7 +359,6 @@ public class PlayerActionController : MonoBehaviour
     {
         return inventory.TryGetValue(itemName, out var count) ? count : 0;
     }
-
 
     private void UpdateLightPlayerVisibility()
     {

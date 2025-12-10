@@ -10,6 +10,9 @@ public class MainMenu : MonoBehaviour
     public Sprite creditsButtonSprite;
     public Sprite backgroundSprite;
     
+    public AudioClip clickSound;
+    private AudioSource clickAudioSource;
+    
     public Button startButton;
     public Button exitButton;
     public Button creditsButton;
@@ -36,12 +39,28 @@ public class MainMenu : MonoBehaviour
     {
         ConfigureMenuSprites();
         SetupAmbientAudio();
+        ApplyButtonEffects();
         
         StartCoroutine(FadeIn());
         
         if (startButton != null) StartCoroutine(FadeInButton(startButton, buttonFadeDuration));
         if (creditsButton != null) StartCoroutine(FadeInButton(creditsButton, buttonFadeDuration));
         if (exitButton != null) StartCoroutine(FadeInButton(exitButton, buttonFadeDuration));
+    }
+
+    private void ApplyButtonEffects()
+    {
+        Button[] allButtons = GetComponentsInChildren<Button>(true);
+        foreach (var btn in allButtons)
+        {
+            ButtonScaleEffect effect = btn.GetComponent<ButtonScaleEffect>();
+            if (effect == null)
+            {
+                effect = btn.gameObject.AddComponent<ButtonScaleEffect>();
+            }
+            effect.ConfigureSounds(clickSound);
+            effect.Initialize();
+        }
     }
 
     private void ConfigureMenuSprites()
@@ -223,5 +242,13 @@ public class MainMenu : MonoBehaviour
         }
         ambientSource.Stop();
         ambientSource.volume = startVol;
+    }
+    
+    private void SetupClickAudio()
+    {
+    }
+    
+    private void PlayClickSound()
+    {
     }
 }

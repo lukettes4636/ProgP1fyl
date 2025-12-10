@@ -35,7 +35,7 @@ public class EnemyHealth : MonoBehaviour
         vidaActual -= cantidad;
         if (vidaActual < 0) vidaActual = 0;
 
-        Debug.Log($" {gameObject.name} recibió {cantidad} de daño. Vida: {vidaActual}/{vidaMaxima}");
+
 
         ReproducirSonido(sonidoDaño);
 
@@ -54,7 +54,7 @@ public class EnemyHealth : MonoBehaviour
     private void Morir()
     {
         estaMuerto = true;
-        Debug.Log($" {gameObject.name} ha muerto!");
+
 
         ReproducirSonido(sonidoMuerte);
 
