@@ -157,7 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb793bbd08eff9459b8f928faeaa2aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialDelay: 0.2
+  initialDelay: 0.4
   attractionSpeed: 2
   pickupSound: {fileID: 8300000, guid: 5f74101f1c449a547ba9ad6d9934391a, type: 3}
   soundVolume: 1
