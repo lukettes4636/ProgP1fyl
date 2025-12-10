@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3288886540255238230}
   - component: {fileID: 4893879249044583084}
   - component: {fileID: 5172560073600955376}
+  - component: {fileID: 3759242559304844404}
   m_Layer: 0
   m_Name: Skeleton_Mage_Projectile_0
   m_TagString: Untagged
@@ -166,3 +167,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resourceName: Material
+--- !u!114 &3759242559304844404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8013833774173798485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cb793bbd08eff9459b8f928faeaa2aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialDelay: 0.2
+  attractionSpeed: 1
+  pickupSound: {fileID: 8300000, guid: 5f74101f1c449a547ba9ad6d9934391a, type: 3}
+  soundVolume: 0.5

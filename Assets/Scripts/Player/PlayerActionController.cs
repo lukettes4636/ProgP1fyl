@@ -120,6 +120,7 @@ public class PlayerActionController : MonoBehaviour
         }
 
         enAccion = true;
+        playerMovement.SetIsActing(true);
         actionTimer = maxActionDuration;
 
         Vector2 actionDirection = playerMovement.GetLastDirection();
@@ -205,22 +206,30 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
+    [SerializeField] private float shootOffsetDistance = 1.0f;
+    [SerializeField] private float shootOffsetY = 0.5f;
+
     public void ShootArrow()
     {
         if (arrowPrefab == null)
         {
             return;
         }
+        
         Vector2 shootDirection = playerMovement.GetLastDirection();
         Vector3 spawnPosition;
+
         if (arrowSpawnPoint != null)
         {
             spawnPosition = arrowSpawnPoint.position;
         }
         else
         {
-            spawnPosition = transform.position + (Vector3)shootDirection * 0.5f;
+            Vector3 offsetVector = (Vector3)shootDirection * shootOffsetDistance;
+            offsetVector.y += shootOffsetY;
+            spawnPosition = transform.position + offsetVector;
         }
+
         GameObject arrowObject = Instantiate(arrowPrefab, spawnPosition, Quaternion.identity);
         Arrow arrowScript = arrowObject.GetComponent<Arrow>();
         if (arrowScript != null)
@@ -263,6 +272,7 @@ public class PlayerActionController : MonoBehaviour
     public void EndActionState()
     {
         enAccion = false;
+        if (playerMovement != null) playerMovement.SetIsActing(false);
 
         animator.SetBool("Atacando", false);
         animator.SetBool("Talar", false);

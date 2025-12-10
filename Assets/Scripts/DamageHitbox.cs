@@ -33,8 +33,6 @@ public class DamageHitbox : MonoBehaviour
 
         transform.localPosition = attackDirection * hitboxDistance;
 
-
-
         gameObject.SetActive(true);
         appliedDamage = false;
 
@@ -62,7 +60,6 @@ public class DamageHitbox : MonoBehaviour
             appliedDamage = true;
             return;
         }
-
 
         if (currentTool == PlayerActionController.EquipType.Espada ||
             currentTool == PlayerActionController.EquipType.Hacha ||
@@ -100,7 +97,6 @@ public class DamageHitbox : MonoBehaviour
 
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, hitRadius);
-
 
             if (transform.parent != null)
             {

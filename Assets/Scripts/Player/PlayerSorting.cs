@@ -14,6 +14,7 @@ public class PlayerSorting : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer == null)
         {
+            Debug.LogError("SpriteRenderer not found on " + gameObject.name);
         }
     }
 

@@ -5,9 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float runSpeed = 8f;
-    [SerializeField] private float spriteScale = 2f;
+    [SerializeField] private float moveSpeed = 2.8f;
+    [SerializeField] private float runSpeed = 2.1f;
 
     private Vector2 moveInput;
     private Vector2 aimInput;
@@ -38,8 +37,6 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-
-    [SerializeField] private float aimThreshold = 0.2f;
 
     private void Awake()
     {
@@ -143,13 +140,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateAnimations()
     {
-        if (animator != null)
+        if (animator != null && !isActing)
         {
             animator.SetFloat("MoveX", moveInput.x);
             animator.SetFloat("MoveY", moveInput.y);
-            animator.SetFloat("Speed", moveInput.sqrMagnitude);
             animator.SetBool("IsRunning", isRunning);
-            animator.SetBool("IsDashing", isDashing);
+
+            if (moveInput.sqrMagnitude > 0.01f)
+            {
+                animator.SetFloat("LastMoveX", moveInput.x);
+                animator.SetFloat("LastMoveY", moveInput.y);
+            }
         }
     }
 
@@ -176,6 +177,10 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            if (wasMovingLastFrame)
+            {
+                audioSource.Stop();
+            }
             stepTimer = 0f;
         }
 
@@ -207,6 +212,13 @@ public class PlayerMovement : MonoBehaviour
     public void SetCanMove(bool state)
     {
         canMove = state;
+    }
+
+    private bool isActing = false;
+
+    public void SetIsActing(bool state)
+    {
+        isActing = state;
     }
 
     public Vector2 GetLastDirection()

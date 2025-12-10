@@ -244,11 +244,5 @@ public class MainMenu : MonoBehaviour
         ambientSource.volume = startVol;
     }
     
-    private void SetupClickAudio()
-    {
-    }
-    
-    private void PlayClickSound()
-    {
-    }
+
 }

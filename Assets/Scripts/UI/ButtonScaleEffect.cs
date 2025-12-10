@@ -16,7 +16,6 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     private Vector3 originalScale;
 
-
     private void Start()
     {
         if(!isInitialized) Initialize();

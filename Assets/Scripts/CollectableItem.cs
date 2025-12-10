@@ -50,6 +50,9 @@ public class CollectableItem : MonoBehaviour
         }
     }
 
+    [SerializeField] private AudioClip pickupSound;
+    [SerializeField] private float soundVolume = 0.5f;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (canBeCollected && other.CompareTag("Player"))
@@ -57,6 +60,10 @@ public class CollectableItem : MonoBehaviour
             if (playerActionController != null)
             {
                 playerActionController.CollectResource(itemName, itemAmount);
+                if (pickupSound != null)
+                {
+                    AudioSource.PlayClipAtPoint(pickupSound, transform.position, soundVolume);
+                }
             }
             Destroy(gameObject);
         }

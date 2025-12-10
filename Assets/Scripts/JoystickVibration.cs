@@ -55,7 +55,6 @@ public class JoystickVibration : MonoBehaviour
 
         isVibrating = true;
         vibrationTimer = duration;
-
     }
 
     public void StopVibration()

@@ -35,8 +35,6 @@ public class EnemyHealth : MonoBehaviour
         vidaActual -= cantidad;
         if (vidaActual < 0) vidaActual = 0;
 
-
-
         ReproducirSonido(sonidoDaño);
 
         EnemyAI enemyAI = GetComponent<EnemyAI>();
@@ -54,7 +52,6 @@ public class EnemyHealth : MonoBehaviour
     private void Morir()
     {
         estaMuerto = true;
-
 
         ReproducirSonido(sonidoMuerte);
 

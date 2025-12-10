@@ -26,7 +26,6 @@ public class PlowManager : MonoBehaviour
 
     [SerializeField] private PlayerActionController playerActionController;
 
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -151,7 +150,6 @@ public class PlowManager : MonoBehaviour
         if (!activeCrops.ContainsKey(cellPosition)) return false;
         return activeCrops[cellPosition].IsReadyToHarvest();
     }
-
 
     public void HarvestAt(Vector3Int cellPosition)
     {

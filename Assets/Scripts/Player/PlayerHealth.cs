@@ -78,7 +78,6 @@ public class PlayerHealth : MonoBehaviour
     {
         isDead = true;
 
-
         PlaySound(deathSound);
 
         if (animator != null)
@@ -114,8 +113,6 @@ public class PlayerHealth : MonoBehaviour
 
     public void Respawn()
     {
-
-
         isDead = false;
 
         currentHealth = maxHealth;
@@ -164,8 +161,6 @@ public class PlayerHealth : MonoBehaviour
         {
             deathCanvas.SetActive(false);
         }
-
-
     }
 
     private void UpdateHealthSlider()
