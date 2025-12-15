@@ -25810,6 +25810,7 @@ MonoBehaviour:
   summonDistance: 3
   angelKey: 49
   demonKey: 50
+  summonClip: {fileID: 8300000, guid: 1ed821f6df749d542a27334fb01e922e, type: 3}
 --- !u!1001 &960061526
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -45985,13 +45986,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 11.83
   mountedSpeedMultiplier: 1.5
+  maxRunTime: 5
+  cooldownTime: 2
+  cooldownSpeedMultiplier: 0.05
+  runClip: {fileID: 8300000, guid: c5d100f619861724aa7697888f4ee826, type: 3}
+  genericClip: {fileID: 8300000, guid: 27e3dd5e058d2a74681da1162e560bb3, type: 3}
   interactionRange: 13.79
   interactKey: 103
   showInteractionPrompt: 1
   mountOffset: {x: 0, y: -0.25, z: 0}
   playerSortingOrderOffset: 1
-  movementParticles: {fileID: 0}
-  enableParticles: 1
 --- !u!50 &1693336963
 Rigidbody2D:
   serializedVersion: 4
@@ -99535,15 +99539,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4910887840170003880, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
       propertyPath: damageFlashColor.b
-      value: 0
+      value: 0.14351194
       objectReference: {fileID: 0}
     - target: {fileID: 4910887840170003880, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
       propertyPath: damageFlashColor.g
-      value: 0
+      value: 0.14351194
       objectReference: {fileID: 0}
     - target: {fileID: 4910887840170003880, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
       propertyPath: damageFlashColor.r
-      value: 0.8396226
+      value: 0.7075472
       objectReference: {fileID: 0}
     - target: {fileID: 4910887840170003880, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
       propertyPath: damageFlashDuration

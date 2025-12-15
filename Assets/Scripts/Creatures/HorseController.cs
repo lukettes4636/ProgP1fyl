@@ -1,11 +1,21 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(AudioSource))]
 public class HorseController : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 14.0f;
     [SerializeField] private float mountedSpeedMultiplier = 1.5f;
+
+    [Header("Fatigue Settings")]
+    [SerializeField] private float maxRunTime = 5.0f;
+    [SerializeField] private float cooldownTime = 3.0f;
+    [SerializeField] private float cooldownSpeedMultiplier = 0.05f;
+
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip runClip;
+    [SerializeField] private AudioClip genericClip;
 
     [Header("Interaction Settings")]
     [SerializeField] private float interactionRange = 1.5f;
@@ -15,10 +25,6 @@ public class HorseController : MonoBehaviour
     [Header("Mount Position")]
     [SerializeField] private Vector3 mountOffset = new Vector3(0, 0.5f, 0);
     [SerializeField] private int playerSortingOrderOffset = 1;
-
-    [Header("Movement Particles")]
-    [SerializeField] private ParticleSystem movementParticles;
-    [SerializeField] private bool enableParticles = true;
 
     private GameObject player;
     private PlayerMovement playerMovement;
@@ -34,12 +40,18 @@ public class HorseController : MonoBehaviour
     private SpriteRenderer horseSprite;
     private float defaultSpeed;
     private int defaultSortingOrder;
+    
+    private AudioSource audioSource;
+    private float currentRunTime;
+    private float currentCooldownTime;
+    private bool isCooldown;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         horseSprite = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
 
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
@@ -67,10 +79,13 @@ public class HorseController : MonoBehaviour
         if (isMounted)
         {
             HandleInput();
+            HandleFatigue();
+            HandleAudio();
         }
         else
         {
             CheckForMount();
+            StopAudio();
         }
     }
 
@@ -97,7 +112,61 @@ public class HorseController : MonoBehaviour
         }
 
         UpdateAnimation();
-        UpdateParticles();
+    }
+
+    private void HandleFatigue()
+    {
+        bool isMoving = moveInput.sqrMagnitude > 0.01f;
+
+        if (isCooldown)
+        {
+            currentCooldownTime -= Time.deltaTime;
+            if (currentCooldownTime <= 0)
+            {
+                isCooldown = false;
+                currentRunTime = 0;
+            }
+        }
+        else if (isMoving)
+        {
+            currentRunTime += Time.deltaTime;
+            if (currentRunTime >= maxRunTime)
+            {
+                isCooldown = true;
+                currentCooldownTime = cooldownTime;
+            }
+        }
+        else
+        {
+            currentRunTime = Mathf.Max(0, currentRunTime - Time.deltaTime);
+        }
+    }
+
+    private void HandleAudio()
+    {
+        bool isMoving = moveInput.sqrMagnitude > 0.01f;
+
+        if (isMoving && !isCooldown)
+        {
+            if (!audioSource.isPlaying && runClip != null)
+            {
+                audioSource.clip = runClip;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            StopAudio();
+        }
+    }
+
+    private void StopAudio()
+    {
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
     }
 
     private void CheckForMount()
@@ -137,8 +206,6 @@ public class HorseController : MonoBehaviour
         {
             playerSprite.sortingOrder = horseSprite.sortingOrder + playerSortingOrderOffset;
         }
-
-        moveSpeed = defaultSpeed * mountedSpeedMultiplier;
     }
 
     private void Dismount()
@@ -169,30 +236,17 @@ public class HorseController : MonoBehaviour
         }
 
         moveSpeed = defaultSpeed;
+        StopAudio();
     }
 
     private void Move()
     {
         if (moveInput.sqrMagnitude > 0.01f)
         {
-            rb.MovePosition(rb.position + moveInput.normalized * moveSpeed * Time.fixedDeltaTime);
-            if (joystickVibration != null) joystickVibration.OnRun();
-        }
-    }
-
-    private void UpdateParticles()
-    {
-        if (movementParticles == null || !enableParticles) return;
-
-        bool isMoving = moveInput.sqrMagnitude > 0.01f;
-
-        if (isMoving && !movementParticles.isPlaying)
-        {
-            movementParticles.Play();
-        }
-        else if (!isMoving && movementParticles.isPlaying)
-        {
-            movementParticles.Stop();
+            float currentSpeed = isCooldown ? defaultSpeed * mountedSpeedMultiplier * cooldownSpeedMultiplier : defaultSpeed * mountedSpeedMultiplier;
+            rb.MovePosition(rb.position + moveInput.normalized * currentSpeed * Time.fixedDeltaTime);
+            
+            if (joystickVibration != null && !isCooldown) joystickVibration.OnRun();
         }
     }
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class PlayerSummonController : MonoBehaviour
 {
     [SerializeField] private GameObject angelPrefab;
@@ -8,8 +9,17 @@ public class PlayerSummonController : MonoBehaviour
     [SerializeField] private KeyCode angelKey = KeyCode.Alpha1;
     [SerializeField] private KeyCode demonKey = KeyCode.Alpha2;
 
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip summonClip;
+
     private GameObject currentAngel;
     private GameObject currentDemon;
+    private AudioSource audioSource;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     private void Update()
     {
@@ -34,6 +44,7 @@ public class PlayerSummonController : MonoBehaviour
 
         Vector3 spawnPos = transform.position + transform.forward * summonDistance;
         currentAngel = Instantiate(angelPrefab, spawnPos, Quaternion.identity);
+        PlaySummonSound();
     }
 
     private void SummonDemon()
@@ -47,5 +58,14 @@ public class PlayerSummonController : MonoBehaviour
 
         Vector3 spawnPos = transform.position + transform.forward * summonDistance;
         currentDemon = Instantiate(demonPrefab, spawnPos, Quaternion.identity);
+        PlaySummonSound();
+    }
+
+    private void PlaySummonSound()
+    {
+        if (audioSource != null && summonClip != null)
+        {
+            audioSource.PlayOneShot(summonClip);
+        }
     }
 }
