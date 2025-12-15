@@ -25793,6 +25793,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1cc4ef5297d8b54b83f324f9bd1b76b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &955288133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955288104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe81b3d60119c7c4085c5f62471bbd60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  angelPrefab: {fileID: 3050276697735375567, guid: 3776049e638150e438644b1f52279eb1, type: 3}
+  demonPrefab: {fileID: 5509481060428229488, guid: c1abedd23e2554448961250f017e7376, type: 3}
+  summonDistance: 3
+  angelKey: 49
+  demonKey: 50
 --- !u!1001 &960061526
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29170,8 +29187,8 @@ MonoBehaviour:
   - {fileID: 259760860}
   - {fileID: 1746879327}
   contenedorLuces: {fileID: 1274168881}
-  sonidoDeDia: {fileID: 0}
-  sonidoDeNoche: {fileID: 0}
+  sonidoDeDia: {fileID: 8300000, guid: d95471b9a6cedec418c246e7548bde16, type: 3}
+  sonidoDeNoche: {fileID: 8300000, guid: 4daf971cf1769af419e5f8c82079e3f3, type: 3}
   volumenAmbiente: 0.5
 --- !u!212 &1081162143
 SpriteRenderer:
@@ -99743,6 +99760,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5824600039365575497, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
       insertIndex: 3
       addedObject: {fileID: 955288127}
+    - targetCorrespondingSourceObject: {fileID: 5824600039365575497, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 955288133}
   m_SourcePrefab: {fileID: 100100000, guid: ed4a79e3ed211af47813f69af8325c7f, type: 3}
 --- !u!1001 &7329645965634328909
 PrefabInstance:

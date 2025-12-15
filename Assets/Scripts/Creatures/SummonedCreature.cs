@@ -3,23 +3,26 @@ using System;
 
 public abstract class SummonedCreature : MonoBehaviour
 {
+    // Evento que se dispara cuando la criatura es destruida
     public event Action OnCreatureDestroyed;
     
+    // Método público para notificar destrucción desde PlayerSummoner
     public void NotifyDestruction()
     {
         OnCreatureDestroyed?.Invoke();
     }
-    
+    [Header("Configuración Base")]
     [SerializeField] protected int maxHealth = 100;
     [SerializeField] protected int attackDamage = 25;
     [SerializeField] protected float attackRange = 2f;
     [SerializeField] protected float attackCooldown = 1.5f;
     [SerializeField] protected float moveSpeed = 3f;
     
+    [Header("Comportamiento")]
     [SerializeField] protected float followDistance = 5f;
-    [SerializeField] protected float maxDistanceFromPlayer = 25f;
-    [SerializeField] protected float teleportDistance = 30f;
-    [SerializeField] protected float fastFollowMultiplier = 2.5f;
+    [SerializeField] protected float maxDistanceFromPlayer = 25f; // Aumentado de 10 a 25
+    [SerializeField] protected float teleportDistance = 30f; // Distancia para teletransportarse
+    [SerializeField] protected float fastFollowMultiplier = 2.5f; // Multiplicador de velocidad cuando está lejos
     
     protected int currentHealth;
     protected float lastAttackTime;
@@ -41,12 +44,14 @@ public abstract class SummonedCreature : MonoBehaviour
         
         if (playerTransform == null)
         {
+            Debug.LogWarning("Jugador no encontrado. El invocado se destruirá en 30 segundos.");
             Destroy(gameObject, 30f);
         }
     }
     
     protected virtual void Start()
     {
+        // Override en clases hijas
     }
     
     protected virtual void Update()
@@ -55,6 +60,7 @@ public abstract class SummonedCreature : MonoBehaviour
         
         float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
         
+        // Si está demasiado lejos, teletransportarse al jugador
         if (distanceToPlayer > teleportDistance)
         {
             TeleportToPlayer();
@@ -78,10 +84,11 @@ public abstract class SummonedCreature : MonoBehaviour
         
         if (distanceToPlayer > followDistance)
         {
+            // Si está lejos, usar velocidad aumentada para alcanzar rápidamente
             float currentMoveSpeed = moveSpeed;
             if (distanceToPlayer > maxDistanceFromPlayer)
             {
-                currentMoveSpeed *= fastFollowMultiplier;
+                currentMoveSpeed *= fastFollowMultiplier; // Velocidad aumentada cuando está lejos
             }
             
             Vector2 movement = directionToPlayer * currentMoveSpeed * Time.deltaTime;
@@ -91,6 +98,7 @@ public abstract class SummonedCreature : MonoBehaviour
     
     protected virtual void HandleCombat()
     {
+        // Override en clases hijas para comportamiento específico
         BasicMeleeAttack();
     }
     
@@ -116,9 +124,13 @@ public abstract class SummonedCreature : MonoBehaviour
     {
         if (playerTransform == null) return;
         
+        // Teletransportarse a una posición cerca del jugador
         Vector2 teleportPosition = (Vector2)playerTransform.position + UnityEngine.Random.insideUnitCircle * 2f;
         transform.position = teleportPosition;
         
+        Debug.Log($"🌀 {creatureType} se teletransportó al jugador (estaba demasiado lejos)");
+        
+        // Agregar efecto visual opcional
         if (animator != null)
         {
             animator.SetTrigger("Teleport");
@@ -136,6 +148,8 @@ public abstract class SummonedCreature : MonoBehaviour
             {
                 animator.SetTrigger("Attack");
             }
+            
+            Debug.Log($"{creatureType} atacó a {target.name} por {attackDamage} daño");
         }
     }
     
@@ -175,6 +189,8 @@ public abstract class SummonedCreature : MonoBehaviour
             animator.SetTrigger("Death");
         }
         
+        Debug.Log($"{creatureType} ha muerto");
+        
         Collider2D col = GetComponent<Collider2D>();
         if (col != null)
         {
@@ -186,6 +202,7 @@ public abstract class SummonedCreature : MonoBehaviour
     
     protected virtual void OnDestroy()
     {
+        // Disparar el evento cuando la criatura es destruida
         OnCreatureDestroyed?.Invoke();
     }
     
@@ -218,6 +235,7 @@ public abstract class SummonedCreature : MonoBehaviour
         creatureType = type;
     }
     
+    // Métodos de utilidad
     public int GetCurrentHealth() => currentHealth;
     public int GetMaxHealth() => maxHealth;
     public CreatureType GetCreatureType() => creatureType;
