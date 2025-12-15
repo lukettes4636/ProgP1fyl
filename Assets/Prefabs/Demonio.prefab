@@ -107,9 +107,10 @@ MonoBehaviour:
   teleportDistance: 30
   fastFollowMultiplier: 2.5
   creatureType: 1
-  projectilePrefab: {fileID: 6367319191189075504, guid: 378552a93f5c75848955d035e1c1995d, type: 3}
+  projectilePrefab: {fileID: 8928728445800644864, guid: c004e300f7bb9a0438b2457dad4f6f46, type: 3}
   firePoint: {fileID: 0}
   fireRate: 0.8
+  shootClip: {fileID: 8300000, guid: b858936a6a7e3d94eb5adb3da028b8c6, type: 3}
   projectileDamage: 35
   projectileSpeed: 20
   projectileLifetime: 3

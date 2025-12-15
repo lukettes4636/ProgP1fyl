@@ -16,6 +16,7 @@ public class HorseController : MonoBehaviour
     [Header("Audio Settings")]
     [SerializeField] private AudioClip runClip;
     [SerializeField] private AudioClip genericClip;
+    [SerializeField] private AudioClip mountClip;
 
     [Header("Interaction Settings")]
     [SerializeField] private float interactionRange = 1.5f;
@@ -163,9 +164,10 @@ public class HorseController : MonoBehaviour
 
     private void StopAudio()
     {
-        if (audioSource.isPlaying)
+        if (audioSource.isPlaying && audioSource.clip == runClip)
         {
             audioSource.Stop();
+            audioSource.clip = null;
         }
     }
 
@@ -181,6 +183,10 @@ public class HorseController : MonoBehaviour
 
     private void Mount()
     {
+        if (mountClip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(mountClip);
+        }
         isMounted = true;
         player.transform.SetParent(transform);
         player.transform.localPosition = mountOffset;

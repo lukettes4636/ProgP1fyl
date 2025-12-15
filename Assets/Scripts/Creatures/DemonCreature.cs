@@ -5,6 +5,7 @@ public class DemonCreature : SummonedCreature
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint;
     [SerializeField] private float fireRate = 0.8f;
+    [SerializeField] private AudioClip shootClip;
     [SerializeField] private int projectileDamage = 35;
     [SerializeField] private float projectileSpeed = 20f;
     [SerializeField] private float projectileLifetime = 3f;
@@ -114,6 +115,11 @@ public class DemonCreature : SummonedCreature
         Vector2 shootDirection = CalculatePredictiveShootDirection();
         
         activeProjectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        
+        if (shootClip != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shootClip);
+        }
         
         Projectile projScript = activeProjectile.GetComponent<Projectile>();
         if (projScript != null)
