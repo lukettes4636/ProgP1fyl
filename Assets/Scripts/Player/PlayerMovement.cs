@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 2.8f;
-    [SerializeField] private float runSpeed = 2.1f;
+    [SerializeField] private float runSpeed = 5.0f;
 
     private Vector2 moveInput;
     private Vector2 aimInput;
@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     private bool wasMovingLastFrame = false;
 
     [SerializeField] private bool canMove = true;
+    [SerializeField] private bool useAimSystem = true; // NUEVO: Toggle para sistema de aim
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -61,8 +62,8 @@ public class PlayerMovement : MonoBehaviour
             HandleInput();
             HandleDash();
         }
-        HandleFootsteps();
         UpdateAnimations();
+        HandleFootsteps();
     }
 
     private void FixedUpdate()
@@ -79,20 +80,41 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleInput()
     {
+        // Input de movimiento (WASD o flechas)
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
         moveInput = Vector2.ClampMagnitude(moveInput, 1f);
+
+        // Input de aim (joystick derecho o mouse)
+        if (useAimSystem)
+        {
+            aimInput.x = Input.GetAxisRaw("AimHorizontal");
+            aimInput.y = Input.GetAxisRaw("AimVertical");
+
+            // Actualizar última dirección con prioridad a aimInput
+            if (aimInput.sqrMagnitude > 0.1f)
+            {
+                lastDirection = aimInput.normalized;
+            }
+            else if (moveInput.sqrMagnitude > 0.1f)
+            {
+                lastDirection = moveInput.normalized;
+            }
+        }
+        else
+        {
+            // Sin sistema de aim, usar solo movimiento
+            if (moveInput.sqrMagnitude > 0.1f)
+            {
+                lastDirection = moveInput.normalized;
+            }
+        }
 
         isRunning = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 
         if (Input.GetButtonDown("Dash") && dashCooldownTimer <= 0f)
         {
             StartDash();
-        }
-
-        if (moveInput.sqrMagnitude > 0.1f)
-        {
-            lastDirection = moveInput.normalized;
         }
 
         dashCooldownTimer -= Time.deltaTime;
@@ -142,14 +164,38 @@ public class PlayerMovement : MonoBehaviour
     {
         if (animator != null && !isActing)
         {
-            animator.SetFloat("MoveX", moveInput.x);
-            animator.SetFloat("MoveY", moveInput.y);
+            // Determinar qué dirección usar para las animaciones
+            Vector2 animDirection;
+
+            if (useAimSystem && aimInput.sqrMagnitude > 0.1f)
+            {
+                // Si hay aim, usar aim para orientar el personaje
+                animDirection = aimInput;
+            }
+            else if (moveInput.sqrMagnitude > 0.01f)
+            {
+                // Si no hay aim pero se está moviendo, usar movimiento
+                animDirection = moveInput;
+            }
+            else
+            {
+                // Si no se mueve, mantener última dirección
+                animDirection = lastDirection;
+            }
+
+            bool isMoving = moveInput.sqrMagnitude > 0.01f;
+
+            // Configurar parámetros del Animator
+            animator.SetBool("IsMoving", isMoving);
             animator.SetBool("IsRunning", isRunning);
 
-            if (moveInput.sqrMagnitude > 0.01f)
+            // Actualizar dirección de animación
+            if (animDirection.sqrMagnitude > 0.01f)
             {
-                animator.SetFloat("LastMoveX", moveInput.x);
-                animator.SetFloat("LastMoveY", moveInput.y);
+                animator.SetFloat("MoveX", animDirection.x);
+                animator.SetFloat("MoveY", animDirection.y);
+                animator.SetFloat("LastMoveX", animDirection.x);
+                animator.SetFloat("LastMoveY", animDirection.y);
             }
         }
     }
@@ -157,7 +203,7 @@ public class PlayerMovement : MonoBehaviour
     private void HandleFootsteps()
     {
         bool isMoving = moveInput.sqrMagnitude > 0.01f && canMove && !isDashing;
-        
+
         if (isMoving)
         {
             if (!wasMovingLastFrame)
@@ -219,11 +265,33 @@ public class PlayerMovement : MonoBehaviour
     public void SetIsActing(bool state)
     {
         isActing = state;
+
+        // Cuando termina la acción, resetear IsMoving
+        if (!state)
+        {
+            bool isMoving = moveInput.sqrMagnitude > 0.01f;
+            animator.SetBool("IsMoving", isMoving);
+        }
+    }
+
+    public void SetUseAimSystem(bool useAim)
+    {
+        useAimSystem = useAim;
     }
 
     public Vector2 GetLastDirection()
     {
         return lastDirection;
+    }
+
+    public Vector2 GetMoveInput()
+    {
+        return moveInput;
+    }
+
+    public Vector2 GetAimInput()
+    {
+        return aimInput;
     }
 
     public SpriteRenderer GetSpriteRenderer()
@@ -239,5 +307,10 @@ public class PlayerMovement : MonoBehaviour
     public float GetRunSpeed()
     {
         return runSpeed;
+    }
+
+    public bool IsUsingAimSystem()
+    {
+        return useAimSystem;
     }
 }
