@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class EnemyArrow : MonoBehaviour
 {
-    [SerializeField] private float speed = 8f;
-    [SerializeField] private int damage = 10;
-    [SerializeField] private float lifetime = 4f;
+    public float speed = 8f;
+    public int damage = 10;
+    public float lifetime = 4f;
 
-    private Vector2 direction;
     private Rigidbody2D rb;
 
     private void Awake()
@@ -19,31 +18,50 @@ public class EnemyArrow : MonoBehaviour
         Destroy(gameObject, lifetime);
     }
 
-    public void Launch(Vector2 shootDirection)
+    public void Launch(Vector2 direction)
     {
-        direction = shootDirection.normalized;
-        rb.velocity = direction * speed;
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+        
+        rb.velocity = direction.normalized * speed;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
-            return;
+        HandleCollision(other.gameObject);
+    }
 
-        PlayerHealth player = other.GetComponent<PlayerHealth>();
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        HandleCollision(collision.gameObject);
+    }
+
+    private void HandleCollision(GameObject target)
+    {
+        if (target.CompareTag("Enemy")) return;
+
+        PlayerHealth player = target.GetComponent<PlayerHealth>();
+        
+        if (player == null)
+        {
+            player = target.GetComponentInParent<PlayerHealth>();
+        }
+
         if (player != null)
         {
             player.TakeDamage(damage);
             Destroy(gameObject);
-            return;
         }
-
-        if (!other.CompareTag("Enemy"))
+        else if (target.CompareTag("Player"))
         {
+            // Si tiene el tag Player pero no encontramos el componente de vida, destruimos la flecha igual
             Destroy(gameObject);
-            return;
+        }
+        else
+        {
+            // Destruir al chocar con paredes u otros objetos (Layer Default, Obstacle, etc)
+            Destroy(gameObject);
         }
     }
 }
