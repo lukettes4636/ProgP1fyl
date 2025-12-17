@@ -34,7 +34,7 @@ public class EnemyAI : MonoBehaviour
     public float attackDamage = 10f;
     public float attackCooldown = 1.2f;
 
-    [Header("Arrow Shooting")]
+    [Header("Disparo")]
     public AttackType attackType = AttackType.Both;
     public GameObject arrowPrefab;
     public float shootingRange = 5f;
@@ -55,11 +55,11 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        rb.mass = 3.0f;
+        rb.mass = 1000f;
         rb.drag = 5.0f;
         rb.angularDrag = 0.05f;
         rb.gravityScale = 0.0f;
+        rb.freezeRotation = true;
 
         animator = GetComponent<Animator>();
         startPosition = transform.position;

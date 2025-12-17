@@ -4,40 +4,36 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class HorseController : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    [SerializeField] private float moveSpeed = 14.0f;
-    [SerializeField] private float mountedSpeedMultiplier = 1.5f;
+    [Header("Configuracion Movimiento")]
+    public float moveSpeed = 14.0f;
+    public float mountedSpeedMultiplier = 1.5f;
 
-    [Header("Fatigue Settings")]
-    [SerializeField] private float maxRunTime = 5.0f;
-    [SerializeField] private float cooldownTime = 3.0f;
-    [SerializeField] private float cooldownSpeedMultiplier = 0.5f;
+    [Header("Fatiga")]
+    public float maxRunTime = 5.0f;
+    public float cooldownTime = 3.0f;
+    public float cooldownSpeedMultiplier = 0.5f;
 
-    [Header("Audio Settings")]
-    [SerializeField] private AudioClip runClip;
-    [SerializeField] private AudioClip mountClip;
-    [SerializeField] private AudioClip dismountClip;
+    [Header("Audio")]
+    public AudioClip runClip;
+    public AudioClip mountClip;
+    public AudioClip dismountClip;
 
-    [Header("Interaction Settings")]
-    [SerializeField] private float interactionRange = 1.5f;
-    [SerializeField] private KeyCode interactKey = KeyCode.F;
+    [Header("Interaccion")]
+    public float interactionRange = 1.5f;
+    public KeyCode interactKey = KeyCode.F;
+    public GameObject interactionPrompt;
 
-    [Header("Mount Position")]
-    [SerializeField] private Vector3 mountOffset = new Vector3(0, 0, 0);
-    [SerializeField] private int playerSortingOrderOffset = 1;
-    [SerializeField] private float dismountDistance = 1.5f;
+    [Header("Montura")]
+    public Vector3 mountOffset = Vector3.zero;
+    public int playerSortingOrderOffset = 1;
+    public float dismountDistance = 1.5f;
 
-    [Header("Visual Settings")]
-    [SerializeField] private bool hideHorseWhenMounted = true;
-    [SerializeField] private bool useFlipForPlayer = true;
-    [SerializeField] private bool useAimWhileMounted = true;
-
-    [Header("UI Prompt (Optional)")]
-    [SerializeField] private GameObject interactionPrompt;
-
-    [Header("Horse Visual Components")]
-    [SerializeField] private SpriteRenderer horseSpriteRenderer;
-    [SerializeField] private Animator horseAnimator;
+    [Header("Visuales")]
+    public bool hideHorseWhenMounted = true;
+    public bool useFlipForPlayer = true;
+    public bool useAimWhileMounted = true;
+    public SpriteRenderer horseSpriteRenderer;
+    public Animator horseAnimator;
 
     private GameObject player;
     private PlayerMovement playerMovement;
@@ -54,14 +50,11 @@ public class HorseController : MonoBehaviour
     private Vector2 lastDirection = Vector2.down;
     private float defaultSpeed;
     private int defaultSortingOrder;
-    private Vector3 horsePositionBeforeMount;
-
+    
     private AudioSource audioSource;
     private float currentRunTime;
     private float currentCooldownTime;
     private bool isCooldown;
-
-    private Collider2D horseCollider;
 
     private void Start()
     {
@@ -74,10 +67,9 @@ public class HorseController : MonoBehaviour
         if (horseAnimator == null)
             horseAnimator = GetComponent<Animator>();
 
-        horseCollider = GetComponent<Collider2D>();
-
         rb.gravityScale = 0f;
         rb.freezeRotation = true;
+        rb.bodyType = RigidbodyType2D.Kinematic;
 
         defaultSpeed = moveSpeed;
 
@@ -131,23 +123,18 @@ public class HorseController : MonoBehaviour
 
     private void HandleInput()
     {
-        // Input de movimiento - CORREGIDO
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
         moveInput = Vector2.ClampMagnitude(moveInput, 1f);
 
-        // Input de aim - CORREGIDO: Ahora lee los ejes correctamente
         if (useAimWhileMounted)
         {
-            // Leer inputs raw del joystick derecho
             float rawAimX = Input.GetAxisRaw("AimHorizontal");
             float rawAimY = Input.GetAxisRaw("AimVertical");
 
-            // Asignar correctamente: X es horizontal, Y es vertical
             aimInput.x = rawAimX;
             aimInput.y = rawAimY;
 
-            // Actualizar �ltima direcci�n (prioridad: aim > movimiento)
             if (aimInput.sqrMagnitude > 0.1f)
             {
                 lastDirection = aimInput.normalized;
@@ -159,7 +146,6 @@ public class HorseController : MonoBehaviour
         }
         else
         {
-            // Sin aim, usar solo movimiento
             if (moveInput.sqrMagnitude > 0.1f)
             {
                 lastDirection = moveInput.normalized;
@@ -250,8 +236,8 @@ public class HorseController : MonoBehaviour
             audioSource.PlayOneShot(mountClip);
         }
 
-        horsePositionBeforeMount = transform.position;
         isMounted = true;
+        rb.bodyType = RigidbodyType2D.Dynamic;
 
         player.transform.SetParent(transform);
         player.transform.localPosition = mountOffset;
@@ -303,6 +289,8 @@ public class HorseController : MonoBehaviour
         }
 
         isMounted = false;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.velocity = Vector2.zero;
 
         if (hideHorseWhenMounted)
         {
@@ -366,38 +354,19 @@ public class HorseController : MonoBehaviour
     private void HideHorse()
     {
         if (horseSpriteRenderer != null)
-        {
             horseSpriteRenderer.enabled = false;
-        }
-
-        // NO desactivamos el collider para que siga colisionando con el mundo
-        // if (horseCollider != null)
-        // {
-        //    horseCollider.enabled = false;
-        // }
 
         if (horseAnimator != null)
-        {
             horseAnimator.enabled = false;
-        }
     }
 
     private void ShowHorse()
     {
         if (horseSpriteRenderer != null)
-        {
             horseSpriteRenderer.enabled = true;
-        }
-
-        // if (horseCollider != null)
-        // {
-        //    horseCollider.enabled = true;
-        // }
 
         if (horseAnimator != null)
-        {
             horseAnimator.enabled = true;
-        }
     }
 
     private void Move()
@@ -420,149 +389,30 @@ public class HorseController : MonoBehaviour
         if (playerAnimator == null) return;
 
         bool isMoving = moveInput.sqrMagnitude > 0.01f;
-
-        // Determinar qu� direcci�n usar para las animaciones - CORREGIDO
         Vector2 animDirection;
 
         if (useAimWhileMounted && aimInput.sqrMagnitude > 0.1f)
         {
-            // Si hay aim, usar aim para las animaciones
             animDirection = aimInput.normalized;
         }
         else if (isMoving)
         {
-            // Si no hay aim pero se est� moviendo, usar movimiento
             animDirection = moveInput.normalized;
         }
         else
         {
-            // Si no se mueve, usar �ltima direcci�n
             animDirection = lastDirection;
         }
 
-        // Actualizar par�metros del jugador montado - CORREGIDO
         playerAnimator.SetBool("MountedMoving", isMoving);
-        playerAnimator.SetFloat("MoveX", animDirection.x);  // X es X
-        playerAnimator.SetFloat("MoveY", animDirection.y);  // Y es Y
+        playerAnimator.SetFloat("MoveX", animDirection.x);
+        playerAnimator.SetFloat("MoveY", animDirection.y);
         playerAnimator.SetFloat("LastMoveX", animDirection.x);
         playerAnimator.SetFloat("LastMoveY", animDirection.y);
 
-        // Flip del jugador basado en direcci�n de animaci�n
         if (useFlipForPlayer && playerSprite != null && Mathf.Abs(animDirection.x) > 0.01f)
         {
             playerSprite.flipX = animDirection.x < 0;
-        }
-
-        // DEBUG: Descomentar para verificar valores
-        // Debug.Log($"Move: ({moveInput.x:F2}, {moveInput.y:F2}) | Aim: ({aimInput.x:F2}, {aimInput.y:F2}) | Anim: ({animDirection.x:F2}, {animDirection.y:F2})");
-    }
-
-    // ==================== M�TODOS P�BLICOS ====================
-
-    public bool IsMounted()
-    {
-        return isMounted;
-    }
-
-    public float GetFatiguePercentage()
-    {
-        if (isCooldown) return 0f;
-        return 1f - (currentRunTime / maxRunTime);
-    }
-
-    public bool IsInCooldown()
-    {
-        return isCooldown;
-    }
-
-    public Vector2 GetLastDirection()
-    {
-        return lastDirection;
-    }
-
-    public Vector2 GetMoveInput()
-    {
-        return moveInput;
-    }
-
-    public Vector2 GetAimInput()
-    {
-        return aimInput;
-    }
-
-    public void SetInteractionRange(float range)
-    {
-        interactionRange = range;
-    }
-
-    public void SetInteractKey(KeyCode key)
-    {
-        interactKey = key;
-    }
-
-    public void SetMountSpeed(float speed)
-    {
-        moveSpeed = speed;
-        defaultSpeed = speed;
-    }
-
-    public void SetMountedSpeedMultiplier(float multiplier)
-    {
-        mountedSpeedMultiplier = multiplier;
-    }
-
-    public void SetUseAim(bool useAim)
-    {
-        useAimWhileMounted = useAim;
-    }
-
-    public void ForceMount()
-    {
-        if (!isMounted && player != null)
-            Mount();
-    }
-
-    public void ForceDismount()
-    {
-        if (isMounted)
-            Dismount();
-    }
-
-    public Vector3 GetHorsePosition()
-    {
-        return transform.position;
-    }
-
-    // Para debugging
-    private void OnDrawGizmosSelected()
-    {
-        // Dibujar rango de interacci�n
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactionRange);
-
-        // Dibujar posici�n de desmontaje
-        if (isMounted)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position + new Vector3(dismountDistance, 0, 0), 0.3f);
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position + new Vector3(-dismountDistance, 0, 0), 0.3f);
-        }
-
-        // Dibujar direcci�n de aim (ROJO)
-        if (isMounted && useAimWhileMounted && aimInput.sqrMagnitude > 0.1f)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(transform.position, aimInput.normalized * 2f);
-            Gizmos.DrawWireSphere(transform.position + (Vector3)(aimInput.normalized * 2f), 0.2f);
-        }
-
-        // Dibujar direcci�n de movimiento (CYAN)
-        if (isMounted && moveInput.sqrMagnitude > 0.1f)
-        {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(transform.position, moveInput.normalized * 1.5f);
-            Gizmos.DrawWireSphere(transform.position + (Vector3)(moveInput.normalized * 1.5f), 0.15f);
         }
     }
 }
