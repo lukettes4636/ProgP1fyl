@@ -1,243 +1,137 @@
 using UnityEngine;
-using System;
 
 public abstract class SummonedCreature : MonoBehaviour
 {
-    // Evento que se dispara cuando la criatura es destruida
-    public event Action OnCreatureDestroyed;
-    
-    // Método público para notificar destrucción desde PlayerSummoner
-    public void NotifyDestruction()
-    {
-        OnCreatureDestroyed?.Invoke();
-    }
-    [Header("Configuración Base")]
+    public enum CreatureType { Angel, Demon }
+
+    [Header("Stats")]
     [SerializeField] protected int maxHealth = 100;
     [SerializeField] protected int attackDamage = 25;
-    [SerializeField] protected float attackRange = 2f;
-    [SerializeField] protected float attackCooldown = 1.5f;
+    [SerializeField] protected float attackRange = 6f;
     [SerializeField] protected float moveSpeed = 3f;
-    
-    [Header("Comportamiento")]
-    [SerializeField] protected float followDistance = 5f;
-    [SerializeField] protected float maxDistanceFromPlayer = 25f; // Aumentado de 10 a 25
-    [SerializeField] protected float teleportDistance = 30f; // Distancia para teletransportarse
-    [SerializeField] protected float fastFollowMultiplier = 2.5f; // Multiplicador de velocidad cuando está lejos
-    
+
+    [Header("Animation")]
+    [SerializeField] protected Animator animator;
+
     protected int currentHealth;
-    protected float lastAttackTime;
-    protected Transform playerTransform;
-    protected EnemyAI enemyAI;
-    protected Animator animator;
-    protected SpriteRenderer spriteRenderer;
-    
-    public enum CreatureType { Angel, Demon }
-    [SerializeField] protected CreatureType creatureType;
-    
+    protected CreatureType creatureType;
+    protected Vector2 lastMovementDirection = Vector2.down;
+    protected bool isMoving = false;
+    protected bool isAttacking = false;
+
+    // Animation parameter names
+    protected readonly string ANIM_HORIZONTAL = "Horizontal";
+    protected readonly string ANIM_VERTICAL = "Vertical";
+    protected readonly string ANIM_IS_MOVING = "IsMoving";
+    protected readonly string ANIM_IS_ATTACKING = "IsAttacking";
+
     protected virtual void Awake()
     {
         currentHealth = maxHealth;
-        playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
-        enemyAI = GetComponent<EnemyAI>();
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        
-        if (playerTransform == null)
+
+        if (animator == null)
         {
-            Debug.LogWarning("Jugador no encontrado. El invocado se destruirá en 30 segundos.");
-            Destroy(gameObject, 30f);
+            animator = GetComponent<Animator>();
         }
     }
-    
+
     protected virtual void Start()
     {
-        // Override en clases hijas
+        InitializeAnimator();
     }
-    
+
     protected virtual void Update()
     {
-        if (playerTransform == null) return;
-        
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
-        
-        // Si está demasiado lejos, teletransportarse al jugador
-        if (distanceToPlayer > teleportDistance)
-        {
-            TeleportToPlayer();
-            return;
-        }
-        
-        HandleMovement();
         HandleCombat();
-        UpdateAnimation();
+        UpdateAnimationParameters();
     }
-    
-    protected virtual void HandleMovement()
+
+    protected virtual void InitializeAnimator()
     {
-        if (enemyAI != null)
-        {
-            return;
-        }
-        
-        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
-        float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
-        
-        if (distanceToPlayer > followDistance)
-        {
-            // Si está lejos, usar velocidad aumentada para alcanzar rápidamente
-            float currentMoveSpeed = moveSpeed;
-            if (distanceToPlayer > maxDistanceFromPlayer)
-            {
-                currentMoveSpeed *= fastFollowMultiplier; // Velocidad aumentada cuando está lejos
-            }
-            
-            Vector2 movement = directionToPlayer * currentMoveSpeed * Time.deltaTime;
-            transform.Translate(movement);
-        }
-    }
-    
-    protected virtual void HandleCombat()
-    {
-        // Override en clases hijas para comportamiento específico
-        BasicMeleeAttack();
-    }
-    
-    protected void BasicMeleeAttack()
-    {
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, attackRange);
-        
-        foreach (Collider2D enemy in enemies)
-        {
-            if (enemy.CompareTag("Enemy"))
-            {
-                if (Time.time - lastAttackTime >= attackCooldown)
-                {
-                    Attack(enemy.gameObject);
-                    lastAttackTime = Time.time;
-                    break;
-                }
-            }
-        }
-    }
-    
-    protected virtual void TeleportToPlayer()
-    {
-        if (playerTransform == null) return;
-        
-        // Teletransportarse a una posición cerca del jugador
-        Vector2 teleportPosition = (Vector2)playerTransform.position + UnityEngine.Random.insideUnitCircle * 2f;
-        transform.position = teleportPosition;
-        
-        Debug.Log($"🌀 {creatureType} se teletransportó al jugador (estaba demasiado lejos)");
-        
-        // Agregar efecto visual opcional
         if (animator != null)
         {
-            animator.SetTrigger("Teleport");
+            animator.SetFloat(ANIM_HORIZONTAL, 0f);
+            animator.SetFloat(ANIM_VERTICAL, -1f);
+            animator.SetBool(ANIM_IS_MOVING, false);
+            animator.SetBool(ANIM_IS_ATTACKING, false);
         }
     }
-    
-    protected virtual void Attack(GameObject target)
+
+    protected virtual void UpdateAnimationParameters()
     {
-        EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
-        if (enemyHealth != null)
+        if (animator == null) return;
+
+        // Actualizar dirección
+        if (lastMovementDirection.sqrMagnitude > 0.01f)
         {
-            enemyHealth.TakeDamage(attackDamage);
-            
-            if (animator != null)
-            {
-                animator.SetTrigger("Attack");
-            }
-            
-            Debug.Log($"{creatureType} atacó a {target.name} por {attackDamage} daño");
+            animator.SetFloat(ANIM_HORIZONTAL, lastMovementDirection.x);
+            animator.SetFloat(ANIM_VERTICAL, lastMovementDirection.y);
+        }
+
+        // Actualizar estado de movimiento
+        animator.SetBool(ANIM_IS_MOVING, isMoving);
+
+        // Actualizar estado de ataque
+        animator.SetBool(ANIM_IS_ATTACKING, isAttacking);
+    }
+
+    protected void SetMovementDirection(Vector2 direction)
+    {
+        if (direction.sqrMagnitude > 0.01f)
+        {
+            lastMovementDirection = direction.normalized;
+            isMoving = true;
+        }
+        else
+        {
+            isMoving = false;
         }
     }
-    
-    protected virtual void UpdateAnimation()
+
+    protected void StartAttackAnimation()
     {
-        if (animator == null || spriteRenderer == null) return;
-        
-        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
-        
-        animator.SetFloat("MoveX", directionToPlayer.x);
-        animator.SetFloat("MoveY", directionToPlayer.y);
-        animator.SetFloat("LastMoveX", directionToPlayer.x);
-        animator.SetFloat("LastMoveY", directionToPlayer.y);
-        
-        spriteRenderer.flipX = directionToPlayer.x < 0;
+        isAttacking = true;
     }
-    
-    public virtual void TakeDamage(int damage)
+
+    protected void StopAttackAnimation()
+    {
+        isAttacking = false;
+    }
+
+    // Este método se llama desde un Animation Event al final de la animación de ataque
+    public void OnAttackAnimationEnd()
+    {
+        StopAttackAnimation();
+    }
+
+    public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        
-        if (animator != null)
-        {
-            animator.SetTrigger("Hit");
-        }
-        
         if (currentHealth <= 0)
         {
             Die();
         }
     }
-    
+
     protected virtual void Die()
     {
-        if (animator != null)
-        {
-            animator.SetTrigger("Death");
-        }
-        
-        Debug.Log($"{creatureType} ha muerto");
-        
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null)
-        {
-            col.enabled = false;
-        }
-        
-        Destroy(gameObject, 1f);
+        Destroy(gameObject);
     }
-    
-    protected virtual void OnDestroy()
+
+    protected abstract void HandleCombat();
+
+    protected virtual void Attack(GameObject target)
     {
-        // Disparar el evento cuando la criatura es destruida
-        OnCreatureDestroyed?.Invoke();
     }
-    
+
+    public void SetCreatureType(CreatureType type)
+    {
+        creatureType = type;
+    }
+
     protected virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
-        
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, followDistance);
-        
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, maxDistanceFromPlayer);
     }
-    
-    public virtual void SetAsAngel()
-    {
-        creatureType = CreatureType.Angel;
-        gameObject.name = "Angel_Invocado";
-    }
-    
-    public virtual void SetAsDemon()
-    {
-        creatureType = CreatureType.Demon;
-        gameObject.name = "Diablo_Invocado";
-    }
-    
-    protected void SetCreatureType(CreatureType type)
-    {
-        creatureType = type;
-    }
-    
-    // Métodos de utilidad
-    public int GetCurrentHealth() => currentHealth;
-    public int GetMaxHealth() => maxHealth;
-    public CreatureType GetCreatureType() => creatureType;
-    public bool IsAlive() => currentHealth > 0;
 }

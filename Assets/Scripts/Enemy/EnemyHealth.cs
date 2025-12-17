@@ -2,18 +2,27 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
+    [Header("Health Settings")]
     public int vidaMaxima = 50;
+
+    [Header("Loot Settings")]
     public GameObject objetoQueSuelta;
     public int cantidadASoltar = 3;
     [SerializeField] private string dropName = "Mineral";
+
+    [Header("Audio Settings")]
     public AudioClip sonidoDaño;
     public AudioClip sonidoMuerte;
+
+    [Header("Death Settings")]
     public float tiempoAntesDeDestruir = 0.5f;
 
     private int vidaActual;
     private bool estaMuerto = false;
     private AudioSource audioSource;
     private Animator animator;
+    private EnemyShooter enemyShooter;
+    private EnemyAI enemyAI;
 
     private void Start()
     {
@@ -26,6 +35,8 @@ public class EnemyHealth : MonoBehaviour
         }
 
         animator = GetComponent<Animator>();
+        enemyShooter = GetComponent<EnemyShooter>();
+        enemyAI = GetComponent<EnemyAI>();
     }
 
     public void TakeDamage(int cantidad)
@@ -37,8 +48,12 @@ public class EnemyHealth : MonoBehaviour
 
         ReproducirSonido(sonidoDaño);
 
-        EnemyAI enemyAI = GetComponent<EnemyAI>();
-        if (enemyAI != null)
+        // Reproducir animación de hit
+        if (enemyShooter != null)
+        {
+            enemyShooter.PlayHitAnimation();
+        }
+        else if (enemyAI != null)
         {
             enemyAI.PlayHitAnimation();
         }
@@ -55,15 +70,25 @@ public class EnemyHealth : MonoBehaviour
 
         ReproducirSonido(sonidoMuerte);
 
-        if (animator != null)
+        // Reproducir animación de muerte
+        if (enemyShooter != null)
+        {
+            enemyShooter.PlayDeathAnimation();
+        }
+        else if (animator != null)
         {
             animator.SetTrigger("Death");
         }
 
-        EnemyAI enemyAI = GetComponent<EnemyAI>();
+        // Desactivar IA y componentes
         if (enemyAI != null)
         {
             enemyAI.enabled = false;
+        }
+
+        if (enemyShooter != null)
+        {
+            enemyShooter.enabled = false;
         }
 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();

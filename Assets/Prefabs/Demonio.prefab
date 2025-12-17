@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5190076242038656290}
   - component: {fileID: 8954184589360935532}
   - component: {fileID: 8358076207779670174}
+  - component: {fileID: 8381451009351582941}
   m_Layer: 0
   m_Name: Demonio
   m_TagString: Untagged
@@ -28,8 +29,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -39.79, y: 14.41, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 0.69064}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.2, y: 1.2, z: 0.828768}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -100,13 +101,8 @@ MonoBehaviour:
   maxHealth: 100
   attackDamage: 25
   attackRange: 2
-  attackCooldown: 1.5
-  moveSpeed: 3
-  followDistance: 5
-  maxDistanceFromPlayer: 25
-  teleportDistance: 30
-  fastFollowMultiplier: 2.5
-  creatureType: 1
+  moveSpeed: 15
+  animator: {fileID: 8381451009351582941}
   projectilePrefab: {fileID: 8928728445800644864, guid: c004e300f7bb9a0438b2457dad4f6f46, type: 3}
   firePoint: {fileID: 0}
   fireRate: 0.8
@@ -122,3 +118,32 @@ MonoBehaviour:
   - Enemy
   - Hostile
   - Boss
+  chaseSpeed: 3.5
+  optimalAttackDistance: 5
+  minAttackDistance: 3
+  followDistance: 3
+  stopDistance: 2
+  attackAnimationDuration: 0.5
+  fadeDelay: 0.5
+  fadeDuration: 1
+--- !u!95 &8381451009351582941
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5509481060428229488}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4309791ac3affff4284394d62da97e18, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
