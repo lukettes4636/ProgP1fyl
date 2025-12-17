@@ -147,7 +147,7 @@ public class HorseController : MonoBehaviour
             aimInput.x = rawAimX;
             aimInput.y = rawAimY;
 
-            // Actualizar última dirección (prioridad: aim > movimiento)
+            // Actualizar ï¿½ltima direcciï¿½n (prioridad: aim > movimiento)
             if (aimInput.sqrMagnitude > 0.1f)
             {
                 lastDirection = aimInput.normalized;
@@ -370,10 +370,11 @@ public class HorseController : MonoBehaviour
             horseSpriteRenderer.enabled = false;
         }
 
-        if (horseCollider != null)
-        {
-            horseCollider.enabled = false;
-        }
+        // NO desactivamos el collider para que siga colisionando con el mundo
+        // if (horseCollider != null)
+        // {
+        //    horseCollider.enabled = false;
+        // }
 
         if (horseAnimator != null)
         {
@@ -388,10 +389,10 @@ public class HorseController : MonoBehaviour
             horseSpriteRenderer.enabled = true;
         }
 
-        if (horseCollider != null)
-        {
-            horseCollider.enabled = true;
-        }
+        // if (horseCollider != null)
+        // {
+        //    horseCollider.enabled = true;
+        // }
 
         if (horseAnimator != null)
         {
@@ -420,7 +421,7 @@ public class HorseController : MonoBehaviour
 
         bool isMoving = moveInput.sqrMagnitude > 0.01f;
 
-        // Determinar qué dirección usar para las animaciones - CORREGIDO
+        // Determinar quï¿½ direcciï¿½n usar para las animaciones - CORREGIDO
         Vector2 animDirection;
 
         if (useAimWhileMounted && aimInput.sqrMagnitude > 0.1f)
@@ -430,23 +431,23 @@ public class HorseController : MonoBehaviour
         }
         else if (isMoving)
         {
-            // Si no hay aim pero se está moviendo, usar movimiento
+            // Si no hay aim pero se estï¿½ moviendo, usar movimiento
             animDirection = moveInput.normalized;
         }
         else
         {
-            // Si no se mueve, usar última dirección
+            // Si no se mueve, usar ï¿½ltima direcciï¿½n
             animDirection = lastDirection;
         }
 
-        // Actualizar parámetros del jugador montado - CORREGIDO
+        // Actualizar parï¿½metros del jugador montado - CORREGIDO
         playerAnimator.SetBool("MountedMoving", isMoving);
         playerAnimator.SetFloat("MoveX", animDirection.x);  // X es X
         playerAnimator.SetFloat("MoveY", animDirection.y);  // Y es Y
         playerAnimator.SetFloat("LastMoveX", animDirection.x);
         playerAnimator.SetFloat("LastMoveY", animDirection.y);
 
-        // Flip del jugador basado en dirección de animación
+        // Flip del jugador basado en direcciï¿½n de animaciï¿½n
         if (useFlipForPlayer && playerSprite != null && Mathf.Abs(animDirection.x) > 0.01f)
         {
             playerSprite.flipX = animDirection.x < 0;
@@ -456,7 +457,7 @@ public class HorseController : MonoBehaviour
         // Debug.Log($"Move: ({moveInput.x:F2}, {moveInput.y:F2}) | Aim: ({aimInput.x:F2}, {aimInput.y:F2}) | Anim: ({animDirection.x:F2}, {animDirection.y:F2})");
     }
 
-    // ==================== MÉTODOS PÚBLICOS ====================
+    // ==================== Mï¿½TODOS Pï¿½BLICOS ====================
 
     public bool IsMounted()
     {
@@ -535,11 +536,11 @@ public class HorseController : MonoBehaviour
     // Para debugging
     private void OnDrawGizmosSelected()
     {
-        // Dibujar rango de interacción
+        // Dibujar rango de interacciï¿½n
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionRange);
 
-        // Dibujar posición de desmontaje
+        // Dibujar posiciï¿½n de desmontaje
         if (isMounted)
         {
             Gizmos.color = Color.green;
@@ -548,7 +549,7 @@ public class HorseController : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position + new Vector3(-dismountDistance, 0, 0), 0.3f);
         }
 
-        // Dibujar dirección de aim (ROJO)
+        // Dibujar direcciï¿½n de aim (ROJO)
         if (isMounted && useAimWhileMounted && aimInput.sqrMagnitude > 0.1f)
         {
             Gizmos.color = Color.red;
@@ -556,7 +557,7 @@ public class HorseController : MonoBehaviour
             Gizmos.DrawWireSphere(transform.position + (Vector3)(aimInput.normalized * 2f), 0.2f);
         }
 
-        // Dibujar dirección de movimiento (CYAN)
+        // Dibujar direcciï¿½n de movimiento (CYAN)
         if (isMounted && moveInput.sqrMagnitude > 0.1f)
         {
             Gizmos.color = Color.cyan;
