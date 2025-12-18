@@ -1,0 +1,492 @@
+fileFormatVersion: 2
+guid: 27050f602eb84204ca8cc03617ba17fc
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Damage_Boosizq_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 93
+        width: 30.75
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c609fc111eafff84885ae59aa0075c5c
+      internalID: 1928669879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_1
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 93
+        width: 30.75
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d5ec30428b75a474092c5c9c877c4b7d
+      internalID: 1957243137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_2
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 93
+        width: 31
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06cc0a6d34868704abd8beea409b61e0
+      internalID: 572432349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_3
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 93
+        width: 31
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2177678254a47440bc800c361c260a5
+      internalID: 9369855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 62
+        width: 30.75
+        height: 31
+      alignment: 9
+      pivot: {x: 0.538523, y: 0.20863047}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e05348d23a228b94f9e73b83a9a8d3c6
+      internalID: 1031888172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_5
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 62
+        width: 30.75
+        height: 31
+      alignment: 9
+      pivot: {x: 0.60593843, y: 0.20863047}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15a1447d8f19bb941bca3bc16323a459
+      internalID: 1555021030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_6
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 62
+        width: 31
+        height: 31
+      alignment: 9
+      pivot: {x: 0.6590581, y: 0.20887019}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70fa01f1a3b37a648895e6c7eee4c15f
+      internalID: -1601376945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_7
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 62
+        width: 29
+        height: 31
+      alignment: 9
+      pivot: {x: 0.641404, y: 0.20898068}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2aeb72a884cdef448e18c6cab7f51cf
+      internalID: -1595512736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 31
+        width: 30.75
+        height: 31
+      alignment: 9
+      pivot: {x: 0.5367407, y: 0.14549513}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3dccc6f2db19b9a47aad491cbadc4b39
+      internalID: 1236909130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_9
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 31
+        width: 31
+        height: 31
+      alignment: 9
+      pivot: {x: 0.5960808, y: 0.14880827}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 547cead2c216d0a47802f1cfc24d7e32
+      internalID: 453561562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_10
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 31
+        width: 31
+        height: 31
+      alignment: 9
+      pivot: {x: 0.6292119, y: 0.142182}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1622ac92ace501047a1b346cd0ccb8f1
+      internalID: 1190350753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_11
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 31
+        width: 31
+        height: 31
+      alignment: 9
+      pivot: {x: 0.6623432, y: 0.14549513}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c94ae8401e05e6e4db1f588a0376907a
+      internalID: 1878806196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 30.75
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 161e88c8ba047f744a9b814adceb3e47
+      internalID: -746065809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_13
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 0
+        width: 30.75
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f40743273ebef74eb1dab840b56df50
+      internalID: 1053815561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_14
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 0
+        width: 30.75
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfe78d85118594d4bb48b6e6d6715816
+      internalID: -1818581734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Damage_Boosizq_15
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 0
+        width: 30.75
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1568f656aa1af7d4ebdf381d4e8d2d69
+      internalID: -2135137003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Damage_Boosizq_0: 1928669879
+      Damage_Boosizq_1: 1957243137
+      Damage_Boosizq_10: 1190350753
+      Damage_Boosizq_11: 1878806196
+      Damage_Boosizq_12: -746065809
+      Damage_Boosizq_13: 1053815561
+      Damage_Boosizq_14: -1818581734
+      Damage_Boosizq_15: -2135137003
+      Damage_Boosizq_2: 572432349
+      Damage_Boosizq_3: 9369855
+      Damage_Boosizq_4: 1031888172
+      Damage_Boosizq_5: 1555021030
+      Damage_Boosizq_6: -1601376945
+      Damage_Boosizq_7: -1595512736
+      Damage_Boosizq_8: 1236909130
+      Damage_Boosizq_9: 453561562
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

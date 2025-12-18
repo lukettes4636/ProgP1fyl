@@ -1,0 +1,668 @@
+fileFormatVersion: 2
+guid: 9ea77c974dbdde84daa24fa65f6e16a3
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Atak_Boss_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 128
+        width: 24
+        height: 29
+      alignment: 9
+      pivot: {x: 0.56, y: 0.15}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cbfc5d319806f046b9718621907e740
+      internalID: -1823642827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_1
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 128
+        width: 23
+        height: 29
+      alignment: 9
+      pivot: {x: 0.54, y: 0.14}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 937af7a0167944e41a1765442660ec90
+      internalID: -1422561165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_2
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 128
+        width: 21
+        height: 31
+      alignment: 9
+      pivot: {x: 0.5, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1798e7e506fc8874082f556e2b26df20
+      internalID: 831399255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_3
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 124
+        width: 21
+        height: 35
+      alignment: 9
+      pivot: {x: 0.53, y: 0.22}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 870287af9f4b6314ca49bf5d6bf85dd4
+      internalID: -223109765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_4
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 124
+        width: 21
+        height: 32
+      alignment: 9
+      pivot: {x: 0.52, y: 0.24}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 03a509a0d2a863a42869166d871d72c7
+      internalID: 502917255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_5
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 126
+        width: 21
+        height: 28
+      alignment: 9
+      pivot: {x: 0.52, y: 0.2}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a100e64a761b7648bfd30f7679dca93
+      internalID: 1057510138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_6
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 128
+        width: 21
+        height: 26
+      alignment: 9
+      pivot: {x: 0.53, y: 0.13}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2112f0cbc84104a44ad0ce5d66a24045
+      internalID: 304077668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_7
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 128
+        width: 21
+        height: 29
+      alignment: 9
+      pivot: {x: 0.5, y: 0.16}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1ef9d3e456c63e46ae3566b4ad37e41
+      internalID: 1386657031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 28
+        height: 27
+      alignment: 9
+      pivot: {x: 0.69, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7eceaef51cb8de42b27ba3ba0ace8ad
+      internalID: 1440922155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_9
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 64
+        width: 27
+        height: 27
+      alignment: 9
+      pivot: {x: 0.68, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c81f7b84992e764696788eee2c76424
+      internalID: 2069233360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_10
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 64
+        width: 18
+        height: 29
+      alignment: 9
+      pivot: {x: 0.5, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f0070fd4df762d4b87710ab9e10732c
+      internalID: -1042331345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_11
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 64
+        width: 34
+        height: 25
+      alignment: 9
+      pivot: {x: 0.32, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 877e7fec46bbe634cb282c815b6fd44d
+      internalID: 1241902725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_12
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 64
+        width: 32
+        height: 25
+      alignment: 9
+      pivot: {x: 0.34, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d62e9dac1f7e7bb4f845c1aeb3c3a912
+      internalID: 1343225744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_13
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 64
+        width: 32
+        height: 25
+      alignment: 9
+      pivot: {x: 0.34, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 252a4601a1d987b42819b61b2ffb19aa
+      internalID: 905348536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_14
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 64
+        width: 26
+        height: 25
+      alignment: 9
+      pivot: {x: 0.41, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15e671a5bad70b140814fc3312252f79
+      internalID: 1172158983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_15
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 64
+        width: 18
+        height: 28
+      alignment: 9
+      pivot: {x: 0.47, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f016df00b65bef74e92f9362ca1bb3ec
+      internalID: -1850528718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_16
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 0
+        width: 23
+        height: 29
+      alignment: 9
+      pivot: {x: 0.45, y: 0.16}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 012a1cb40efe9884abc61b3aa3fe368c
+      internalID: 1176277880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_17
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 0
+        width: 22
+        height: 29
+      alignment: 9
+      pivot: {x: 0.48, y: 0.14}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49025cdba4aebc8408cd15a70dafc793
+      internalID: -2049910354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_18
+      rect:
+        serializedVersion: 2
+        x: 137
+        y: 0
+        width: 21
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77e3e80745d2de344a349dc70e7106f3
+      internalID: -1334634389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_19
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 0
+        width: 26
+        height: 39
+      alignment: 9
+      pivot: {x: 0.41, y: 0.07}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1acc569d32ad55d4384cc008decceb06
+      internalID: 893778780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_20
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 0
+        width: 27
+        height: 33
+      alignment: 9
+      pivot: {x: 0.41, y: 0.07}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87b2299e4471c864dbfa0a958f75925b
+      internalID: -1531679067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_21
+      rect:
+        serializedVersion: 2
+        x: 329
+        y: 0
+        width: 27
+        height: 26
+      alignment: 9
+      pivot: {x: 0.41, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 22ae15e331fa9ab41a9b7e88ef5c9906
+      internalID: -1682537254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_22
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 0
+        width: 22
+        height: 26
+      alignment: 9
+      pivot: {x: 0.5, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb05951d6891780468827475e7c65863
+      internalID: 1503831882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Atak_Boss_23
+      rect:
+        serializedVersion: 2
+        x: 457
+        y: 0
+        width: 22
+        height: 30
+      alignment: 9
+      pivot: {x: 0.49, y: 0.11}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38d399bafd13c40418acb429db1bc51c
+      internalID: 425866360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Atak_Boss_0: -1823642827
+      Atak_Boss_1: -1422561165
+      Atak_Boss_10: -1042331345
+      Atak_Boss_11: 1241902725
+      Atak_Boss_12: 1343225744
+      Atak_Boss_13: 905348536
+      Atak_Boss_14: 1172158983
+      Atak_Boss_15: -1850528718
+      Atak_Boss_16: 1176277880
+      Atak_Boss_17: -2049910354
+      Atak_Boss_18: -1334634389
+      Atak_Boss_19: 893778780
+      Atak_Boss_2: 831399255
+      Atak_Boss_20: -1531679067
+      Atak_Boss_21: -1682537254
+      Atak_Boss_22: 1503831882
+      Atak_Boss_23: 425866360
+      Atak_Boss_3: -223109765
+      Atak_Boss_4: 502917255
+      Atak_Boss_5: 1057510138
+      Atak_Boss_6: 304077668
+      Atak_Boss_7: 1386657031
+      Atak_Boss_8: 1440922155
+      Atak_Boss_9: 2069233360
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
