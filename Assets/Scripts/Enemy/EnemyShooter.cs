@@ -8,7 +8,11 @@ public class EnemyShooter : MonoBehaviour
     public Transform firePoint;
     public float projectileSpeed = 8f;
     public float fireRate = 2f;
-    public float detectionRange = 8f;
+
+    [Header("Range Settings")]
+    public float detectionRange = 10f;
+    public float shootRange = 6f;
+    public float moveSpeed = 2f;
 
     [Header("Animation Settings")]
     [SerializeField] private Animator animator;
@@ -20,6 +24,8 @@ public class EnemyShooter : MonoBehaviour
     private bool isDead = false;
     private Vector2 pendingShootDirection;
     private EnemyHealth enemyHealth;
+    private Rigidbody2D rb;
+    private bool isMoving = false;
 
     // Animation parameter names
     private readonly string ANIM_HORIZONTAL = "Horizontal";
@@ -47,7 +53,39 @@ public class EnemyShooter : MonoBehaviour
 
         enemyHealth = GetComponent<EnemyHealth>();
 
+        rb = GetComponent<Rigidbody2D>();
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody2D>();
+            rb.gravityScale = 0f;
+            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+        // Configurar FirePoint
+        SetupFirePoint();
+
         InitializeAnimator();
+    }
+
+    private void SetupFirePoint()
+    {
+        if (firePoint == null)
+        {
+            // Buscar si ya existe un FirePoint hijo
+            Transform existingFirePoint = transform.Find("FirePoint");
+            if (existingFirePoint != null)
+            {
+                firePoint = existingFirePoint;
+            }
+            else
+            {
+                // Crear un nuevo FirePoint
+                GameObject firePointObj = new GameObject("FirePoint");
+                firePointObj.transform.SetParent(transform);
+                firePointObj.transform.localPosition = Vector3.right * 0.5f; // Ajusta esta posición
+                firePoint = firePointObj.transform;
+            }
+        }
     }
 
     private void InitializeAnimator()
@@ -64,19 +102,62 @@ public class EnemyShooter : MonoBehaviour
     {
         if (isDead || targetPlayer == null) return;
 
-        float distance = Vector2.Distance(transform.position, targetPlayer.position);
+        float distanceToPlayer = Vector2.Distance(transform.position, targetPlayer.position);
 
         // Calcular dirección hacia el jugador
         Vector2 directionToPlayer = (targetPlayer.position - transform.position).normalized;
-        UpdateDirection(directionToPlayer);
 
-        if (distance <= detectionRange && !isShooting)
+        // Sistema de dos rangos
+        if (distanceToPlayer <= detectionRange && distanceToPlayer > shootRange)
         {
-            if (Time.time >= nextFireTime)
+            // RANGO 1: Detectado pero fuera de rango de disparo - PERSEGUIR
+            if (!isShooting)
+            {
+                MoveTowardsPlayer(directionToPlayer);
+            }
+        }
+        else if (distanceToPlayer <= shootRange)
+        {
+            // RANGO 2: Dentro del rango de disparo - DETENERSE Y DISPARAR
+            StopMoving();
+            UpdateDirection(directionToPlayer);
+
+            if (!isShooting && Time.time >= nextFireTime)
             {
                 StartShootAnimation();
                 nextFireTime = Time.time + fireRate;
             }
+        }
+        else
+        {
+            // Fuera de ambos rangos - IDLE
+            StopMoving();
+        }
+
+        // Actualizar animación de movimiento
+        if (animator != null)
+        {
+            animator.SetBool(ANIM_IS_MOVING, isMoving);
+        }
+    }
+
+    private void MoveTowardsPlayer(Vector2 direction)
+    {
+        // Moverse hacia el jugador
+        Vector2 targetPosition = (Vector2)transform.position + direction * moveSpeed * Time.deltaTime;
+        rb.MovePosition(targetPosition);
+
+        isMoving = true;
+        UpdateDirection(direction);
+    }
+
+    private void StopMoving()
+    {
+        isMoving = false;
+
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
         }
     }
 
@@ -106,12 +187,25 @@ public class EnemyShooter : MonoBehaviour
             animator.SetTrigger(ANIM_SHOOT);
         }
 
-        // Fallback por si no hay Animation Event
+        // Fallback: disparar automáticamente si no hay Animation Event
+        // Calcula cuándo debería disparar (en el medio de la animación)
+        float shootTiming = shootAnimationDuration * 0.5f; // 50% de la animación
+        Invoke(nameof(ExecuteShootFallback), shootTiming);
+
+        // Terminar el estado de disparo
         Invoke(nameof(EndShooting), shootAnimationDuration);
     }
 
-    // Este método es llamado por el Animation Event
+    // Este método es llamado por el Animation Event (MÉTODO PRINCIPAL)
     public void OnShootFrame()
+    {
+        // Cancelar el fallback porque el Animation Event funcionó
+        CancelInvoke(nameof(ExecuteShootFallback));
+        ExecuteShoot();
+    }
+
+    // Fallback por si no hay Animation Event configurado
+    private void ExecuteShootFallback()
     {
         ExecuteShoot();
     }
@@ -178,7 +272,23 @@ public class EnemyShooter : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
+        // Rango de detección (verde)
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+
+        // Rango de disparo (rojo)
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, shootRange);
+
+        // Línea hacia el jugador si está en rango
+        if (targetPlayer != null)
+        {
+            float dist = Vector2.Distance(transform.position, targetPlayer.position);
+            if (dist <= detectionRange)
+            {
+                Gizmos.color = dist <= shootRange ? Color.red : Color.yellow;
+                Gizmos.DrawLine(transform.position, targetPlayer.position);
+            }
+        }
     }
 }
