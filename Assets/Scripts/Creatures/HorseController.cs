@@ -274,8 +274,8 @@ public class HorseController : MonoBehaviour
         {
             playerAnimator.SetBool("IsMounted", true);
             playerAnimator.SetBool("MountedMoving", false);
-            playerAnimator.SetFloat("MoveX", 0);
-            playerAnimator.SetFloat("MoveY", 0);
+            if (HasParameter(playerAnimator, "MoveX")) playerAnimator.SetFloat("MoveX", 0);
+            if (HasParameter(playerAnimator, "MoveY")) playerAnimator.SetFloat("MoveY", 0);
         }
 
         if (interactionPrompt != null)
@@ -342,8 +342,8 @@ public class HorseController : MonoBehaviour
         if (horseAnimator != null)
         {
             horseAnimator.SetBool("IsMoving", false);
-            horseAnimator.SetFloat("MoveX", 0);
-            horseAnimator.SetFloat("MoveY", 0);
+            if (HasParameter(horseAnimator, "MoveX")) horseAnimator.SetFloat("MoveX", 0);
+            if (HasParameter(horseAnimator, "MoveY")) horseAnimator.SetFloat("MoveY", 0);
         }
 
         moveSpeed = defaultSpeed;
@@ -406,14 +406,24 @@ public class HorseController : MonoBehaviour
         }
 
         playerAnimator.SetBool("MountedMoving", isMoving);
-        playerAnimator.SetFloat("MoveX", animDirection.x);
-        playerAnimator.SetFloat("MoveY", animDirection.y);
-        playerAnimator.SetFloat("LastMoveX", animDirection.x);
-        playerAnimator.SetFloat("LastMoveY", animDirection.y);
+        if (HasParameter(playerAnimator, "MoveX")) playerAnimator.SetFloat("MoveX", animDirection.x);
+        if (HasParameter(playerAnimator, "MoveY")) playerAnimator.SetFloat("MoveY", animDirection.y);
+        if (HasParameter(playerAnimator, "LastMoveX")) playerAnimator.SetFloat("LastMoveX", animDirection.x);
+        if (HasParameter(playerAnimator, "LastMoveY")) playerAnimator.SetFloat("LastMoveY", animDirection.y);
 
         if (useFlipForPlayer && playerSprite != null && Mathf.Abs(animDirection.x) > 0.01f)
         {
             playerSprite.flipX = animDirection.x < 0;
         }
+    }
+
+    private bool HasParameter(Animator anim, string paramName)
+    {
+        if (anim == null) return false;
+        foreach (AnimatorControllerParameter param in anim.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
+        return false;
     }
 }

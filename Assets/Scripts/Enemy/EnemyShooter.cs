@@ -31,8 +31,8 @@ public class EnemyShooter : MonoBehaviour
     private Rigidbody2D rb;
     private bool isMoving = false;
 
-    private readonly string ANIM_HORIZONTAL = "MoveX";
-    private readonly string ANIM_VERTICAL = "MoveY";
+    private string ANIM_HORIZONTAL = "MoveX";
+    private string ANIM_VERTICAL = "MoveY";
     private readonly string ANIM_IS_MOVING = "IsMoving";
     private readonly string ANIM_SHOOT = "Shoot";
     private readonly string ANIM_HIT = "Hit";
@@ -96,6 +96,9 @@ public class EnemyShooter : MonoBehaviour
     {
         if (animator != null)
         {
+            if (!HasParameter(ANIM_HORIZONTAL) && HasParameter("Horizontal")) ANIM_HORIZONTAL = "Horizontal";
+            if (!HasParameter(ANIM_VERTICAL) && HasParameter("Vertical")) ANIM_VERTICAL = "Vertical";
+
             if (HasParameter(ANIM_HORIZONTAL)) animator.SetFloat(ANIM_HORIZONTAL, 0f);
             if (HasParameter(ANIM_VERTICAL)) animator.SetFloat(ANIM_VERTICAL, -1f);
             if (HasParameter(ANIM_IS_MOVING)) animator.SetBool(ANIM_IS_MOVING, false);

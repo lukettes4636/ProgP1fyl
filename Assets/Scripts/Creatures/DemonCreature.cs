@@ -70,7 +70,16 @@ public class DemonCreature : SummonedCreature
     {
         base.Start();
         SetCreatureType(CreatureType.Demon);
-        moveSpeed = chaseSpeed;
+        
+        PlayerMovement player = FindObjectOfType<PlayerMovement>();
+        if (player != null)
+        {
+            moveSpeed = player.GetRunSpeed();
+        }
+        else
+        {
+            moveSpeed = chaseSpeed;
+        }
     }
 
     protected override void Update()

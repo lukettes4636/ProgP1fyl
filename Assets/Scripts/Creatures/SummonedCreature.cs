@@ -17,15 +17,33 @@ public abstract class SummonedCreature : MonoBehaviour
     protected bool isMoving = false;
     protected bool isAttacking = false;
 
-    protected readonly string PARAM_H = "MoveX";
-    protected readonly string PARAM_V = "MoveY";
-    protected readonly string PARAM_MOV = "IsMoving";
-    protected readonly string PARAM_ATK = "IsAttacking";
+    protected string PARAM_H = "MoveX";
+    protected string PARAM_V = "MoveY";
+    protected string PARAM_MOV = "IsMoving";
+    protected string PARAM_ATK = "IsAttacking";
 
     protected virtual void Awake()
     {
         currentHealth = maxHealth;
         if (anim == null) anim = GetComponent<Animator>();
+
+        if (anim != null)
+        {
+            if (!HasParameter(PARAM_H) && HasParameter("Horizontal")) PARAM_H = "Horizontal";
+            if (!HasParameter(PARAM_V) && HasParameter("Vertical")) PARAM_V = "Vertical";
+            if (!HasParameter(PARAM_MOV) && HasParameter("Moving")) PARAM_MOV = "Moving";
+            if (!HasParameter(PARAM_ATK) && HasParameter("Attack")) PARAM_ATK = "Attack";
+        }
+    }
+
+    private bool HasParameter(string paramName)
+    {
+        if (anim == null) return false;
+        foreach (AnimatorControllerParameter param in anim.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
+        return false;
     }
 
     protected virtual void Start()

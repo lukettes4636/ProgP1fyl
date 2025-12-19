@@ -64,7 +64,16 @@ public class AngelCreature : SummonedCreature
     { 
         base.Start();
         SetCreatureType(CreatureType.Angel);
-        moveSpeed = followSpeed;
+        
+        PlayerMovement player = FindObjectOfType<PlayerMovement>();
+        if (player != null)
+        {
+            moveSpeed = player.GetRunSpeed();
+        }
+        else
+        {
+            moveSpeed = followSpeed;
+        }
 
         attackDamage = 0;
         attackRange = 0f;
@@ -165,9 +174,21 @@ public class AngelCreature : SummonedCreature
 
         if (anim != null)
         {
-            anim.SetTrigger("Attack");
+            if (HasParameter(PARAM_ATK)) anim.SetTrigger(PARAM_ATK);
+            else if (HasParameter("Attack")) anim.SetTrigger("Attack");
+            
             StartAttackAnimation();
         }
+    }
+
+    private bool HasParameter(string paramName)
+    {
+        if (anim == null) return false;
+        foreach (AnimatorControllerParameter param in anim.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
+        return false;
     }
 
     private System.Collections.IEnumerator FadeAndDestroy()

@@ -135,10 +135,10 @@ public class PlayerActionController : MonoBehaviour
 
         Vector2 actionDirection = playerMovement.GetLastDirection();
 
-        animator.SetFloat("MoveX", actionDirection.x);
-        animator.SetFloat("MoveY", actionDirection.y);
-        animator.SetFloat("LastMoveX", actionDirection.x);
-        animator.SetFloat("LastMoveY", actionDirection.y);
+        if (HasParameter("MoveX")) animator.SetFloat("MoveX", actionDirection.x);
+        if (HasParameter("MoveY")) animator.SetFloat("MoveY", actionDirection.y);
+        if (HasParameter("LastMoveX")) animator.SetFloat("LastMoveX", actionDirection.x);
+        if (HasParameter("LastMoveY")) animator.SetFloat("LastMoveY", actionDirection.y);
 
         switch (currentEquip)
         {
@@ -462,6 +462,16 @@ public class PlayerActionController : MonoBehaviour
     {
         if (dayNightCycle != null)
             return dayNightCycle.IsNight();
+        return false;
+    }
+
+    private bool HasParameter(string paramName)
+    {
+        if (animator == null) return false;
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
         return false;
     }
 }

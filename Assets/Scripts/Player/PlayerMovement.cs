@@ -182,12 +182,22 @@ public class PlayerMovement : MonoBehaviour
 
             if (animDir.sqrMagnitude > 0.01f)
             {
-                anim.SetFloat("MoveX", animDir.x);
-                anim.SetFloat("MoveY", animDir.y);
-                anim.SetFloat("LastMoveX", animDir.x);
-                anim.SetFloat("LastMoveY", animDir.y);
+                if (HasParameter("MoveX")) anim.SetFloat("MoveX", animDir.x);
+                if (HasParameter("MoveY")) anim.SetFloat("MoveY", animDir.y);
+                if (HasParameter("LastMoveX")) anim.SetFloat("LastMoveX", animDir.x);
+                if (HasParameter("LastMoveY")) anim.SetFloat("LastMoveY", animDir.y);
             }
         }
+    }
+
+    private bool HasParameter(string paramName)
+    {
+        if (anim == null) return false;
+        foreach (AnimatorControllerParameter param in anim.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
+        return false;
     }
 
     private void HandleFootstepSounds()

@@ -13,7 +13,6 @@ public class Projectile : MonoBehaviour
     [SerializeField] private Color healColor = Color.green;
     
     [SerializeField] private Color orbColor = Color.red;
-    [SerializeField] private float glowIntensity = 2f;
     
     [SerializeField] private GameObject impactEffect;
     [SerializeField] private GameObject trailEffect;

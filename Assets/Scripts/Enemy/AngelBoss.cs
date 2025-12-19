@@ -23,10 +23,20 @@ public class AngelBoss : MonoBehaviour
     private BossAttackHitbox bossHitbox;
     private Vector2 facing;
 
+    private string PARAM_H = "MoveX";
+    private string PARAM_V = "MoveY";
+
     private void Start()
     {
         currentHealth = maxHealth;
         animator = GetComponent<Animator>();
+
+        if (animator != null)
+        {
+            if (!HasParameter(PARAM_H) && HasParameter("Horizontal")) PARAM_H = "Horizontal";
+            if (!HasParameter(PARAM_V) && HasParameter("Vertical")) PARAM_V = "Vertical";
+        }
+
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null) target = playerObj.transform;
         if (healthBar != null)
@@ -62,8 +72,8 @@ public class AngelBoss : MonoBehaviour
         }
         if (animator != null)
         {
-            animator.SetFloat("MoveX", facing.x);
-            animator.SetFloat("MoveY", facing.y);
+            if (HasParameter(PARAM_H)) animator.SetFloat(PARAM_H, facing.x);
+            if (HasParameter(PARAM_V)) animator.SetFloat(PARAM_V, facing.y);
         }
 
         if (dist > attackRange)
@@ -128,5 +138,15 @@ public class AngelBoss : MonoBehaviour
         if (attackHitbox == null) return;
         attackHitbox.gameObject.SetActive(false);
         attackHitbox.localPosition = Vector3.zero;
+    }
+
+    private bool HasParameter(string paramName)
+    {
+        if (animator == null) return false;
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
+        return false;
     }
 }

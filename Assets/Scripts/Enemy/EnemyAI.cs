@@ -54,6 +54,9 @@ public class EnemyAI : MonoBehaviour
     private float prevMoveX = 0f;
     private float prevMoveY = -1f;
 
+    private string PARAM_H = "MoveX";
+    private string PARAM_V = "MoveY";
+
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
@@ -65,6 +68,12 @@ public class EnemyAI : MonoBehaviour
 
         animator = GetComponent<Animator>();
         initialPosition = transform.position;
+
+        if (animator != null)
+        {
+            if (!HasParameter(PARAM_H) && HasParameter("Horizontal")) PARAM_H = "Horizontal";
+            if (!HasParameter(PARAM_V) && HasParameter("Vertical")) PARAM_V = "Vertical";
+        }
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -401,16 +410,16 @@ public class EnemyAI : MonoBehaviour
                 currentMoveY = Mathf.Sign(velocity.y);
             }
 
-            if (HasParameter("MoveX")) animator.SetFloat("MoveX", currentMoveX);
-            if (HasParameter("MoveY")) animator.SetFloat("MoveY", currentMoveY);
+            if (HasParameter(PARAM_H)) animator.SetFloat(PARAM_H, currentMoveX);
+            if (HasParameter(PARAM_V)) animator.SetFloat(PARAM_V, currentMoveY);
 
             prevMoveX = currentMoveX;
             prevMoveY = currentMoveY;
         }
         else
         {
-            if (HasParameter("MoveX")) animator.SetFloat("MoveX", prevMoveX);
-            if (HasParameter("MoveY")) animator.SetFloat("MoveY", prevMoveY);
+            if (HasParameter(PARAM_H)) animator.SetFloat(PARAM_H, prevMoveX);
+            if (HasParameter(PARAM_V)) animator.SetFloat(PARAM_V, prevMoveY);
         }
     }
 

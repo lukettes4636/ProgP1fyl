@@ -101,11 +101,11 @@ MonoBehaviour:
   maxHealth: 100
   attackDamage: 25
   attackRange: 1
-  moveSpeed: 8
+  moveSpeed: 11
   anim: {fileID: 0}
   attackCooldown: 0.8
   attackClip: {fileID: 8300000, guid: b858936a6a7e3d94eb5adb3da028b8c6, type: 3}
-  meleeDamage: 35
+  meleeDamage: 20
   detectionRange: 8
   enemyLayers:
     serializedVersion: 2
@@ -114,7 +114,7 @@ MonoBehaviour:
   - Enemy
   - Hostile
   - Boss
-  chaseSpeed: 8
+  chaseSpeed: 11
   meleeAttackRange: 2
   meleeStopDist: 1.8
   followDist: 3
