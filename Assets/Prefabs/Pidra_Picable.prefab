@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   max_Health: 20
   requiredtool: 3
-  resoursedrop_Prefab: {fileID: 0}
+  resoursedrop_Prefab: {fileID: 8824159031651748879, guid: e2d8ce151ad8bb64994deb7fb4a64c4b, type: 3}
   drop_Amount: 1
   drop_Name: Piedra
   shakeDuration: 0.1

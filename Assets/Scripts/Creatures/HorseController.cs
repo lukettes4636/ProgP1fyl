@@ -4,31 +4,26 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class HorseController : MonoBehaviour
 {
-    [Header("Configuracion Movimiento")]
     public float moveSpeed = 14.0f;
     public float mountedSpeedMultiplier = 1.5f;
 
-    [Header("Fatiga")]
     public float maxRunTime = 5.0f;
     public float cooldownTime = 3.0f;
     public float cooldownSpeedMultiplier = 0.5f;
 
-    [Header("Audio")]
     public AudioClip runClip;
+    public AudioClip gallopClip;
     public AudioClip mountClip;
     public AudioClip dismountClip;
 
-    [Header("Interaccion")]
     public float interactionRange = 1.5f;
     public KeyCode interactKey = KeyCode.F;
     public GameObject interactionPrompt;
 
-    [Header("Montura")]
     public Vector3 mountOffset = Vector3.zero;
     public int playerSortingOrderOffset = 1;
     public float dismountDistance = 1.5f;
 
-    [Header("Visuales")]
     public bool hideHorseWhenMounted = true;
     public bool useFlipForPlayer = true;
     public bool useAimWhileMounted = true;
@@ -190,13 +185,19 @@ public class HorseController : MonoBehaviour
     {
         bool isMoving = moveInput.sqrMagnitude > 0.01f;
 
-        if (isMoving && !isCooldown)
+        if (isMoving)
         {
-            if (!audioSource.isPlaying && runClip != null)
+            AudioClip clipToPlay = (isCooldown || gallopClip == null) ? runClip : gallopClip;
+            
+            if (clipToPlay != null && (!audioSource.isPlaying || audioSource.clip != clipToPlay))
             {
-                audioSource.clip = runClip;
+                audioSource.clip = clipToPlay;
                 audioSource.loop = true;
                 audioSource.Play();
+            }
+            else if (clipToPlay == null)
+            {
+                StopAudio();
             }
         }
         else
@@ -207,7 +208,7 @@ public class HorseController : MonoBehaviour
 
     private void StopAudio()
     {
-        if (audioSource.isPlaying && audioSource.clip == runClip)
+        if (audioSource.isPlaying && (audioSource.clip == runClip || audioSource.clip == gallopClip))
         {
             audioSource.Stop();
             audioSource.clip = null;

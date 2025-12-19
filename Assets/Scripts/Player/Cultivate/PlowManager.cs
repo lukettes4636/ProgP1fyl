@@ -19,7 +19,7 @@ public class PlowManager : MonoBehaviour
     [SerializeField] private GameObject lootPrefab; 
 
     [SerializeField] private float dryingCycleIntervalSeconds = 60f;
-    private float dryTimer = 0f;
+    private float dryingTimer = 0f;
 
     private Dictionary<Vector3Int, CropTile> activeCrops = new Dictionary<Vector3Int, CropTile>();
     private Dictionary<Vector3Int, GameObject> activeCropObjects = new Dictionary<Vector3Int, GameObject>();
@@ -59,10 +59,10 @@ public class PlowManager : MonoBehaviour
             }
         }
 
-        dryTimer += deltaTime;
-        if (dryTimer >= dryingCycleIntervalSeconds)
+        dryingTimer += deltaTime;
+        if (dryingTimer >= dryingCycleIntervalSeconds)
         {
-            dryTimer = 0f;
+            dryingTimer = 0f;
             ProcessDryingCycle();
         }
     }
@@ -128,19 +128,19 @@ public class PlowManager : MonoBehaviour
         CropTile newCropInstance = ScriptableObject.Instantiate(originalCropTile);
         newCropInstance.Initialize(isInitiallyMoist);
 
-        GameObject cropGO = Instantiate(cropPrefab);
-        CropVisualController visualController = cropGO.GetComponent<CropVisualController>();
+        GameObject cropObject = Instantiate(cropPrefab);
+        CropVisualController visualController = cropObject.GetComponent<CropVisualController>();
 
         if (visualController != null)
         {
             visualController.Initialize(newCropInstance);
 
             Vector3 worldPos = cropTilemap.CellToWorld(cellPosition) + cropTilemap.cellSize / 2f;
-            cropGO.transform.position = worldPos;
+            cropObject.transform.position = worldPos;
         }
 
         activeCrops.Add(cellPosition, newCropInstance);
-        activeCropObjects.Add(cellPosition, cropGO);
+        activeCropObjects.Add(cellPosition, cropObject);
 
         return true;
     }
@@ -159,7 +159,7 @@ public class PlowManager : MonoBehaviour
         }
 
         CropTile cropInstance = activeCrops[cellPosition];
-        GameObject cropGO = activeCropObjects[cellPosition];
+        GameObject cropObject = activeCropObjects[cellPosition];
 
         if (!cropInstance.IsReadyToHarvest())
         {
@@ -172,7 +172,7 @@ public class PlowManager : MonoBehaviour
 
         for (int i = 0; i < dropAmount; i++)
         {
-            GameObject lootObject = Instantiate(lootPrefab, cropGO.transform.position, Quaternion.identity);
+            GameObject lootObject = Instantiate(lootPrefab, cropObject.transform.position, Quaternion.identity);
 
             CollectableItem collectable = lootObject.GetComponent<CollectableItem>();
             if (collectable != null)
@@ -181,14 +181,10 @@ public class PlowManager : MonoBehaviour
             }
         }
 
-
-        Destroy(cropGO);
-
+        Destroy(cropObject);
         ScriptableObject.Destroy(cropInstance);
-
         activeCrops.Remove(cellPosition);
         activeCropObjects.Remove(cellPosition);
-
         waterTilemap.SetTile(cellPosition, null);
     }
 }

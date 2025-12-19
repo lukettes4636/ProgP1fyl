@@ -1,18 +1,17 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-
 public class DamageHitbox : MonoBehaviour
 {
     [SerializeField] private float hitboxDistance = 0.6f;
-    [SerializeField] private float hitboxLifetime = 0.2f;
-    [SerializeField] private float hitRadius = 0.3f;
+    [SerializeField] private float hitboxLifeTime = 0.2f;
+    [SerializeField] private float impactRadius = 0.3f;
 
     private PlayerActionController actionController;
     private PlayerMovement playerMovement;
     private int currentDamage;
     private PlayerActionController.EquipType currentTool;
-    private bool appliedDamage;
+    private bool damageApplied;
 
     private void Awake()
     {
@@ -34,11 +33,11 @@ public class DamageHitbox : MonoBehaviour
         transform.localPosition = attackDirection * hitboxDistance;
 
         gameObject.SetActive(true);
-        appliedDamage = false;
+        damageApplied = false;
 
-        TryImmediateHit();
+        TryImmediateImpact();
 
-        Invoke(nameof(DeactivateHitbox), hitboxLifetime);
+        Invoke(nameof(DeactivateHitbox), hitboxLifeTime);
     }
 
     public void DeactivateHitbox()
@@ -46,39 +45,39 @@ public class DamageHitbox : MonoBehaviour
         CancelInvoke(nameof(DeactivateHitbox));
         gameObject.SetActive(false);
         transform.localPosition = Vector3.zero;
-        appliedDamage = false;
+        damageApplied = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (appliedDamage) return;
+        if (damageApplied) return;
 
-        Resource_Collect resource = other.GetComponent<Resource_Collect>();
+        ResourceCollect resource = other.GetComponent<ResourceCollect>();
         if (resource != null)
         {
-            resource.TakeHit(currentTool, currentDamage);
-            appliedDamage = true;
+            resource.ReceiveHit(currentTool, currentDamage);
+            damageApplied = true;
             return;
         }
 
-        if (currentTool == PlayerActionController.EquipType.Espada ||
-            currentTool == PlayerActionController.EquipType.Hacha ||
-            currentTool == PlayerActionController.EquipType.Pico)
+        if (currentTool == PlayerActionController.EquipType.Sword ||
+            currentTool == PlayerActionController.EquipType.Axe ||
+            currentTool == PlayerActionController.EquipType.Pickaxe)
         {
             EnemyHealth enemy = other.GetComponent<EnemyHealth>();
             if (enemy != null)
             {
                 enemy.TakeDamage(currentDamage);
-                appliedDamage = true;
+                damageApplied = true;
             }
 
-            if (!appliedDamage)
+            if (!damageApplied)
             {
                 AngelBoss boss = other.GetComponent<AngelBoss>();
                 if (boss != null)
                 {
                     boss.TakeDamage(currentDamage);
-                    appliedDamage = true;
+                    damageApplied = true;
                 }
             }
         }
@@ -89,14 +88,12 @@ public class DamageHitbox : MonoBehaviour
         CancelInvoke(nameof(DeactivateHitbox));
     }
 
-
     private void OnDrawGizmos()
     {
         if (Application.isPlaying && gameObject.activeSelf)
         {
-
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, hitRadius);
+            Gizmos.DrawWireSphere(transform.position, impactRadius);
 
             if (transform.parent != null)
             {
@@ -106,31 +103,31 @@ public class DamageHitbox : MonoBehaviour
         }
     }
 
-    private void TryImmediateHit()
+    private void TryImmediateImpact()
     {
-        var cols = Physics2D.OverlapCircleAll(transform.position, hitRadius);
+        var cols = Physics2D.OverlapCircleAll(transform.position, impactRadius);
         for (int i = 0; i < cols.Length; i++)
         {
             var c = cols[i];
             if (actionController != null && c.gameObject == actionController.gameObject) continue;
 
-            var resource = c.GetComponent<Resource_Collect>();
+            var resource = c.GetComponent<ResourceCollect>();
             if (resource != null)
             {
-                resource.TakeHit(currentTool, currentDamage);
-                appliedDamage = true;
+                resource.ReceiveHit(currentTool, currentDamage);
+                damageApplied = true;
                 continue;
             }
 
-            if (currentTool == PlayerActionController.EquipType.Espada ||
-                currentTool == PlayerActionController.EquipType.Hacha ||
-                currentTool == PlayerActionController.EquipType.Pico)
+            if (currentTool == PlayerActionController.EquipType.Sword ||
+                currentTool == PlayerActionController.EquipType.Axe ||
+                currentTool == PlayerActionController.EquipType.Pickaxe)
             {
                 var enemy = c.GetComponent<EnemyHealth>();
                 if (enemy != null)
                 {
                     enemy.TakeDamage(currentDamage);
-                    appliedDamage = true;
+                    damageApplied = true;
                     continue;
                 }
 
@@ -138,7 +135,7 @@ public class DamageHitbox : MonoBehaviour
                 if (boss != null)
                 {
                     boss.TakeDamage(currentDamage);
-                    appliedDamage = true;
+                    damageApplied = true;
                 }
             }
         }

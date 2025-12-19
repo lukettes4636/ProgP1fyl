@@ -4,82 +4,66 @@ public abstract class SummonedCreature : MonoBehaviour
 {
     public enum CreatureType { Angel, Demon }
 
-    [Header("Stats")]
     [SerializeField] protected int maxHealth = 100;
     [SerializeField] protected int attackDamage = 25;
     [SerializeField] protected float attackRange = 6f;
     [SerializeField] protected float moveSpeed = 3f;
 
-    [Header("Animation")]
-    [SerializeField] protected Animator animator;
+    [SerializeField] protected Animator anim;
 
     protected int currentHealth;
     protected CreatureType creatureType;
-    protected Vector2 lastMovementDirection = Vector2.down;
+    protected Vector2 lastMoveDir = Vector2.down;
     protected bool isMoving = false;
     protected bool isAttacking = false;
 
-    // Animation parameter names
-    protected readonly string ANIM_HORIZONTAL = "Horizontal";
-    protected readonly string ANIM_VERTICAL = "Vertical";
-    protected readonly string ANIM_IS_MOVING = "IsMoving";
-    protected readonly string ANIM_IS_ATTACKING = "IsAttacking";
+    protected readonly string PARAM_H = "MoveX";
+    protected readonly string PARAM_V = "MoveY";
+    protected readonly string PARAM_MOV = "IsMoving";
+    protected readonly string PARAM_ATK = "IsAttacking";
 
     protected virtual void Awake()
     {
         currentHealth = maxHealth;
-
-        if (animator == null)
-        {
-            animator = GetComponent<Animator>();
-        }
+        if (anim == null) anim = GetComponent<Animator>();
     }
 
     protected virtual void Start()
     {
-        InitializeAnimator();
+        if (anim != null)
+        {
+            anim.SetFloat(PARAM_H, 0f);
+            anim.SetFloat(PARAM_V, -1f);
+            anim.SetBool(PARAM_MOV, false);
+            anim.SetBool(PARAM_ATK, false);
+        }
     }
 
     protected virtual void Update()
     {
         HandleCombat();
-        UpdateAnimationParameters();
+        UpdateBaseAnimations();
     }
 
-    protected virtual void InitializeAnimator()
+    protected virtual void UpdateBaseAnimations()
     {
-        if (animator != null)
-        {
-            animator.SetFloat(ANIM_HORIZONTAL, 0f);
-            animator.SetFloat(ANIM_VERTICAL, -1f);
-            animator.SetBool(ANIM_IS_MOVING, false);
-            animator.SetBool(ANIM_IS_ATTACKING, false);
-        }
-    }
+        if (anim == null) return;
 
-    protected virtual void UpdateAnimationParameters()
-    {
-        if (animator == null) return;
-
-        // Actualizar dirección
-        if (lastMovementDirection.sqrMagnitude > 0.01f)
+        if (lastMoveDir.sqrMagnitude > 0.01f)
         {
-            animator.SetFloat(ANIM_HORIZONTAL, lastMovementDirection.x);
-            animator.SetFloat(ANIM_VERTICAL, lastMovementDirection.y);
+            anim.SetFloat(PARAM_H, lastMoveDir.x);
+            anim.SetFloat(PARAM_V, lastMoveDir.y);
         }
 
-        // Actualizar estado de movimiento
-        animator.SetBool(ANIM_IS_MOVING, isMoving);
-
-        // Actualizar estado de ataque
-        animator.SetBool(ANIM_IS_ATTACKING, isAttacking);
+        anim.SetBool(PARAM_MOV, isMoving);
+        anim.SetBool(PARAM_ATK, isAttacking);
     }
 
-    protected void SetMovementDirection(Vector2 direction)
+    protected void SetMoveDirection(Vector2 direction)
     {
         if (direction.sqrMagnitude > 0.01f)
         {
-            lastMovementDirection = direction.normalized;
+            lastMoveDir = direction.normalized;
             isMoving = true;
         }
         else
@@ -88,46 +72,24 @@ public abstract class SummonedCreature : MonoBehaviour
         }
     }
 
-    protected void StartAttackAnimation()
-    {
-        isAttacking = true;
-    }
+    protected void StartAttackAnimation() => isAttacking = true;
+    protected void StopAttackAnimation() => isAttacking = false;
 
-    protected void StopAttackAnimation()
-    {
-        isAttacking = false;
-    }
-
-    // Este método se llama desde un Animation Event al final de la animación de ataque
-    public void OnAttackAnimationEnd()
-    {
-        StopAttackAnimation();
-    }
+    public void OnAttackAnimationEnd() => StopAttackAnimation();
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        if (currentHealth <= 0) Die();
     }
 
-    protected virtual void Die()
-    {
-        Destroy(gameObject);
-    }
+    protected virtual void Die() => Destroy(gameObject);
 
     protected abstract void HandleCombat();
 
-    protected virtual void Attack(GameObject target)
-    {
-    }
+    protected virtual void Attack(GameObject target) { }
 
-    public void SetCreatureType(CreatureType type)
-    {
-        creatureType = type;
-    }
+    public void SetCreatureType(CreatureType type) => creatureType = type;
 
     protected virtual void OnDrawGizmosSelected()
     {

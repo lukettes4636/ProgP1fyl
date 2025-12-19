@@ -11,7 +11,7 @@ public class EnemyAI : MonoBehaviour
         Returning
     }
 
-    public enum AttackType
+    public enum EnemyAttackType
     {
         MeleeOnly,
         RangedOnly,
@@ -19,52 +19,60 @@ public class EnemyAI : MonoBehaviour
     }
 
     public Transform target;
-
+    
     public float detectionRange = 5f;
-    public float followRange = 8f;
+    public float chaseRange = 8f;
     public float attackRange = 1.2f;
 
     public float moveSpeed = 2f;
-    public float stopDistance = 0.5f;
+    public float stoppingDistance = 0.5f;
 
-    public bool avoidOtherEnemies = true;
+    public bool avoidAllies = true;
     public float separationRadius = 1.0f;
     public float separationForce = 0.6f;
 
     public float attackDamage = 10f;
     public float attackCooldown = 1.2f;
 
-    [Header("Disparo")]
-    public AttackType attackType = AttackType.Both;
+    [Header("Ranged")]
+    public EnemyAttackType attackType = EnemyAttackType.Both;
     public GameObject arrowPrefab;
-    public float shootingRange = 5f;
+    public float rangedRange = 5f;
     public float arrowCooldown = 2f;
     public Transform arrowSpawnPoint;
+    [SerializeField] private AudioClip shootSound;
+    private AudioSource audioSource;
     private float lastAttackTime;
     private float lastArrowTime;
 
     private EnemyState currentState = EnemyState.Idle;
-    private Vector3 startPosition;
-    private Rigidbody2D rb;
+    private Vector3 initialPosition;
+    private Rigidbody2D rb2d;
     private Animator animator;
 
     private readonly Vector3 spriteScale = new Vector3(1.8f, 1.8f, 1.8f);
-    private float lastMoveX = 0f;
-    private float lastMoveY = -1f;
+    private float prevMoveX = 0f;
+    private float prevMoveY = -1f;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        rb.mass = 1000f;
-        rb.drag = 5.0f;
-        rb.angularDrag = 0.05f;
-        rb.gravityScale = 0.0f;
-        rb.freezeRotation = true;
+        rb2d = GetComponent<Rigidbody2D>();
+        rb2d.mass = 1000f;
+        rb2d.drag = 5.0f;
+        rb2d.angularDrag = 0.05f;
+        rb2d.gravityScale = 0.0f;
+        rb2d.freezeRotation = true;
 
         animator = GetComponent<Animator>();
-        startPosition = transform.position;
+        initialPosition = transform.position;
 
-        lastMoveY = -1f;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
+        prevMoveY = -1f;
         transform.localScale = spriteScale;
 
         if (target == null)
@@ -80,23 +88,23 @@ public class EnemyAI : MonoBehaviour
         if (target == null) return;
 
         HandleStateLogic();
-        UpdateAnimator();
+        UpdateAnimations();
     }
 
     void FixedUpdate()
     {
-        HandleMovement();
+        Move();
     }
 
     void HandleStateLogic()
     {
         float distanceToTarget = Vector2.Distance(transform.position, target.position);
-        float distanceToStart = Vector2.Distance(transform.position, startPosition);
+        float distanceToStart = Vector2.Distance(transform.position, initialPosition);
         
-        bool canMelee = (attackType == AttackType.MeleeOnly || attackType == AttackType.Both) && distanceToTarget <= attackRange;
-        bool canShoot = (attackType == AttackType.RangedOnly || attackType == AttackType.Both) && arrowPrefab != null && distanceToTarget <= shootingRange;
+        bool canMelee = (attackType == EnemyAttackType.MeleeOnly || attackType == EnemyAttackType.Both) && distanceToTarget <= attackRange;
+        bool canShoot = (attackType == EnemyAttackType.RangedOnly || attackType == EnemyAttackType.Both) && arrowPrefab != null && distanceToTarget <= rangedRange;
         
-        bool canAttackDistance = canMelee || canShoot;
+        bool attackAvailable = canMelee || canShoot;
 
         switch (currentState)
         {
@@ -106,9 +114,9 @@ public class EnemyAI : MonoBehaviour
                 break;
 
             case EnemyState.Chasing:
-                if (distanceToTarget > followRange)
+                if (distanceToTarget > chaseRange)
                     currentState = EnemyState.Returning;
-                else if (canAttackDistance)
+                else if (attackAvailable)
                     currentState = EnemyState.Attacking;
                 break;
 
@@ -119,18 +127,18 @@ public class EnemyAI : MonoBehaviour
                     break;
                 }
 
-                FaceTarget();
+                LookAtTarget();
 
                 if (Time.time >= lastAttackTime + attackCooldown)
                 {
-                    Attack();
+                    ExecuteAttack();
                 }
                 break;
 
             case EnemyState.Returning:
                 if (distanceToTarget <= detectionRange)
                     currentState = EnemyState.Chasing;
-                else if (distanceToStart <= stopDistance + 0.1f)
+                else if (distanceToStart <= stoppingDistance + 0.1f)
                 {
                     currentState = EnemyState.Idle;
                 }
@@ -139,39 +147,39 @@ public class EnemyAI : MonoBehaviour
 
         if (currentState == EnemyState.Idle)
         {
-            if (rb.bodyType != RigidbodyType2D.Kinematic)
+            if (rb2d.bodyType != RigidbodyType2D.Kinematic)
             {
-                rb.bodyType = RigidbodyType2D.Kinematic;
-                rb.velocity = Vector2.zero;
+                rb2d.bodyType = RigidbodyType2D.Kinematic;
+                rb2d.velocity = Vector2.zero;
             }
         }
         else
         {
-            if (rb.bodyType != RigidbodyType2D.Dynamic)
+            if (rb2d.bodyType != RigidbodyType2D.Dynamic)
             {
-                rb.bodyType = RigidbodyType2D.Dynamic;
+                rb2d.bodyType = RigidbodyType2D.Dynamic;
             }
         }
     }
 
-    void HandleMovement()
+    void Move()
     {
         if (currentState == EnemyState.Attacking)
         {
-            if (attackType == AttackType.RangedOnly && target != null)
+            if (attackType == EnemyAttackType.RangedOnly && target != null)
             {
                 float distanceToTarget = Vector2.Distance(transform.position, target.position);
-                float optimalDistance = shootingRange * 0.7f;
+                float optimalDistance = rangedRange * 0.7f;
                 
                 if (distanceToTarget < optimalDistance)
                 {
                     Vector2 awayDirection = (transform.position - target.position).normalized;
-                    rb.velocity = awayDirection * moveSpeed * 0.5f;
+                    rb2d.velocity = awayDirection * moveSpeed * 0.5f;
                     return;
                 }
             }
             
-            rb.velocity = Vector2.zero;
+            rb2d.velocity = Vector2.zero;
             return;
         }
 
@@ -184,17 +192,17 @@ public class EnemyAI : MonoBehaviour
             case EnemyState.Chasing:
                 destination = target.position;
                 distance = Vector2.Distance(transform.position, target.position);
-                shouldMove = distance > stopDistance;
+                shouldMove = distance > stoppingDistance;
                 break;
 
             case EnemyState.Returning:
-                destination = startPosition;
-                distance = Vector2.Distance(transform.position, startPosition);
-                shouldMove = distance > stopDistance;
+                destination = initialPosition;
+                distance = Vector2.Distance(transform.position, initialPosition);
+                shouldMove = distance > stoppingDistance;
                 break;
 
             case EnemyState.Idle:
-                rb.velocity = Vector2.zero;
+                rb2d.velocity = Vector2.zero;
                 return;
         }
 
@@ -208,7 +216,7 @@ public class EnemyAI : MonoBehaviour
     {
         Vector2 direction = (targetPosition - transform.position).normalized;
 
-        if (avoidOtherEnemies)
+        if (avoidAllies)
         {
             Vector2 separation = Vector2.zero;
             Collider2D[] neighbors = Physics2D.OverlapCircleAll(transform.position, separationRadius);
@@ -224,7 +232,7 @@ public class EnemyAI : MonoBehaviour
             direction = (direction + separation * separationForce).normalized;
         }
 
-        rb.velocity = direction * moveSpeed;
+        rb2d.velocity = direction * moveSpeed;
 
         if (Mathf.Abs(direction.x) > 0.01f)
         {
@@ -239,7 +247,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    void FaceTarget()
+    void LookAtTarget()
     {
         Vector2 direction = (target.position - transform.position).normalized;
 
@@ -257,39 +265,39 @@ public class EnemyAI : MonoBehaviour
 
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
         {
-            lastMoveX = Mathf.Sign(direction.x);
-            lastMoveY = 0f;
+            prevMoveX = Mathf.Sign(direction.x);
+            prevMoveY = 0f;
         }
         else
         {
-            lastMoveX = 0f;
-            lastMoveY = Mathf.Sign(direction.y);
+            prevMoveX = 0f;
+            prevMoveY = Mathf.Sign(direction.y);
         }
     }
 
-    void Attack()
+    void ExecuteAttack()
     {
         float distanceToTarget = Vector2.Distance(transform.position, target.position);
         
-        bool canMelee = (attackType == AttackType.MeleeOnly || attackType == AttackType.Both) && distanceToTarget <= attackRange;
-        bool canShoot = (attackType == AttackType.RangedOnly || attackType == AttackType.Both) && arrowPrefab != null && distanceToTarget <= shootingRange;
+        bool canMelee = (attackType == EnemyAttackType.MeleeOnly || attackType == EnemyAttackType.Both) && distanceToTarget <= attackRange;
+        bool canShoot = (attackType == EnemyAttackType.RangedOnly || attackType == EnemyAttackType.Both) && arrowPrefab != null && distanceToTarget <= rangedRange;
 
-        if (attackType == AttackType.RangedOnly && canShoot && Time.time >= lastArrowTime + arrowCooldown)
+        if (attackType == EnemyAttackType.RangedOnly && canShoot && Time.time >= lastArrowTime + arrowCooldown)
         {
-            ShootArrow();
+            LaunchProjectile();
             return;
         }
 
         if (canShoot && Time.time >= lastArrowTime + arrowCooldown)
         {
-            if (attackType == AttackType.Both && distanceToTarget > attackRange)
+            if (attackType == EnemyAttackType.Both && distanceToTarget > attackRange)
             {
-                ShootArrow();
+                LaunchProjectile();
                 return;
             }
-            else if (attackType != AttackType.MeleeOnly)
+            else if (attackType != EnemyAttackType.MeleeOnly)
             {
-                ShootArrow();
+                LaunchProjectile();
                 return;
             }
         }
@@ -304,7 +312,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    public void DealDamageToPlayer()
+    public void DamagePlayer()
     {
         if (target == null) return;
 
@@ -319,9 +327,19 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    void ShootArrow()
+    public void HacerDañoAlJugador()
+    {
+        DamagePlayer();
+    }
+
+    void LaunchProjectile()
     {
         if (arrowPrefab == null || target == null) return;
+
+        if (shootSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shootSound);
+        }
 
         lastArrowTime = Time.time;
 
@@ -350,7 +368,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    public void PlayHitAnimation()
+    public void PlayImpactAnimation()
     {
         if (animator != null)
         {
@@ -358,15 +376,14 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    void UpdateAnimator()
+    void UpdateAnimations()
     {
         if (animator == null) return;
 
-        Vector2 velocity = rb.velocity;
+        Vector2 velocity = rb2d.velocity;
         bool isMoving = (velocity.sqrMagnitude > 0.01f);
 
-        animator.SetBool("IsMoving", isMoving);
-        animator.SetBool("IsAttacking", currentState == EnemyState.Attacking);
+        if (HasParameter("IsMoving")) animator.SetBool("IsMoving", isMoving);
 
         if (isMoving)
         {
@@ -384,17 +401,27 @@ public class EnemyAI : MonoBehaviour
                 currentMoveY = Mathf.Sign(velocity.y);
             }
 
-            animator.SetFloat("Move X", currentMoveX);
-            animator.SetFloat("Move Y", currentMoveY);
+            if (HasParameter("MoveX")) animator.SetFloat("MoveX", currentMoveX);
+            if (HasParameter("MoveY")) animator.SetFloat("MoveY", currentMoveY);
 
-            lastMoveX = currentMoveX;
-            lastMoveY = currentMoveY;
+            prevMoveX = currentMoveX;
+            prevMoveY = currentMoveY;
         }
         else
         {
-            animator.SetFloat("Move X", lastMoveX);
-            animator.SetFloat("Move Y", lastMoveY);
+            if (HasParameter("MoveX")) animator.SetFloat("MoveX", prevMoveX);
+            if (HasParameter("MoveY")) animator.SetFloat("MoveY", prevMoveY);
         }
+    }
+
+    private bool HasParameter(string paramName)
+    {
+        if (animator == null) return false;
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
+        return false;
     }
 
     public void SetTarget(Transform newTarget)

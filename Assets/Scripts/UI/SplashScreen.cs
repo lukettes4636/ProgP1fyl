@@ -79,3 +79,4 @@ public class SplashScreen : MonoBehaviour
         canvasGroup.alpha = 0f;
     }
 }
+

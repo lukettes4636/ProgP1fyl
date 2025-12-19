@@ -29,3 +29,4 @@ public class PlayerSorting : MonoBehaviour
         spriteRenderer.sortingOrder = newSortingOrder;
     }
 }
+

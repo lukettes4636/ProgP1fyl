@@ -4,7 +4,7 @@ public class Arrow : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;
     [SerializeField] private int damage = 15;
-    [SerializeField] private float lifetime = 3f;
+    [SerializeField] private float lifeTime = 3f;
 
     private Vector2 direction;
     private Rigidbody2D rb;
@@ -16,7 +16,7 @@ public class Arrow : MonoBehaviour
 
     private void Start()
     {
-        Destroy(gameObject, lifetime);
+        Destroy(gameObject, lifeTime);
     }
 
     public void Launch(Vector2 shootDirection)
@@ -45,3 +45,4 @@ public class Arrow : MonoBehaviour
         }
     }
 }
+

@@ -7,6 +7,10 @@ TagManager:
   - Enemy
   - Water
   - Resource
+  - SortingLayersHelper
+  - Hostile
+  - Boss
+  - DIANOCHE
   layers:
   - Default
   - TransparentFX
@@ -15,9 +19,9 @@ TagManager:
   - Water
   - UI
   - Enemy
-  - 
+  - Ground
   - MENUFX
-  - 
+  - DIANOCHE
   - 
   - 
   - 
@@ -47,12 +51,15 @@ TagManager:
   - name: ground
     uniqueID: 1899084587
     locked: 0
-  - name: objets
-    uniqueID: 483329965
+  - name: ground2
+    uniqueID: 3207368835
     locked: 0
   - name: characters
     uniqueID: 2027886513
     locked: 0
-  - name: Roofs
+  - name: objets
+    uniqueID: 483329965
+    locked: 0
+  - name: DIANOCHE
     uniqueID: 3689266667
     locked: 0

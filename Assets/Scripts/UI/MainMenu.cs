@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
     public Sprite backgroundSprite;
     
     public AudioClip clickSound;
+    public AudioClip hoverSound;
     private AudioSource clickAudioSource;
     
     public Button startButton;
@@ -58,7 +59,7 @@ public class MainMenu : MonoBehaviour
             {
                 effect = btn.gameObject.AddComponent<ButtonScaleEffect>();
             }
-            effect.ConfigureSounds(clickSound);
+            effect.ConfigureSounds(hoverSound, clickSound);
             effect.Initialize();
         }
     }
@@ -243,6 +244,5 @@ public class MainMenu : MonoBehaviour
         ambientSource.Stop();
         ambientSource.volume = startVol;
     }
-    
-
 }
+

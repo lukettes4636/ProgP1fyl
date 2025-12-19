@@ -1,16 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(Animator))]
 public class PlayerActionController : MonoBehaviour
 {
     public enum EquipType
     {
-        None, Espada, Hacha, Pico, Arado, Regadera, Arco, Antorcha,
-        Semilla1, Semilla2
+        None, Sword, Axe, Pickaxe, Plow, WateringCan, Bow, Torch,
+        Seed1, Seed2
     }
 
-    [SerializeField] private EquipType equipActual = EquipType.None;
+    [FormerlySerializedAs("equipActual")]
+    [SerializeField] private EquipType currentEquip = EquipType.None;
     [SerializeField] private int baseDamage = 20;
     [SerializeField] private GameObject damageHitbox;
 
@@ -20,38 +22,51 @@ public class PlayerActionController : MonoBehaviour
     private Dictionary<string, int> inventory = new Dictionary<string, int>();
     [SerializeField] private List<string> inventoryDisplay = new List<string>();
 
-    private readonly Dictionary<EquipType, string> SeedItemNames = new Dictionary<EquipType, string>
+    private readonly Dictionary<EquipType, string> seedItemNames = new Dictionary<EquipType, string>
     {
-        { EquipType.Semilla1, "SemillasDeGirasol" },
-        { EquipType.Semilla2, "SemillasDeCebolla" }
+        { EquipType.Seed1, "SunflowerSeeds" },
+        { EquipType.Seed2, "OnionSeeds" }
     };
 
     private Animator animator;
     private PlayerMovement playerMovement;
     private DamageHitbox hitboxScript;
 
+    [FormerlySerializedAs("plowManager")]
     [SerializeField] private PlowManager plowManager;
+    [FormerlySerializedAs("tileCursorController")]
     [SerializeField] private TileCursorController tileCursorController;
 
     [SerializeField] private AudioClip[] attackSounds;
-    [SerializeField] private AudioClip[] treeCuttingSounds;
+    [FormerlySerializedAs("treeCuttingSounds")]
+    [SerializeField] private AudioClip[] woodcutSounds;
+    [SerializeField] private AudioClip[] miningSounds;
+    [SerializeField] private AudioClip[] plowSounds;
+    [SerializeField] private AudioClip shootSound;
     [SerializeField] private AudioClip dashSound;
     [SerializeField] private float audioVolume = 1.0f;
     [SerializeField] private float attackVolume = 1.0f;
-    [SerializeField] private float treeCuttingVolume = 1.0f;
+    [FormerlySerializedAs("treeCuttingVolume")]
+    [SerializeField] private float woodcutVolume = 1.0f;
+    [SerializeField] private float miningVolume = 1.0f;
+    [SerializeField] private float plowVolume = 1.0f;
+    [SerializeField] private float shootVolume = 1.0f;
     [SerializeField] private float dashVolume = 1.0f;
     [SerializeField] private float pitchVariation = 0.1f;
 
     private AudioSource audioSource;
-    [SerializeField] private bool enAccion = false;
+    [FormerlySerializedAs("enAccion")]
+    [SerializeField] private bool isActing = false;
 
     [SerializeField] private float maxActionDuration = 0.6f;
     private float actionTimer = 0f;
 
-    [SerializeField] private GameObject lightPlayer;
+    [FormerlySerializedAs("lightPlayer")]
+    [SerializeField] private GameObject playerLight;
     [SerializeField] private GameObject torchSprite;
 
-    [SerializeField] private CicloDiaNoche cicloDiaNoche;
+    [FormerlySerializedAs("cicloDiaNoche")]
+    [SerializeField] private DayNightCycle dayNightCycle;
 
     private void Awake()
     {
@@ -71,28 +86,23 @@ public class PlayerActionController : MonoBehaviour
 
         tileCursorController = FindObjectOfType<TileCursorController>();
 
-        foreach (var item in SeedItemNames)
+        foreach (var item in seedItemNames)
         {
             inventory.Add(item.Value, 10);
         }
-        if (!inventory.ContainsKey("Regadera"))
-            inventory.Add("Regadera", 1);
+        if (!inventory.ContainsKey("WateringCan"))
+            inventory.Add("WateringCan", 1);
         UpdateInventoryDisplay();
-
-        if (plowManager == null)
-            plowManager = FindObjectOfType<PlowManager>();
-        if (tileCursorController == null)
-            tileCursorController = FindObjectOfType<TileCursorController>();
     }
 
     private void Update()
     {
-        if (enAccion)
+        if (isActing)
         {
             actionTimer -= Time.deltaTime;
             if (actionTimer <= 0f)
             {
-                EndActionState();
+                FinishActionState();
             }
             return;
         }
@@ -100,26 +110,26 @@ public class PlayerActionController : MonoBehaviour
         if (Input.GetButtonDown("Action"))
             HandleAction();
 
-        UpdateLightPlayerVisibilityContinuous();
+        UpdateContinuousPlayerLightVisibility();
     }
 
     private void HandleAction()
     {
-        if (enAccion || equipActual == EquipType.None) return;
+        if (isActing || currentEquip == EquipType.None) return;
 
-        bool isSeedEquipped = equipActual == EquipType.Semilla1 || equipActual == EquipType.Semilla2;
+        bool isSeedEquipped = currentEquip == EquipType.Seed1 || currentEquip == EquipType.Seed2;
 
         if (isSeedEquipped)
         {
-            if (!HasItem(SeedItemNames[equipActual]))
+            if (!HasItem(seedItemNames[currentEquip]))
             {
                 return;
             }
-            ExecuteSeedActionInstant();
+            ExecuteInstantSeedAction();
             return;
         }
 
-        enAccion = true;
+        isActing = true;
         playerMovement.SetIsActing(true);
         actionTimer = maxActionDuration;
 
@@ -130,46 +140,49 @@ public class PlayerActionController : MonoBehaviour
         animator.SetFloat("LastMoveX", actionDirection.x);
         animator.SetFloat("LastMoveY", actionDirection.y);
 
-        switch (equipActual)
+        switch (currentEquip)
         {
-            case EquipType.Espada:
+            case EquipType.Sword:
                 PlayAttackSound();
                 animator.SetInteger("AttackIndex", UnityEngine.Random.Range(1, 4));
                 animator.SetBool("Atacando", true);
                 ActivateHitbox();
                 break;
 
-            case EquipType.Hacha:
-                PlayTreeCuttingSound();
+            case EquipType.Axe:
+                PlayWoodcutSound();
                 animator.SetBool("Talar", true);
                 ActivateHitbox();
                 break;
 
-            case EquipType.Pico:
+            case EquipType.Pickaxe:
+                PlayMiningSound();
                 animator.SetBool("Minar", true);
                 ActivateHitbox();
                 break;
 
-            case EquipType.Arado:
+            case EquipType.Plow:
+                PlayPlowSound();
                 animator.SetBool("Arar", true);
                 break;
 
-            case EquipType.Regadera:
+            case EquipType.WateringCan:
                 animator.SetBool("Regar", true);
                 break;
 
-            case EquipType.Arco:
+            case EquipType.Bow:
+                PlayShootSound();
                 animator.SetBool("Disparar", true);
                 break;
 
-            case EquipType.Antorcha:
+            case EquipType.Torch:
                 break;
         }
     }
 
-    private void ExecuteSeedActionInstant()
+    private void ExecuteInstantSeedAction()
     {
-        bool isSeedEquipped = equipActual == EquipType.Semilla1 || equipActual == EquipType.Semilla2;
+        bool isSeedEquipped = currentEquip == EquipType.Seed1 || currentEquip == EquipType.Seed2;
         if (!isSeedEquipped || plowManager == null || tileCursorController == null)
             return;
 
@@ -180,12 +193,12 @@ public class PlayerActionController : MonoBehaviour
             return;
         }
 
-        int seedIndex = (int)equipActual - (int)EquipType.Semilla1;
+        int seedIndex = (int)currentEquip - (int)EquipType.Seed1;
         bool wasPlanted = plowManager.PlantSeedAt(cellPos, seedIndex);
 
         if (wasPlanted)
         {
-            string seedItemName = SeedItemNames[equipActual];
+            string seedItemName = seedItemNames[currentEquip];
             RemoveItem(seedItemName, 1);
         }
     }
@@ -198,7 +211,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    public void DisableHitbox()
+    public void DeactivateHitbox()
     {
         if (hitboxScript != null)
         {
@@ -240,7 +253,7 @@ public class PlayerActionController : MonoBehaviour
 
     public void ExecutePlowAction()
     {
-        if (equipActual != EquipType.Arado || plowManager == null || tileCursorController == null)
+        if (currentEquip != EquipType.Plow || plowManager == null || tileCursorController == null)
         {
             return;
         }
@@ -256,9 +269,9 @@ public class PlayerActionController : MonoBehaviour
             plowManager.PlowAt(cellPos);
     }
 
-    public void ExecuteWaterAction()
+    public void ExecuteWateringAction()
     {
-        if (equipActual != EquipType.Regadera || plowManager == null || tileCursorController == null)
+        if (currentEquip != EquipType.WateringCan || plowManager == null || tileCursorController == null)
         {
             return;
         }
@@ -269,9 +282,9 @@ public class PlayerActionController : MonoBehaviour
         plowManager.WaterAt(cellPos);
     }
 
-    public void EndActionState()
+    public void FinishActionState()
     {
-        enAccion = false;
+        isActing = false;
         if (playerMovement != null) playerMovement.SetIsActing(false);
 
         animator.SetBool("Atacando", false);
@@ -283,6 +296,10 @@ public class PlayerActionController : MonoBehaviour
         animator.SetInteger("AttackIndex", 0);
     }
 
+    public void EndActionState()
+    {
+        FinishActionState();
+    }
 
     private void PlayAttackSound()
     {
@@ -294,13 +311,42 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    private void PlayTreeCuttingSound()
+    private void PlayWoodcutSound()
     {
-        if (treeCuttingSounds != null && treeCuttingSounds.Length > 0 && audioSource != null)
+        if (woodcutSounds != null && woodcutSounds.Length > 0 && audioSource != null)
         {
-            AudioClip clip = treeCuttingSounds[UnityEngine.Random.Range(0, treeCuttingSounds.Length)];
+            AudioClip clip = woodcutSounds[UnityEngine.Random.Range(0, woodcutSounds.Length)];
             audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
-            audioSource.PlayOneShot(clip, audioVolume * treeCuttingVolume);
+            audioSource.PlayOneShot(clip, audioVolume * woodcutVolume);
+        }
+    }
+
+    private void PlayMiningSound()
+    {
+        if (miningSounds != null && miningSounds.Length > 0 && audioSource != null)
+        {
+            AudioClip clip = miningSounds[UnityEngine.Random.Range(0, miningSounds.Length)];
+            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
+            audioSource.PlayOneShot(clip, audioVolume * miningVolume);
+        }
+    }
+
+    private void PlayPlowSound()
+    {
+        if (plowSounds != null && plowSounds.Length > 0 && audioSource != null)
+        {
+            AudioClip clip = plowSounds[UnityEngine.Random.Range(0, plowSounds.Length)];
+            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
+            audioSource.PlayOneShot(clip, audioVolume * plowVolume);
+        }
+    }
+
+    private void PlayShootSound()
+    {
+        if (shootSound != null && audioSource != null)
+        {
+            audioSource.pitch = 1f + UnityEngine.Random.Range(-pitchVariation, pitchVariation);
+            audioSource.PlayOneShot(shootSound, audioVolume * shootVolume);
         }
     }
 
@@ -342,12 +388,12 @@ public class PlayerActionController : MonoBehaviour
             inventoryDisplay.Add($"{item.Key}: {item.Value}");
     }
 
-    public void SetEquip(EquipType newEquip)
+    public void SetEquipment(EquipType newEquip)
     {
-        if (enAccion) return;
-        equipActual = newEquip;
+        if (isActing) return;
+        currentEquip = newEquip;
 
-        UpdateLightPlayerVisibility();
+        UpdatePlayerLightVisibility();
     }
 
     public int GetBaseDamage()
@@ -357,7 +403,7 @@ public class PlayerActionController : MonoBehaviour
 
     public EquipType GetCurrentEquip()
     {
-        return equipActual;
+        return currentEquip;
     }
 
     public bool HasItem(string itemName)
@@ -367,63 +413,55 @@ public class PlayerActionController : MonoBehaviour
 
     public int GetItemCount(string itemName)
     {
-        return inventory.TryGetValue(itemName, out var count) ? count : 0;
+        return inventory.TryGetValue(itemName, out var amount) ? amount : 0;
     }
 
-    private void UpdateLightPlayerVisibility()
+    private void UpdatePlayerLightVisibility()
     {
-        bool tieneAntorchaEquipada = equipActual == EquipType.Antorcha;
-        bool esDeNoche = EsDeNoche();
+        bool hasTorchEquipped = currentEquip == EquipType.Torch;
+        bool isNight = IsNight();
 
-        bool deberiaEstarEncendida = tieneAntorchaEquipada && esDeNoche;
+        bool shouldBeOn = hasTorchEquipped && isNight;
 
         if (torchSprite != null)
         {
-            torchSprite.SetActive(tieneAntorchaEquipada);
+            torchSprite.SetActive(hasTorchEquipped);
         }
 
-        if (lightPlayer != null)
+        if (playerLight != null)
         {
-            if (lightPlayer.activeSelf != deberiaEstarEncendida)
+            if (playerLight.activeSelf != shouldBeOn)
             {
-                lightPlayer.SetActive(deberiaEstarEncendida);
+                playerLight.SetActive(shouldBeOn);
             }
         }
     }
 
-    private void UpdateLightPlayerVisibilityContinuous()
+    private void UpdateContinuousPlayerLightVisibility()
     {
-        bool tieneAntorchaEquipada = equipActual == EquipType.Antorcha;
+        bool hasTorchEquipped = currentEquip == EquipType.Torch;
 
         if (torchSprite != null)
         {
-            torchSprite.SetActive(tieneAntorchaEquipada);
+            torchSprite.SetActive(hasTorchEquipped);
         }
 
-        if (lightPlayer != null && cicloDiaNoche != null)
+        if (playerLight != null && dayNightCycle != null)
         {
-            bool esDeNoche = cicloDiaNoche.EsDeNoche();
-            bool deberiaEstarEncendida = tieneAntorchaEquipada && esDeNoche;
+            bool isNight = dayNightCycle.IsNight();
+            bool shouldBeOn = hasTorchEquipped && isNight;
 
-            if (lightPlayer.activeSelf != deberiaEstarEncendida)
+            if (playerLight.activeSelf != shouldBeOn)
             {
-                lightPlayer.SetActive(deberiaEstarEncendida);
+                playerLight.SetActive(shouldBeOn);
             }
         }
     }
 
-    private bool EsDeNoche()
+    private bool IsNight()
     {
-        if (cicloDiaNoche == null)
-        {
-            cicloDiaNoche = FindObjectOfType<CicloDiaNoche>();
-
-            if (cicloDiaNoche == null)
-            {
-                return false;
-            }
-        }
-
-        return cicloDiaNoche.EsDeNoche();
+        if (dayNightCycle != null)
+            return dayNightCycle.IsNight();
+        return false;
     }
 }

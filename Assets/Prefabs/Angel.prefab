@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8671672286785968452}
   - component: {fileID: -5437214106848873441}
   - component: {fileID: -5138393708616779518}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Angel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,17 +101,18 @@ MonoBehaviour:
   maxHealth: 100
   attackDamage: 25
   attackRange: 2
-  moveSpeed: 15
-  animator: {fileID: 0}
+  moveSpeed: 10
+  anim: {fileID: 0}
   healAmount: 30
   healRange: 5
   healCooldown: 3
   healKey: 122
-  followDistance: 3
-  stopDistance: 1.5
+  followSpeed: 10
+  followDist: 2
+  stopDist: 1.5
   healEffect: {fileID: 0}
   healSound: {fileID: 8300000, guid: f8799bf1bc4714646b6f2176b188966a, type: 3}
-  attackAnimationDuration: 0.6
+  attackAnimDuration: 0.6
   fadeDelay: 0.5
   fadeDuration: 1
 --- !u!95 &-5138393708616779518

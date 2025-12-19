@@ -10,7 +10,7 @@ public class CropVisualController : MonoBehaviour
 
     [SerializeField] private int sortingFactor = 100;
 
-    private const int BaseDrawOffset = 50000;
+    private const int BaseDrawingOffset = 50000;
 
     private void Awake()
     {
@@ -49,7 +49,7 @@ public class CropVisualController : MonoBehaviour
 
         int invertedSorting = Mathf.RoundToInt(-currentY * sortingFactor);
 
-        int newSortingOrder = invertedSorting + BaseDrawOffset;
+        int newSortingOrder = invertedSorting + BaseDrawingOffset;
 
         spriteRenderer.sortingOrder = newSortingOrder;
     }

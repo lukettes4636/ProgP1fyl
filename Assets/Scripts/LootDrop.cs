@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class LootDrop : MonoBehaviour
 {
-    
-    [SerializeField] private string resourceName = "Item Desconocido";
+    [SerializeField] private string resourceName = "Unknown Item";
 
     public void SetResourceName(string name)
     {

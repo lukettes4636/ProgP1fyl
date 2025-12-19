@@ -5,12 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 2.8f;
+    [SerializeField] private float walkSpeed = 2.8f;
     [SerializeField] private float runSpeed = 5.0f;
 
     private Vector2 moveInput;
     private Vector2 aimInput;
-    private Vector2 lastDirection = Vector2.down;
+    private Vector2 lastDir = Vector2.down;
 
     [SerializeField] private float dashSpeed = 15f;
     [SerializeField] private float dashDuration = 0.2f;
@@ -21,8 +21,8 @@ public class PlayerMovement : MonoBehaviour
     private float dashCooldownTimer = 0f;
     private Vector2 dashDirection;
 
-    [SerializeField] private AudioClip[] footstepSounds;
-    [SerializeField] private AudioClip[] runFootstepSounds;
+    [SerializeField] private AudioClip[] walkFootsteps;
+    [SerializeField] private AudioClip[] runFootsteps;
     [SerializeField] private float footstepVolume = 0.5f;
     [SerializeField] private float pitchVariation = 0.2f;
     [SerializeField] private float walkStepInterval = 0.35f;
@@ -30,19 +30,19 @@ public class PlayerMovement : MonoBehaviour
 
     private AudioSource audioSource;
     private float stepTimer = 0f;
-    private bool wasMovingLastFrame = false;
+    private bool wasMoving = false;
 
     [SerializeField] private bool canMove = true;
-    [SerializeField] private bool useAimSystem = true; // NUEVO: Toggle para sistema de aim
+    [SerializeField] private bool useAimSystem = true; 
 
-    private Rigidbody2D rb;
-    private Animator animator;
+    private Rigidbody2D rb2d;
+    private Animator anim;
     private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+        rb2d = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
     }
@@ -59,54 +59,50 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canMove)
         {
-            HandleInput();
+            ProcessInputs();
             HandleDash();
         }
-        UpdateAnimations();
-        HandleFootsteps();
+        ManageAnimations();
+        HandleFootstepSounds();
     }
 
     private void FixedUpdate()
     {
         if (canMove && !isDashing)
         {
-            HandleMovement();
+            MoveCharacter();
         }
         else if (isDashing)
         {
-            HandleDashMovement();
+            MoveDash();
         }
     }
 
-    private void HandleInput()
+    private void ProcessInputs()
     {
-        // Input de movimiento (WASD o flechas)
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
         moveInput = Vector2.ClampMagnitude(moveInput, 1f);
 
-        // Input de aim (joystick derecho o mouse)
         if (useAimSystem)
         {
             aimInput.x = Input.GetAxisRaw("AimHorizontal");
             aimInput.y = Input.GetAxisRaw("AimVertical");
 
-            // Actualizar última dirección con prioridad a aimInput
             if (aimInput.sqrMagnitude > 0.1f)
             {
-                lastDirection = aimInput.normalized;
+                lastDir = aimInput.normalized;
             }
             else if (moveInput.sqrMagnitude > 0.1f)
             {
-                lastDirection = moveInput.normalized;
+                lastDir = moveInput.normalized;
             }
         }
         else
         {
-            // Sin sistema de aim, usar solo movimiento
             if (moveInput.sqrMagnitude > 0.1f)
             {
-                lastDirection = moveInput.normalized;
+                lastDir = moveInput.normalized;
             }
         }
 
@@ -120,10 +116,10 @@ public class PlayerMovement : MonoBehaviour
         dashCooldownTimer -= Time.deltaTime;
     }
 
-    private void HandleMovement()
+    private void MoveCharacter()
     {
-        float currentSpeed = isRunning ? runSpeed : moveSpeed;
-        rb.MovePosition(rb.position + moveInput * currentSpeed * Time.fixedDeltaTime);
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+        rb2d.MovePosition(rb2d.position + moveInput * currentSpeed * Time.fixedDeltaTime);
     }
 
     private void HandleDash()
@@ -139,9 +135,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void HandleDashMovement()
+    private void MoveDash()
     {
-        rb.MovePosition(rb.position + dashDirection * dashSpeed * Time.fixedDeltaTime);
+        rb2d.MovePosition(rb2d.position + dashDirection * dashSpeed * Time.fixedDeltaTime);
     }
 
     private void StartDash()
@@ -152,70 +148,64 @@ public class PlayerMovement : MonoBehaviour
             dashTimer = dashDuration;
             dashDirection = moveInput.normalized;
         }
-        else if (lastDirection.sqrMagnitude > 0.1f)
+        else if (lastDir.sqrMagnitude > 0.1f)
         {
             isDashing = true;
             dashTimer = dashDuration;
-            dashDirection = lastDirection;
+            dashDirection = lastDir;
         }
     }
 
-    private void UpdateAnimations()
+    private void ManageAnimations()
     {
-        if (animator != null && !isActing)
+        if (anim != null && !isActingInternally)
         {
-            // Determinar qué dirección usar para las animaciones
-            Vector2 animDirection;
+            Vector2 animDir;
 
             if (useAimSystem && aimInput.sqrMagnitude > 0.1f)
             {
-                // Si hay aim, usar aim para orientar el personaje
-                animDirection = aimInput;
+                animDir = aimInput;
             }
             else if (moveInput.sqrMagnitude > 0.01f)
             {
-                // Si no hay aim pero se está moviendo, usar movimiento
-                animDirection = moveInput;
+                animDir = moveInput;
             }
             else
             {
-                // Si no se mueve, mantener última dirección
-                animDirection = lastDirection;
+                animDir = lastDir;
             }
 
             bool isMoving = moveInput.sqrMagnitude > 0.01f;
 
-            // Configurar parámetros del Animator
-            animator.SetBool("IsMoving", isMoving);
-            animator.SetBool("IsRunning", isRunning);
+            anim.SetBool("IsMoving", isMoving);
+            anim.SetBool("IsRunning", isRunning);
 
-            // Actualizar dirección de animación
-            if (animDirection.sqrMagnitude > 0.01f)
+            if (animDir.sqrMagnitude > 0.01f)
             {
-                animator.SetFloat("MoveX", animDirection.x);
-                animator.SetFloat("MoveY", animDirection.y);
-                animator.SetFloat("LastMoveX", animDirection.x);
-                animator.SetFloat("LastMoveY", animDirection.y);
+                anim.SetFloat("MoveX", animDir.x);
+                anim.SetFloat("MoveY", animDir.y);
+                anim.SetFloat("LastMoveX", animDir.x);
+                anim.SetFloat("LastMoveY", animDir.y);
             }
         }
     }
 
-    private void HandleFootsteps()
+    private void HandleFootstepSounds()
     {
         bool isMoving = moveInput.sqrMagnitude > 0.01f && canMove && !isDashing;
 
         if (isMoving)
         {
-            if (!wasMovingLastFrame)
+            if (!wasMoving)
             {
                 PlayFootstepSound();
                 stepTimer = 0f;
             }
 
             stepTimer += Time.deltaTime;
-            float currentStepInterval = isRunning ? runStepInterval : walkStepInterval;
+            float currentInterval = isRunning ? runStepInterval : walkStepInterval;
 
-            if (stepTimer >= currentStepInterval)
+            if (stepTimer >= currentInterval)
             {
                 PlayFootstepSound();
                 stepTimer = 0f;
@@ -223,33 +213,33 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (wasMovingLastFrame)
+            if (wasMoving)
             {
                 audioSource.Stop();
             }
             stepTimer = 0f;
         }
 
-        wasMovingLastFrame = isMoving;
+        wasMoving = isMoving;
     }
 
     private void PlayFootstepSound()
     {
-        AudioClip[] soundArray = isRunning ? runFootstepSounds : footstepSounds;
+        AudioClip[] soundArray = isRunning ? runFootsteps : walkFootsteps;
 
         if (soundArray != null && soundArray.Length > 0 && audioSource != null)
         {
-            AudioClip clipToPlay = soundArray[Random.Range(0, soundArray.Length)];
+            AudioClip clip = soundArray[Random.Range(0, soundArray.Length)];
 
-            if (clipToPlay != null)
+            if (clip != null)
             {
-                float randomPitch = 1f + Random.Range(-pitchVariation, pitchVariation);
-                audioSource.pitch = randomPitch;
-                audioSource.PlayOneShot(clipToPlay, footstepVolume);
+                float rndPitch = 1f + Random.Range(-pitchVariation, pitchVariation);
+                audioSource.pitch = rndPitch;
+                audioSource.PlayOneShot(clip, footstepVolume);
                 if (isRunning)
                 {
-                    var vib = GetComponent<JoystickVibration>();
-                    if (vib != null) vib.OnRun();
+                    var vibration = GetComponent<JoystickVibration>();
+                    if (vibration != null) vibration.OnRun();
                 }
             }
         }
@@ -260,31 +250,30 @@ public class PlayerMovement : MonoBehaviour
         canMove = state;
     }
 
-    private bool isActing = false;
+    private bool isActingInternally = false;
 
     public void SetIsActing(bool state)
     {
-        isActing = state;
+        isActingInternally = state;
 
-        // Cuando termina la acción, resetear IsMoving
         if (!state)
         {
             bool isMoving = moveInput.sqrMagnitude > 0.01f;
-            animator.SetBool("IsMoving", isMoving);
+            anim.SetBool("IsMoving", isMoving);
         }
     }
 
-    public void SetUseAimSystem(bool useAim)
+    public void SetUseAimSystem(bool use)
     {
-        useAimSystem = useAim;
+        useAimSystem = use;
     }
 
     public Vector2 GetLastDirection()
     {
-        return lastDirection;
+        return lastDir;
     }
 
-    public Vector2 GetMoveInput()
+    public Vector2 GetMovementInput()
     {
         return moveInput;
     }

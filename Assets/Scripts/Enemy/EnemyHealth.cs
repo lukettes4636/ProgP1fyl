@@ -3,22 +3,22 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     [Header("Health Settings")]
-    public int vidaMaxima = 50;
+    public int maxHealth = 50;
 
     [Header("Loot Settings")]
-    public GameObject objetoQueSuelta;
-    public int cantidadASoltar = 3;
+    public GameObject dropPrefab;
+    public int dropAmount = 3;
     [SerializeField] private string dropName = "Mineral";
 
     [Header("Audio Settings")]
-    public AudioClip sonidoDaño;
-    public AudioClip sonidoMuerte;
+    public AudioClip hitSound;
+    public AudioClip deathSound;
 
     [Header("Death Settings")]
-    public float tiempoAntesDeDestruir = 0.5f;
+    public float destructionDelay = 0.5f;
 
-    private int vidaActual;
-    private bool estaMuerto = false;
+    private int currentHealth;
+    private bool isDead = false;
     private AudioSource audioSource;
     private Animator animator;
     private EnemyShooter enemyShooter;
@@ -26,7 +26,7 @@ public class EnemyHealth : MonoBehaviour
 
     private void Start()
     {
-        vidaActual = vidaMaxima;
+        currentHealth = maxHealth;
 
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
@@ -39,38 +39,36 @@ public class EnemyHealth : MonoBehaviour
         enemyAI = GetComponent<EnemyAI>();
     }
 
-    public void TakeDamage(int cantidad)
+    public void TakeDamage(int amount)
     {
-        if (estaMuerto) return;
+        if (isDead) return;
 
-        vidaActual -= cantidad;
-        if (vidaActual < 0) vidaActual = 0;
+        currentHealth -= amount;
+        if (currentHealth < 0) currentHealth = 0;
 
-        ReproducirSonido(sonidoDaño);
+        PlaySound(hitSound);
 
-        // Reproducir animación de hit
         if (enemyShooter != null)
         {
-            enemyShooter.PlayHitAnimation();
+            enemyShooter.PlayImpactAnimation();
         }
         else if (enemyAI != null)
         {
-            enemyAI.PlayHitAnimation();
+            enemyAI.PlayImpactAnimation();
         }
 
-        if (vidaActual <= 0)
+        if (currentHealth <= 0)
         {
-            Morir();
+            Die();
         }
     }
 
-    private void Morir()
+    private void Die()
     {
-        estaMuerto = true;
+        isDead = true;
 
-        ReproducirSonido(sonidoMuerte);
+        PlaySound(deathSound);
 
-        // Reproducir animación de muerte
         if (enemyShooter != null)
         {
             enemyShooter.PlayDeathAnimation();
@@ -80,7 +78,6 @@ public class EnemyHealth : MonoBehaviour
             animator.SetTrigger("Death");
         }
 
-        // Desactivar IA y componentes
         if (enemyAI != null)
         {
             enemyAI.enabled = false;
@@ -98,29 +95,29 @@ public class EnemyHealth : MonoBehaviour
             rb.bodyType = RigidbodyType2D.Kinematic;
         }
 
-        SoltarObjetos();
+        DropLoot();
 
         if (GameManager.GetInstance() != null)
         {
             GameManager.GetInstance().EnemyDefeated();
         }
 
-        Destroy(gameObject, tiempoAntesDeDestruir);
+        Destroy(gameObject, destructionDelay);
     }
 
-    private void SoltarObjetos()
+    private void DropLoot()
     {
-        if (objetoQueSuelta != null)
+        if (dropPrefab != null)
         {
-            for (int i = 0; i < cantidadASoltar; i++)
+            for (int i = 0; i < dropAmount; i++)
             {
-                Vector3 posicionAleatoria = transform.position + new Vector3(
+                Vector3 randomPos = transform.position + new Vector3(
                     Random.Range(-0.5f, 0.5f),
                     Random.Range(-0.5f, 0.5f),
                     0f
                 );
 
-                GameObject obj = Instantiate(objetoQueSuelta, posicionAleatoria, Quaternion.identity);
+                GameObject obj = Instantiate(dropPrefab, randomPos, Quaternion.identity);
 
                 LootDrop loot = obj.GetComponent<LootDrop>();
                 if (loot != null)
@@ -137,21 +134,21 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    private void ReproducirSonido(AudioClip sonido)
+    private void PlaySound(AudioClip clip)
     {
-        if (audioSource != null && sonido != null)
+        if (audioSource != null && clip != null)
         {
-            audioSource.PlayOneShot(sonido);
+            audioSource.PlayOneShot(clip);
         }
     }
 
-    public int ObtenerVidaActual()
+    public int GetCurrentHealth()
     {
-        return vidaActual;
+        return currentHealth;
     }
 
-    public bool EstaVivo()
+    public bool IsAlive()
     {
-        return !estaMuerto;
+        return !isDead;
     }
 }

@@ -2,30 +2,30 @@ using UnityEngine;
 
 public class JoystickVibration : MonoBehaviour
 {
-    [SerializeField] private bool enableVibration = true;
+    [SerializeField] private bool vibrationEnabled = true;
 
-    [SerializeField] private float attackTreeLowFreq = 0.6f;
-    [SerializeField] private float attackTreeHighFreq = 0.8f;
-    [SerializeField] private float attackTreeDuration = 0.3f;
+    [SerializeField] private float lowFreqTreeAttack = 0.6f;
+    [SerializeField] private float highFreqTreeAttack = 0.8f;
+    [SerializeField] private float durationTreeAttack = 0.3f;
 
-    [SerializeField] private float attackEnemyLowFreq = 0.9f;
-    [SerializeField] private float attackEnemyHighFreq = 1.0f;
-    [SerializeField] private float attackEnemyDuration = 0.4f;
+    [SerializeField] private float lowFreqEnemyAttack = 0.9f;
+    [SerializeField] private float highFreqEnemyAttack = 1.0f;
+    [SerializeField] private float durationEnemyAttack = 0.4f;
 
-    [SerializeField] private float miningLowFreq = 0.8f;
-    [SerializeField] private float miningHighFreq = 0.6f;
-    [SerializeField] private float miningDuration = 0.36f;
+    [SerializeField] private float lowFreqMining = 0.8f;
+    [SerializeField] private float highFreqMining = 0.6f;
+    [SerializeField] private float durationMining = 0.36f;
 
-    [SerializeField] private float dashLowFreq = 0.4f;
-    [SerializeField] private float dashHighFreq = 0.6f;
-    [SerializeField] private float dashDuration = 0.2f;
-    [SerializeField] private float runLowFreq = 0.2f;
-    [SerializeField] private float runHighFreq = 0.3f;
-    [SerializeField] private float runDuration = 0.08f;
+    [SerializeField] private float lowFreqDash = 0.4f;
+    [SerializeField] private float highFreqDash = 0.6f;
+    [SerializeField] private float durationDash = 0.2f;
+    [SerializeField] private float lowFreqRun = 0.2f;
+    [SerializeField] private float highFreqRun = 0.3f;
+    [SerializeField] private float durationRun = 0.08f;
 
-    [SerializeField] private float collectItemLowFreq = 0.2f;
-    [SerializeField] private float collectItemHighFreq = 0.4f;
-    [SerializeField] private float collectItemDuration = 0.16f;
+    [SerializeField] private float lowFreqItemPickup = 0.2f;
+    [SerializeField] private float highFreqItemPickup = 0.4f;
+    [SerializeField] private float durationItemPickup = 0.16f;
 
     private bool isVibrating = false;
     private float vibrationTimer = 0f;
@@ -42,16 +42,19 @@ public class JoystickVibration : MonoBehaviour
         }
     }
 
-    public void OnAttackTree() => Vibrate(attackTreeLowFreq, attackTreeHighFreq, attackTreeDuration);
-    public void OnAttackEnemy() => Vibrate(attackEnemyLowFreq, attackEnemyHighFreq, attackEnemyDuration);
-    public void OnMining() => Vibrate(miningLowFreq, miningHighFreq, miningDuration);
-    public void OnDash() => Vibrate(dashLowFreq, dashHighFreq, dashDuration);
-    public void OnRun() => Vibrate(runLowFreq, runHighFreq, runDuration);
-    public void OnCollectItem() => Vibrate(collectItemLowFreq, collectItemHighFreq, collectItemDuration);
+    public void OnTreeAttack() => Vibrate(lowFreqTreeAttack, highFreqTreeAttack, durationTreeAttack);
+    public void OnEnemyAttack() => Vibrate(lowFreqEnemyAttack, highFreqEnemyAttack, durationEnemyAttack);
+    public void OnMining() => Vibrate(lowFreqMining, highFreqMining, durationMining);
+    public void OnDash() => Vibrate(lowFreqDash, highFreqDash, durationDash);
+    public void OnRun()
+    {
+        Vibrate(lowFreqRun, highFreqRun, durationRun);
+    }
+    public void OnItemPickup() => Vibrate(lowFreqItemPickup, highFreqItemPickup, durationItemPickup);
 
     public void Vibrate(float lowFreq, float highFreq, float duration)
     {
-        if (!enableVibration) return;
+        if (!vibrationEnabled) return;
 
         isVibrating = true;
         vibrationTimer = duration;
@@ -65,7 +68,7 @@ public class JoystickVibration : MonoBehaviour
 
     public void SetVibrationEnabled(bool enabled)
     {
-        enableVibration = enabled;
+        vibrationEnabled = enabled;
         if (!enabled)
         {
             StopVibration();

@@ -4,19 +4,23 @@ public class EnemyShooter : MonoBehaviour
 {
     [Header("Combat Settings")]
     public GameObject projectilePrefab;
-    public Transform targetPlayer;
+    public Transform playerTarget;
     public Transform firePoint;
     public float projectileSpeed = 8f;
     public float fireRate = 2f;
 
     [Header("Range Settings")]
     public float detectionRange = 10f;
-    public float shootRange = 6f;
-    public float moveSpeed = 2f;
+    public float shootingRange = 6f;
+    public float movementSpeed = 2f;
 
     [Header("Animation Settings")]
     [SerializeField] private Animator animator;
     [SerializeField] private float shootAnimationDuration = 0.8f;
+
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip shootSound;
+    private AudioSource audioSource;
 
     private float nextFireTime;
     private Vector2 lastDirection = Vector2.down;
@@ -27,9 +31,8 @@ public class EnemyShooter : MonoBehaviour
     private Rigidbody2D rb;
     private bool isMoving = false;
 
-    // Animation parameter names
-    private readonly string ANIM_HORIZONTAL = "Horizontal";
-    private readonly string ANIM_VERTICAL = "Vertical";
+    private readonly string ANIM_HORIZONTAL = "MoveX";
+    private readonly string ANIM_VERTICAL = "MoveY";
     private readonly string ANIM_IS_MOVING = "IsMoving";
     private readonly string ANIM_SHOOT = "Shoot";
     private readonly string ANIM_HIT = "Hit";
@@ -37,12 +40,12 @@ public class EnemyShooter : MonoBehaviour
 
     private void Start()
     {
-        if (targetPlayer == null)
+        if (playerTarget == null)
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
-                targetPlayer = player.transform;
+                playerTarget = player.transform;
             }
         }
 
@@ -52,6 +55,11 @@ public class EnemyShooter : MonoBehaviour
         }
 
         enemyHealth = GetComponent<EnemyHealth>();
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
 
         rb = GetComponent<Rigidbody2D>();
         if (rb == null)
@@ -61,9 +69,7 @@ public class EnemyShooter : MonoBehaviour
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
 
-        // Configurar FirePoint
         SetupFirePoint();
-
         InitializeAnimator();
     }
 
@@ -71,7 +77,6 @@ public class EnemyShooter : MonoBehaviour
     {
         if (firePoint == null)
         {
-            // Buscar si ya existe un FirePoint hijo
             Transform existingFirePoint = transform.Find("FirePoint");
             if (existingFirePoint != null)
             {
@@ -79,10 +84,9 @@ public class EnemyShooter : MonoBehaviour
             }
             else
             {
-                // Crear un nuevo FirePoint
                 GameObject firePointObj = new GameObject("FirePoint");
                 firePointObj.transform.SetParent(transform);
-                firePointObj.transform.localPosition = Vector3.right * 0.5f; // Ajusta esta posición
+                firePointObj.transform.localPosition = Vector3.right * 0.5f;
                 firePoint = firePointObj.transform;
             }
         }
@@ -92,34 +96,39 @@ public class EnemyShooter : MonoBehaviour
     {
         if (animator != null)
         {
-            animator.SetFloat(ANIM_HORIZONTAL, 0f);
-            animator.SetFloat(ANIM_VERTICAL, -1f);
-            animator.SetBool(ANIM_IS_MOVING, false);
+            if (HasParameter(ANIM_HORIZONTAL)) animator.SetFloat(ANIM_HORIZONTAL, 0f);
+            if (HasParameter(ANIM_VERTICAL)) animator.SetFloat(ANIM_VERTICAL, -1f);
+            if (HasParameter(ANIM_IS_MOVING)) animator.SetBool(ANIM_IS_MOVING, false);
         }
+    }
+
+    private bool HasParameter(string paramName)
+    {
+        if (animator == null) return false;
+        foreach (AnimatorControllerParameter param in animator.parameters)
+        {
+            if (param.name == paramName) return true;
+        }
+        return false;
     }
 
     private void Update()
     {
-        if (isDead || targetPlayer == null) return;
+        if (isDead || playerTarget == null) return;
 
-        float distanceToPlayer = Vector2.Distance(transform.position, targetPlayer.position);
+        float distanceToPlayer = Vector2.Distance(transform.position, playerTarget.position);
+        Vector2 directionToPlayer = (playerTarget.position - transform.position).normalized;
 
-        // Calcular dirección hacia el jugador
-        Vector2 directionToPlayer = (targetPlayer.position - transform.position).normalized;
-
-        // Sistema de dos rangos
-        if (distanceToPlayer <= detectionRange && distanceToPlayer > shootRange)
+        if (distanceToPlayer <= detectionRange && distanceToPlayer > shootingRange)
         {
-            // RANGO 1: Detectado pero fuera de rango de disparo - PERSEGUIR
             if (!isShooting)
             {
                 MoveTowardsPlayer(directionToPlayer);
             }
         }
-        else if (distanceToPlayer <= shootRange)
+        else if (distanceToPlayer <= shootingRange)
         {
-            // RANGO 2: Dentro del rango de disparo - DETENERSE Y DISPARAR
-            StopMoving();
+            StopMovement();
             UpdateDirection(directionToPlayer);
 
             if (!isShooting && Time.time >= nextFireTime)
@@ -130,11 +139,9 @@ public class EnemyShooter : MonoBehaviour
         }
         else
         {
-            // Fuera de ambos rangos - IDLE
-            StopMoving();
+            StopMovement();
         }
 
-        // Actualizar animación de movimiento
         if (animator != null)
         {
             animator.SetBool(ANIM_IS_MOVING, isMoving);
@@ -143,15 +150,14 @@ public class EnemyShooter : MonoBehaviour
 
     private void MoveTowardsPlayer(Vector2 direction)
     {
-        // Moverse hacia el jugador
-        Vector2 targetPosition = (Vector2)transform.position + direction * moveSpeed * Time.deltaTime;
+        Vector2 targetPosition = (Vector2)transform.position + direction * movementSpeed * Time.deltaTime;
         rb.MovePosition(targetPosition);
 
         isMoving = true;
         UpdateDirection(direction);
     }
 
-    private void StopMoving()
+    private void StopMovement()
     {
         isMoving = false;
 
@@ -187,25 +193,18 @@ public class EnemyShooter : MonoBehaviour
             animator.SetTrigger(ANIM_SHOOT);
         }
 
-        // Fallback: disparar automáticamente si no hay Animation Event
-        // Calcula cuándo debería disparar (en el medio de la animación)
-        float shootTiming = shootAnimationDuration * 0.5f; // 50% de la animación
-        Invoke(nameof(ExecuteShootFallback), shootTiming);
-
-        // Terminar el estado de disparo
-        Invoke(nameof(EndShooting), shootAnimationDuration);
+        float shootTiming = shootAnimationDuration * 0.5f;
+        Invoke(nameof(ExecuteBackupShoot), shootTiming);
+        Invoke(nameof(FinishShooting), shootAnimationDuration);
     }
 
-    // Este método es llamado por el Animation Event (MÉTODO PRINCIPAL)
     public void OnShootFrame()
     {
-        // Cancelar el fallback porque el Animation Event funcionó
-        CancelInvoke(nameof(ExecuteShootFallback));
+        CancelInvoke(nameof(ExecuteBackupShoot));
         ExecuteShoot();
     }
 
-    // Fallback por si no hay Animation Event configurado
-    private void ExecuteShootFallback()
+    private void ExecuteBackupShoot()
     {
         ExecuteShoot();
     }
@@ -213,6 +212,11 @@ public class EnemyShooter : MonoBehaviour
     private void ExecuteShoot()
     {
         if (projectilePrefab == null || isDead) return;
+
+        if (shootSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shootSound);
+        }
 
         Vector3 spawnPosition = transform.position;
         if (firePoint != null)
@@ -236,12 +240,12 @@ public class EnemyShooter : MonoBehaviour
         }
     }
 
-    private void EndShooting()
+    private void FinishShooting()
     {
         isShooting = false;
     }
 
-    public void PlayHitAnimation()
+    public void PlayImpactAnimation()
     {
         if (animator != null && !isDead)
         {
@@ -258,7 +262,6 @@ public class EnemyShooter : MonoBehaviour
 
         if (animator != null)
         {
-            // Para muerte, usar la dirección horizontal (izquierda/derecha)
             float horizontal = lastDirection.x;
             animator.SetFloat(ANIM_HORIZONTAL, horizontal);
             animator.SetTrigger(ANIM_DEATH);
@@ -272,22 +275,19 @@ public class EnemyShooter : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        // Rango de detección (verde)
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        // Rango de disparo (rojo)
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, shootRange);
+        Gizmos.DrawWireSphere(transform.position, shootingRange);
 
-        // Línea hacia el jugador si está en rango
-        if (targetPlayer != null)
+        if (playerTarget != null)
         {
-            float dist = Vector2.Distance(transform.position, targetPlayer.position);
+            float dist = Vector2.Distance(transform.position, playerTarget.position);
             if (dist <= detectionRange)
             {
-                Gizmos.color = dist <= shootRange ? Color.red : Color.yellow;
-                Gizmos.DrawLine(transform.position, targetPlayer.position);
+                Gizmos.color = dist <= shootingRange ? Color.red : Color.yellow;
+                Gizmos.DrawLine(transform.position, playerTarget.position);
             }
         }
     }

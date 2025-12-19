@@ -1,35 +1,35 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement; // Necesario para el cambio de escenas
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
-    [Header("Configuración de Escenas")]
-    public string nombreEscenaGameplay = "Gameplay";
-    public string nombreEscenaMenu = "MenuPrincipal";
+    [Header("Scene Configuration")]
+    public string gameplaySceneName = "Gameplay";
+    public string menuSceneName = "MenuPrincipal";
 
-    [Header("Referencias Originales")]
+    [Header("Original References")]
     public GameObject menuCanvas;
     public GameObject gameUIContainer;
-    public GameObject panelCreditos;
-    public GameObject panelControles;
-    public GameObject camaraMenu;
-    public GameObject camaraJuego;
+    public GameObject creditsPanel;
+    public GameObject controlsPanel;
+    public GameObject menuCamera;
+    public GameObject gameCamera;
 
     public AudioClip clickSound;
+    public AudioClip hoverSound;
     private CanvasGroup menuGroup;
 
     void Start()
     {
-        // Mantiene tu lógica original de inicio
         if (menuCanvas != null) menuCanvas.SetActive(true);
-        if (camaraMenu != null) camaraMenu.SetActive(true);
-        if (camaraJuego != null) camaraJuego.SetActive(false);
+        if (menuCamera != null) menuCamera.SetActive(true);
+        if (gameCamera != null) gameCamera.SetActive(false);
 
         if (gameUIContainer != null) gameUIContainer.SetActive(false);
-        if (panelCreditos != null) panelCreditos.SetActive(false);
-        if (panelControles != null) panelControles.SetActive(false);
+        if (creditsPanel != null) creditsPanel.SetActive(false);
+        if (controlsPanel != null) controlsPanel.SetActive(false);
 
         ApplyButtonEffects();
 
@@ -43,10 +43,8 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    // --- NUEVA FUNCIÓN: JUGAR (Cambia a la escena de Gameplay) ---
-    public void BotonJugar()
+    public void PlayButton()
     {
-        // Mantiene la lógica de ocultar el menú por si la transición tarda un poco
         if (menuGroup != null)
         {
             menuGroup.alpha = 0f;
@@ -55,26 +53,22 @@ public class MenuManager : MonoBehaviour
         }
 
         Time.timeScale = 1f;
-        // Cambia a la escena de juego
-        SceneManager.LoadScene(nombreEscenaGameplay);
+        SceneManager.LoadScene(gameplaySceneName);
     }
 
-    // --- NUEVA FUNCIÓN: REINTENTAR (Para la escena de Victoria aparte) ---
-    public void BotonReintentarDesdeVictoria()
+    public void RetryFromVictoryButton()
     {
         Time.timeScale = 1f;
-        // Carga la escena de juego limpia desde el principio
-        SceneManager.LoadScene(nombreEscenaGameplay);
+        SceneManager.LoadScene(gameplaySceneName);
     }
 
-    // --- FUNCIÓN PARA VOLVER AL MENÚ ---
-    public void VolverAlMenu()
+    public void ReturnToMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(nombreEscenaMenu);
+        SceneManager.LoadScene(menuSceneName);
     }
 
-    public void BotonSalir()
+    public void QuitButton()
     {
         Application.Quit();
 #if UNITY_EDITOR
@@ -82,35 +76,31 @@ public class MenuManager : MonoBehaviour
 #endif
     }
 
-    // --- MÉTODOS DE PANELES (Mantenidos igual) ---
-
-    public void AbrirCreditos()
+    public void OpenCredits()
     {
-        if (panelCreditos != null) panelCreditos.SetActive(true);
+        if (creditsPanel != null) creditsPanel.SetActive(true);
     }
 
-    public void CerrarCreditos()
+    public void CloseCredits()
     {
-        if (panelCreditos != null) panelCreditos.SetActive(false);
+        if (creditsPanel != null) creditsPanel.SetActive(false);
     }
 
-    public void AbrirControles()
+    public void OpenControls()
     {
-        if (panelControles != null) panelControles.SetActive(true);
+        if (controlsPanel != null) controlsPanel.SetActive(true);
     }
 
-    public void CerrarControles()
+    public void CloseControls()
     {
-        if (panelControles != null) panelControles.SetActive(false);
+        if (controlsPanel != null) controlsPanel.SetActive(false);
     }
-
-    // --- EFECTOS DE BOTONES (Mantenidos igual) ---
 
     private void ApplyButtonEffects()
     {
         if (menuCanvas != null) ApplyToRoot(menuCanvas);
-        if (panelCreditos != null) ApplyToRoot(panelCreditos);
-        if (panelControles != null) ApplyToRoot(panelControles);
+        if (creditsPanel != null) ApplyToRoot(creditsPanel);
+        if (controlsPanel != null) ApplyToRoot(controlsPanel);
     }
 
     private void ApplyToRoot(GameObject root)
@@ -123,7 +113,7 @@ public class MenuManager : MonoBehaviour
             {
                 effect = btn.gameObject.AddComponent<ButtonScaleEffect>();
             }
-            effect.ConfigureSounds(clickSound);
+            effect.ConfigureSounds(hoverSound, clickSound);
             effect.Initialize();
         }
     }

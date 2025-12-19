@@ -3,23 +3,23 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private float speed = 15f;
-    [SerializeField] private float lifetime = 3f;
+    [SerializeField] private float lifeTime = 3f;
     [SerializeField] private int damage = 25;
-    [SerializeField] private bool destroyOnHit = true;
+    [SerializeField] private bool destroyOnImpact = true;
     [SerializeField] private LayerMask enemyLayers = -1;
     
     [SerializeField] private float lifeStealPercentage = 0.5f;
     [SerializeField] private GameObject healEffect;
     [SerializeField] private Color healColor = Color.green;
     
-    [SerializeField] private Color orbeColor = Color.red;
+    [SerializeField] private Color orbColor = Color.red;
     [SerializeField] private float glowIntensity = 2f;
     
-    [SerializeField] private GameObject hitEffect;
+    [SerializeField] private GameObject impactEffect;
     [SerializeField] private GameObject trailEffect;
     
     private Rigidbody2D rb;
-    private bool hasHit = false;
+    private bool hasImpacted = false;
     
     private void Awake()
     {
@@ -34,8 +34,8 @@ public class Projectile : MonoBehaviour
         rb.freezeRotation = true;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         
-        SetupDestructiveAppearance();
-        Destroy(gameObject, lifetime);
+        SetupAppearance();
+        Destroy(gameObject, lifeTime);
     }
     
     private void Start()
@@ -48,33 +48,33 @@ public class Projectile : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (hasHit) return;
+        if (hasImpacted) return;
         
         if (((1 << collision.gameObject.layer) & enemyLayers) != 0)
         {
-            ProcessHit(collision.gameObject);
+            ProcessImpact(collision.gameObject);
         }
     }
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (hasHit) return;
+        if (hasImpacted) return;
         
         if (((1 << collision.gameObject.layer) & enemyLayers) != 0)
         {
-            ProcessHit(collision.gameObject);
+            ProcessImpact(collision.gameObject);
         }
         else
         {
-            if (destroyOnHit)
+            if (destroyOnImpact)
             {
-                OnHitEffect();
+                OnImpactEffect();
                 Destroy(gameObject);
             }
         }
     }
     
-    private void ProcessHit(GameObject target)
+    private void ProcessImpact(GameObject target)
     {
         EnemyHealth enemyHealth = target.GetComponent<EnemyHealth>();
         if (enemyHealth != null)
@@ -89,23 +89,23 @@ public class Projectile : MonoBehaviour
             }
         }
         
-        if (destroyOnHit)
+        if (destroyOnImpact)
         {
-            OnHitEffect();
+            OnImpactEffect();
             Destroy(gameObject);
         }
         else
         {
-            hasHit = true;
-            OnHitEffect();
+            hasImpacted = true;
+            OnImpactEffect();
         }
     }
     
-    private void OnHitEffect()
+    private void OnImpactEffect()
     {
-        if (hitEffect != null)
+        if (impactEffect != null)
         {
-            Instantiate(hitEffect, transform.position, Quaternion.identity);
+            Instantiate(impactEffect, transform.position, Quaternion.identity);
         }
         
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
@@ -121,14 +121,14 @@ public class Projectile : MonoBehaviour
         }
     }
     
-    public void SetupProjectile(Vector2 shootDirection, int projectileDamage, float projectileSpeed, float projectileLifetime)
+    public void SetupProjectile(Vector2 shootDirection, int projectileDamage, float projectileSpeed, float projectileLifeTime)
     {
         damage = projectileDamage;
         speed = projectileSpeed;
-        lifetime = projectileLifetime;
+        lifeTime = projectileLifeTime;
         
         CancelInvoke("DestroyProjectile");
-        Invoke("DestroyProjectile", lifetime);
+        Invoke("DestroyProjectile", lifeTime);
         
         if (rb != null)
         {
@@ -139,21 +139,21 @@ public class Projectile : MonoBehaviour
         }
     }
     
-    public void SetEnemyLayers(LayerMask enemyLayerMask)
+    public void SetEnemyLayers(LayerMask layerMask)
     {
-        enemyLayers = enemyLayerMask;
+        enemyLayers = layerMask;
     }
     
-    private void SetupDestructiveAppearance()
+    private void SetupAppearance()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
-            spriteRenderer.color = orbeColor;
+            spriteRenderer.color = orbColor;
         }
     }
     
-    private void HealPlayer(int healingAmount)
+    private void HealPlayer(int amount)
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
@@ -161,7 +161,7 @@ public class Projectile : MonoBehaviour
             PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
             if (playerHealth != null)
             {
-                playerHealth.Heal(healingAmount);
+                playerHealth.Heal(amount);
             }
         }
     }

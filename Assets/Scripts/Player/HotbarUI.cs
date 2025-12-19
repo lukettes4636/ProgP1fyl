@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 public class HotbarUI : MonoBehaviour
 {
@@ -23,21 +24,30 @@ public class HotbarUI : MonoBehaviour
     [SerializeField] private GameObject slot8Selection;
     [SerializeField] private GameObject slot9Selection;
 
-    [SerializeField] private Sprite espadaSprite;
-    [SerializeField] private Sprite hachaSprite;
-    [SerializeField] private Sprite picoSprite;
-    [SerializeField] private Sprite aradoSprite;
-    [SerializeField] private Sprite regaderaSprite;
-    [SerializeField] private Sprite arcoSprite;
-    [SerializeField] private Sprite antorchaSprite;
-    [SerializeField] private Sprite semilla1Sprite;
-    [SerializeField] private Sprite semilla2Sprite;
+    [FormerlySerializedAs("espadaSprite")]
+    [SerializeField] private Sprite swordSprite;
+    [FormerlySerializedAs("hachaSprite")]
+    [SerializeField] private Sprite axeSprite;
+    [FormerlySerializedAs("picoSprite")]
+    [SerializeField] private Sprite pickaxeSprite;
+    [FormerlySerializedAs("aradoSprite")]
+    [SerializeField] private Sprite plowSprite;
+    [FormerlySerializedAs("regaderaSprite")]
+    [SerializeField] private Sprite wateringCanSprite;
+    [FormerlySerializedAs("arcoSprite")]
+    [SerializeField] private Sprite bowSprite;
+    [FormerlySerializedAs("antorchaSprite")]
+    [SerializeField] private Sprite torchSprite;
+    [FormerlySerializedAs("semilla1Sprite")]
+    [SerializeField] private Sprite seed1Sprite;
+    [FormerlySerializedAs("semilla2Sprite")]
+    [SerializeField] private Sprite seed2Sprite;
 
-    private int slotActual = 0; 
+    private int currentSlot = 0; 
     private PlayerActionController playerController;
 
-    private bool nextWeaponPressed = false;
-    private bool prevWeaponPressed = false;
+    private bool nextButtonPressed = false;
+    private bool previousButtonPressed = false;
 
     void Start()
     {
@@ -48,71 +58,71 @@ public class HotbarUI : MonoBehaviour
             return;
         }
 
-        slot1Icon.sprite = espadaSprite;
-        slot2Icon.sprite = hachaSprite;
-        slot3Icon.sprite = picoSprite;
-        slot4Icon.sprite = aradoSprite;
-        slot5Icon.sprite = regaderaSprite;
-        slot6Icon.sprite = arcoSprite;
-        slot7Icon.sprite = antorchaSprite;
-        slot8Icon.sprite = semilla1Sprite;
-        slot9Icon.sprite = semilla2Sprite;
+        if (slot1Icon != null) slot1Icon.sprite = swordSprite;
+        if (slot2Icon != null) slot2Icon.sprite = axeSprite;
+        if (slot3Icon != null) slot3Icon.sprite = pickaxeSprite;
+        if (slot4Icon != null) slot4Icon.sprite = plowSprite;
+        if (slot5Icon != null) slot5Icon.sprite = wateringCanSprite;
+        if (slot6Icon != null) slot6Icon.sprite = bowSprite;
+        if (slot7Icon != null) slot7Icon.sprite = torchSprite;
+        if (slot8Icon != null) slot8Icon.sprite = seed1Sprite;
+        if (slot9Icon != null) slot9Icon.sprite = seed2Sprite;
 
-        ActualizarSeleccion();
+        UpdateSelection();
     }
 
     void Update()
     {
         float axisValue = Input.GetAxis("ChangeWeapon");
 
-        if (axisValue > 0.5f && !nextWeaponPressed)
+        if (axisValue > 0.5f && !nextButtonPressed)
         {
-            nextWeaponPressed = true;
-            CambiarSlotAdelante();
+            nextButtonPressed = true;
+            ChangeSlotForward();
         }
 
-        if (axisValue <= 0.5f && nextWeaponPressed)
+        if (axisValue <= 0.5f && nextButtonPressed)
         {
-            nextWeaponPressed = false;
+            nextButtonPressed = false;
         }
 
-        if (axisValue < -0.5f && !prevWeaponPressed)
+        if (axisValue < -0.5f && !previousButtonPressed)
         {
-            prevWeaponPressed = true;
-            CambiarSlotAtras();
+            previousButtonPressed = true;
+            ChangeSlotBackward();
         }
 
-        if (axisValue >= -0.5f && prevWeaponPressed)
+        if (axisValue >= -0.5f && previousButtonPressed)
         {
-            prevWeaponPressed = false;
+            previousButtonPressed = false;
         }
     }
 
-    void CambiarSlotAdelante()
+    void ChangeSlotForward()
     {
-        slotActual = slotActual + 1;
+        currentSlot = currentSlot + 1;
 
-        if (slotActual > 8)
+        if (currentSlot > 8)
         {
-            slotActual = 0;
+            currentSlot = 0;
         }
 
-        ActualizarSeleccion();
+        UpdateSelection();
     }
 
-    void CambiarSlotAtras()
+    void ChangeSlotBackward()
     {
-        slotActual = slotActual - 1;
+        currentSlot = currentSlot - 1;
 
-        if (slotActual < 0)
+        if (currentSlot < 0)
         {
-            slotActual = 8;
+            currentSlot = 8;
         }
 
-        ActualizarSeleccion();
+        UpdateSelection();
     }
 
-    void ActualizarSeleccion()
+    void UpdateSelection()
     {
         slot1Selection.SetActive(false);
         slot2Selection.SetActive(false);
@@ -124,50 +134,51 @@ public class HotbarUI : MonoBehaviour
         slot8Selection.SetActive(false);
         slot9Selection.SetActive(false);
 
-        if (slotActual == 0)
+        if (currentSlot == 0)
         {
             slot1Selection.SetActive(true);
-            playerController.SetEquip(PlayerActionController.EquipType.Espada);
+            playerController.SetEquipment(PlayerActionController.EquipType.Sword);
         }
-        else if (slotActual == 1)
+        else if (currentSlot == 1)
         {
             slot2Selection.SetActive(true);
-            playerController.SetEquip(PlayerActionController.EquipType.Hacha);
+            playerController.SetEquipment(PlayerActionController.EquipType.Axe);
         }
-        else if (slotActual == 2)
+        else if (currentSlot == 2)
         {
             slot3Selection.SetActive(true);
-            playerController.SetEquip(PlayerActionController.EquipType.Pico);
+            playerController.SetEquipment(PlayerActionController.EquipType.Pickaxe);
         }
-        else if (slotActual == 3)
+        else if (currentSlot == 3)
         {
             slot4Selection.SetActive(true);
-            playerController.SetEquip(PlayerActionController.EquipType.Arado);
+            playerController.SetEquipment(PlayerActionController.EquipType.Plow);
         }
-        else if (slotActual == 4)
+        else if (currentSlot == 4)
         {
             slot5Selection.SetActive(true);
-            playerController.SetEquip(PlayerActionController.EquipType.Regadera);
+            playerController.SetEquipment(PlayerActionController.EquipType.WateringCan);
         }
-        else if (slotActual == 5)
+        else if (currentSlot == 5)
         {
             slot6Selection.SetActive(true);
-            playerController.SetEquip(PlayerActionController.EquipType.Arco);
+            playerController.SetEquipment(PlayerActionController.EquipType.Bow);
         }
-        else if (slotActual == 6)
+        else if (currentSlot == 6)
         {
             slot7Selection.SetActive(true);
-            playerController.SetEquip(PlayerActionController.EquipType.Antorcha);
+            playerController.SetEquipment(PlayerActionController.EquipType.Torch);
         }
-        else if (slotActual == 7)
+        else if (currentSlot == 7)
         {
             slot8Selection.SetActive(true);
-            playerController.SetEquip(PlayerActionController.EquipType.Semilla1);
+            playerController.SetEquipment(PlayerActionController.EquipType.Seed1);
         }
-        else if (slotActual == 8)
+        else if (currentSlot == 8)
         {
             slot9Selection.SetActive(true);
-            playerController.SetEquip(PlayerActionController.EquipType.Semilla2);
+            playerController.SetEquipment(PlayerActionController.EquipType.Seed2);
         }
     }
 }
+

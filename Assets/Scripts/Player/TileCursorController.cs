@@ -10,15 +10,10 @@ public class TileCursorController : MonoBehaviour
     [SerializeField] private PlayerActionController playerActionController;
 
     [SerializeField] private float tileSize = 1.0f;
-
     [SerializeField] private int minTileDistance = 1;
-
     [SerializeField] private int maxTileDistance = 3;
-
     [SerializeField] private float maxDistanceThreshold = 0.8f;
-
     [SerializeField] private Vector3 offset = new Vector3(0, 0.05f, 0);
-
 
     private SpriteRenderer spriteRenderer;
 
@@ -59,11 +54,11 @@ public class TileCursorController : MonoBehaviour
 
         var equip = playerActionController.GetCurrentEquip();
 
-        bool isToolActive = equip == PlayerActionController.EquipType.Hacha ||
-                            equip == PlayerActionController.EquipType.Pico ||
-                            equip == PlayerActionController.EquipType.Arado ||
-                            equip == PlayerActionController.EquipType.Regadera ||
-                            (equip >= PlayerActionController.EquipType.Semilla1 && equip <= PlayerActionController.EquipType.Semilla2);
+        bool isToolActive = equip == PlayerActionController.EquipType.Axe ||
+                            equip == PlayerActionController.EquipType.Pickaxe ||
+                            equip == PlayerActionController.EquipType.Plow ||
+                            equip == PlayerActionController.EquipType.WateringCan ||
+                            (equip >= PlayerActionController.EquipType.Seed1 && equip <= PlayerActionController.EquipType.Seed2);
 
         if (!isToolActive)
         {
@@ -101,17 +96,17 @@ public class TileCursorController : MonoBehaviour
 
         aimDir.Normalize();
 
-        int distanceTiles;
+        int tileDistance;
         if (aimMag >= maxDistanceThreshold)
         {
-            distanceTiles = maxTileDistance;
+            tileDistance = maxTileDistance;
         }
         else
         {
-            distanceTiles = minTileDistance;
+            tileDistance = minTileDistance;
         }
 
-        float effectiveDistance = distanceTiles * tileSize;
+        float effectiveDistance = tileDistance * tileSize;
 
         Vector3 targetWorldPos = playerTransform.position + (Vector3)(aimDir * effectiveDistance);
 

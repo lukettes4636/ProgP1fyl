@@ -7,7 +7,7 @@ public class PlayerSummonController : MonoBehaviour
     [SerializeField] private GameObject demonPrefab;
     [SerializeField] private float summonDistance = 3f;
     [SerializeField] private KeyCode angelKey = KeyCode.Alpha1;
-    [SerializeField] private KeyCode demonKey = KeyCode.Alpha2;
+    [SerializeField] private KeyCode demonKey = KeyCode.Alpha3;
 
     [Header("Audio Settings")]
     [SerializeField] private AudioClip summonClip;
@@ -42,7 +42,7 @@ public class PlayerSummonController : MonoBehaviour
             Destroy(currentAngel);
         }
 
-        Vector3 spawnPos = transform.position + transform.forward * summonDistance;
+        Vector3 spawnPos = GetSummonPosition();
         currentAngel = Instantiate(angelPrefab, spawnPos, Quaternion.identity);
         PlaySummonSound();
     }
@@ -56,9 +56,22 @@ public class PlayerSummonController : MonoBehaviour
             Destroy(currentDemon);
         }
 
-        Vector3 spawnPos = transform.position + transform.forward * summonDistance;
+        Vector3 spawnPos = GetSummonPosition();
         currentDemon = Instantiate(demonPrefab, spawnPos, Quaternion.identity);
         PlaySummonSound();
+    }
+
+    private Vector3 GetSummonPosition()
+    {
+        PlayerMovement movement = GetComponent<PlayerMovement>();
+        Vector2 direction = Vector2.down; 
+
+        if (movement != null)
+        {
+            direction = movement.GetLastDirection();
+        }
+
+        return transform.position + (Vector3)(direction * summonDistance);
     }
 
     private void PlaySummonSound()

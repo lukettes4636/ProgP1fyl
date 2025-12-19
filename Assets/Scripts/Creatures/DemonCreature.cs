@@ -2,53 +2,44 @@ using UnityEngine;
 
 public class DemonCreature : SummonedCreature
 {
-    [Header("Combat Settings")]
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private Transform firePoint;
-    [SerializeField] private float fireRate = 0.8f;
-    [SerializeField] private AudioClip shootClip;
-    [SerializeField] private int projectileDamage = 35;
-    [SerializeField] private float projectileSpeed = 20f;
-    [SerializeField] private float projectileLifetime = 3f;
+    [SerializeField] private float attackCooldown = 0.8f;
+    [SerializeField] private AudioClip attackClip;
+    [SerializeField] private int meleeDamage = 35;
 
-    [Header("Detection")]
-    [SerializeField] private float detectionRange = 8f;
+    [SerializeField] private float detectionRange = 10f; 
     [SerializeField] private LayerMask enemyLayers = -1;
     [SerializeField] private string[] enemyTags = { "Enemy", "Hostile", "Boss" };
 
-    [Header("Movement")]
-    [SerializeField] private float chaseSpeed = 3.5f;
-    [SerializeField] private float optimalAttackDistance = 5f;
-    [SerializeField] private float minAttackDistance = 3f;
+    [SerializeField] private float chaseSpeed = 12f;
+    [SerializeField] private float meleeAttackRange = 2f; 
+    [SerializeField] private float meleeStopDist = 1.8f; 
 
-    [Header("Follow Player")]
-    [SerializeField] private float followDistance = 3f;
-    [SerializeField] private float stopDistance = 2f;
+    public void AttackHitboxOn() { }
+    public void AttackHitboxOff() { }
 
-    [Header("Attack Animation Duration")]
-    [SerializeField] private float attackAnimationDuration = 0.5f;
+    [SerializeField] private float followDist = 3f;
+    [SerializeField] private float stopDist = 2f;
 
-    [Header("Fade Settings")]
+    [SerializeField] private float attackAnimDuration = 0.5f;
+
     [SerializeField] private float fadeDelay = 0.5f;
     [SerializeField] private float fadeDuration = 1f;
 
     private Transform currentTarget;
     private Transform playerTransform;
-    private float lastFireTime;
+    private float lastAttackTime;
     private AudioSource audioSource;
-    private GameObject activeProjectile;
-    private Rigidbody2D rb;
-    private Vector2 moveDirection;
-    private float attackAnimationTimer = 0f;
+    private Rigidbody2D rb2d;
+    private Vector2 moveDir;
+    private float attackAnimTimer = 0f;
     private SpriteRenderer spriteRenderer;
     private bool isFading = false;
-    private Transform lastKilledEnemy;
+    private Transform lastDeadEnemy;
 
     protected override void Awake()
     {
         base.Awake();
 
-        // Buscar al jugador
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -61,31 +52,18 @@ public class DemonCreature : SummonedCreature
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
+        rb2d = GetComponent<Rigidbody2D>();
+        if (rb2d == null)
         {
-            rb = gameObject.AddComponent<Rigidbody2D>();
-            rb.gravityScale = 0f;
-            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            rb2d = gameObject.AddComponent<Rigidbody2D>();
         }
+        rb2d.gravityScale = 0f;
+        rb2d.drag = 0f;
+        rb2d.angularDrag = 0f;
+        rb2d.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb2d.bodyType = RigidbodyType2D.Kinematic;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (firePoint == null)
-        {
-            Transform existingFirePoint = transform.Find("FirePoint");
-            if (existingFirePoint != null)
-            {
-                firePoint = existingFirePoint;
-            }
-            else
-            {
-                GameObject firePointObj = new GameObject("FirePoint");
-                firePointObj.transform.SetParent(transform);
-                firePointObj.transform.localPosition = Vector3.right * 0.5f;
-                firePoint = firePointObj.transform;
-            }
-        }
     }
 
     protected override void Start()
@@ -99,36 +77,45 @@ public class DemonCreature : SummonedCreature
     {
         if (isFading) return;
 
-        // Manejar timer de animación de ataque
         if (isAttacking)
         {
-            attackAnimationTimer += Time.deltaTime;
-            if (attackAnimationTimer >= attackAnimationDuration)
+            attackAnimTimer += Time.deltaTime;
+            if (attackAnimTimer >= attackAnimDuration)
             {
                 StopAttackAnimation();
-                attackAnimationTimer = 0f;
+                attackAnimTimer = 0f;
             }
         }
 
         base.Update();
-
         FindTarget();
 
-        // Verificar si el enemigo murió
-        if (lastKilledEnemy != null && currentTarget == null)
+        if (currentTarget == null && lastDeadEnemy != null)
         {
-            StartCoroutine(FadeOutAndDestroy());
-            lastKilledEnemy = null;
+            Collider2D[] potentialTargets = Physics2D.OverlapCircleAll(transform.position, detectionRange, enemyLayers);
+            bool enemiesLeft = false;
+            foreach (var col in potentialTargets)
+            {
+                if (IsEnemy(col.gameObject)) { enemiesLeft = true; break; }
+            }
+
+            if (!enemiesLeft)
+            {
+                StartCoroutine(FadeAndDestroy());
+                lastDeadEnemy = null;
+            }
         }
 
         if (currentTarget != null)
         {
+            float distToTarget = Vector2.Distance(transform.position, currentTarget.position);
+
             if (!isAttacking)
             {
-                HandleTargetMovement();
+                MoveTowardsTarget();
             }
 
-            if (activeProjectile == null && !isAttacking && Time.time - lastFireTime >= 1f / fireRate)
+            if (!isAttacking && distToTarget <= meleeAttackRange && Time.time - lastAttackTime >= attackCooldown)
             {
                 AttackTarget();
             }
@@ -137,72 +124,55 @@ public class DemonCreature : SummonedCreature
         {
             if (!isAttacking)
             {
-                // Si no hay enemigos, seguir al jugador
                 FollowPlayer();
             }
         }
     }
 
-    private void HandleTargetMovement()
+    private void MoveTowardsTarget()
     {
         if (currentTarget == null) return;
 
-        float distanceToTarget = Vector2.Distance(transform.position, currentTarget.position);
-        Vector2 directionToTarget = (currentTarget.position - transform.position).normalized;
+        float dist = Vector2.Distance(transform.position, currentTarget.position);
+        Vector2 dir = (currentTarget.position - transform.position).normalized;
 
-        if (distanceToTarget > optimalAttackDistance)
+        if (dist > meleeStopDist)
         {
-            // Acercarse al enemigo
-            moveDirection = directionToTarget;
-            Vector2 targetPosition = (Vector2)transform.position + moveDirection * moveSpeed * Time.deltaTime;
-            rb.MovePosition(targetPosition);
-            SetMovementDirection(moveDirection);
-        }
-        else if (distanceToTarget < minAttackDistance)
-        {
-            // Alejarse si está muy cerca
-            moveDirection = -directionToTarget;
-            Vector2 targetPosition = (Vector2)transform.position + moveDirection * (moveSpeed * 0.5f) * Time.deltaTime;
-            rb.MovePosition(targetPosition);
-            SetMovementDirection(moveDirection);
+            moveDir = dir;
+            Vector2 targetPos = (Vector2)transform.position + moveDir * moveSpeed * Time.deltaTime;
+            rb2d.MovePosition(targetPos);
+            SetMoveDirection(moveDir);
         }
         else
         {
-            // Distancia óptima, dejar de moverse pero mantener orientación
-            SetMovementDirection(Vector2.zero);
-            lastMovementDirection = directionToTarget;
+            SetMoveDirection(Vector2.zero);
+            lastMoveDir = dir;
         }
-    }
-
-    protected override void HandleCombat()
-    {
     }
 
     private void FollowPlayer()
     {
         if (playerTransform == null) return;
 
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+        float dist = Vector2.Distance(transform.position, playerTransform.position);
 
-        if (distanceToPlayer > followDistance)
+        if (dist > followDist)
         {
-            Vector2 direction = (playerTransform.position - transform.position).normalized;
-            Vector2 targetPosition = (Vector2)transform.position + direction * moveSpeed * Time.deltaTime;
-
-            rb.MovePosition(targetPosition);
-            SetMovementDirection(direction);
+            Vector2 dir = (playerTransform.position - transform.position).normalized;
+            Vector2 targetPos = (Vector2)transform.position + dir * moveSpeed * Time.deltaTime;
+            rb2d.MovePosition(targetPos);
+            SetMoveDirection(dir);
         }
-        else if (distanceToPlayer < stopDistance)
+        else if (dist < stopDist)
         {
-            Vector2 direction = (transform.position - playerTransform.position).normalized;
-            Vector2 targetPosition = (Vector2)transform.position + direction * (moveSpeed * 0.5f) * Time.deltaTime;
-
-            rb.MovePosition(targetPosition);
-            SetMovementDirection(direction);
+            Vector2 dir = (transform.position - playerTransform.position).normalized;
+            Vector2 targetPos = (Vector2)transform.position + dir * (moveSpeed * 0.5f) * Time.deltaTime;
+            rb2d.MovePosition(targetPos);
+            SetMoveDirection(dir);
         }
         else
         {
-            SetMovementDirection(Vector2.zero);
+            SetMoveDirection(Vector2.zero);
         }
     }
 
@@ -210,29 +180,28 @@ public class DemonCreature : SummonedCreature
     {
         Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position, detectionRange, enemyLayers);
 
-        float closestDistance = Mathf.Infinity;
-        Transform closestEnemy = null;
+        float closestDist = Mathf.Infinity;
+        Transform closest = null;
 
         foreach (Collider2D enemy in enemies)
         {
             if (IsEnemy(enemy.gameObject))
             {
-                float distance = Vector2.Distance(transform.position, enemy.transform.position);
-                if (distance < closestDistance)
+                float dist = Vector2.Distance(transform.position, enemy.transform.position);
+                if (dist < closestDist)
                 {
-                    closestDistance = distance;
-                    closestEnemy = enemy.transform;
+                    closestDist = dist;
+                    closest = enemy.transform;
                 }
             }
         }
 
-        // Si perdimos el objetivo, marcarlo como último enemigo matado
-        if (currentTarget != null && closestEnemy == null)
+        if (currentTarget != null && closest == null)
         {
-            lastKilledEnemy = currentTarget;
+            lastDeadEnemy = currentTarget;
         }
 
-        currentTarget = closestEnemy;
+        currentTarget = closest;
     }
 
     private bool IsEnemy(GameObject target)
@@ -240,9 +209,9 @@ public class DemonCreature : SummonedCreature
         if (target.CompareTag("Player") || target == gameObject)
             return false;
 
-        foreach (string enemyTag in enemyTags)
+        foreach (string t in enemyTags)
         {
-            if (target.CompareTag(enemyTag))
+            if (target.CompareTag(t))
                 return true;
         }
 
@@ -254,55 +223,31 @@ public class DemonCreature : SummonedCreature
 
     private void AttackTarget()
     {
-        if (currentTarget == null || projectilePrefab == null) return;
+        if (currentTarget == null) return;
 
-        // Orientar hacia el objetivo y detener movimiento
-        Vector2 directionToTarget = (currentTarget.position - transform.position).normalized;
-        lastMovementDirection = directionToTarget;
-        SetMovementDirection(Vector2.zero);
+        Vector2 dir = (currentTarget.position - transform.position).normalized;
+        lastMoveDir = dir;
+        SetMoveDirection(Vector2.zero);
 
-        // Iniciar animación de ataque
         StartAttackAnimation();
-        attackAnimationTimer = 0f;
+        attackAnimTimer = 0f;
 
-        Vector2 shootDirection = CalculatePredictiveShootDirection();
-
-        activeProjectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
-
-        if (shootClip != null && audioSource != null)
+        EnemyHealth enemyHealth = currentTarget.GetComponent<EnemyHealth>();
+        if (enemyHealth != null)
         {
-            audioSource.PlayOneShot(shootClip);
+            enemyHealth.TakeDamage(meleeDamage);
         }
 
-        Projectile projScript = activeProjectile.GetComponent<Projectile>();
-        if (projScript != null)
+        if (attackClip != null && audioSource != null)
         {
-            projScript.SetupProjectile(shootDirection, projectileDamage, projectileSpeed, projectileLifetime);
-            projScript.SetEnemyLayers(enemyLayers);
+            audioSource.PlayOneShot(attackClip);
         }
 
-        lastFireTime = Time.time;
+        lastAttackTime = Time.time;
     }
 
-    private Vector2 CalculatePredictiveShootDirection()
+    protected override void HandleCombat()
     {
-        if (currentTarget == null) return lastMovementDirection;
-
-        Vector2 targetVelocity = Vector2.zero;
-        Rigidbody2D targetRb = currentTarget.GetComponent<Rigidbody2D>();
-        if (targetRb != null)
-        {
-            targetVelocity = targetRb.velocity;
-        }
-
-        Vector2 toTarget = currentTarget.position - transform.position;
-        float distance = toTarget.magnitude;
-        float timeToTarget = distance / projectileSpeed;
-
-        Vector2 predictedPosition = (Vector2)currentTarget.position + targetVelocity * timeToTarget;
-        Vector2 shootDirection = (predictedPosition - (Vector2)transform.position).normalized;
-
-        return shootDirection;
     }
 
     protected override void OnDrawGizmosSelected()
@@ -313,10 +258,10 @@ public class DemonCreature : SummonedCreature
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, optimalAttackDistance);
+        Gizmos.DrawWireSphere(transform.position, meleeAttackRange);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, minAttackDistance);
+        Gizmos.DrawWireSphere(transform.position, meleeStopDist);
 
         if (currentTarget != null)
         {
@@ -325,27 +270,20 @@ public class DemonCreature : SummonedCreature
         }
     }
 
-    public bool HasTarget()
-    {
-        return currentTarget != null;
-    }
-
-    private System.Collections.IEnumerator FadeOutAndDestroy()
+    private System.Collections.IEnumerator FadeAndDestroy()
     {
         isFading = true;
-
-        // Esperar un momento antes de empezar a desvanecer
         yield return new WaitForSeconds(fadeDelay);
 
         if (spriteRenderer != null)
         {
             Color startColor = spriteRenderer.color;
-            float elapsedTime = 0f;
+            float time = 0f;
 
-            while (elapsedTime < fadeDuration)
+            while (time < fadeDuration)
             {
-                elapsedTime += Time.deltaTime;
-                float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+                time += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0f, time / fadeDuration);
                 spriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
                 yield return null;
             }

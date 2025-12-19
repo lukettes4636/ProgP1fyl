@@ -5,7 +5,7 @@ public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 100;
 
-    public Slider healthSlider;
+    public Slider healthBar;
     public GameObject deathCanvas;
 
     public AudioClip damageSound;
@@ -14,7 +14,7 @@ public class PlayerHealth : MonoBehaviour
     public float damageFlashDuration = 0.1f;
     public Color damageFlashColor = Color.red;
 
-    public Transform spawnPoint;
+    public Transform respawnPoint;
 
     private int currentHealth;
     private bool isDead = false;
@@ -22,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private Animator animator;
-    private Vector3 initialSpawnPoint;
+    private Vector3 initialRespawnPoint;
 
     void Start()
     {
@@ -46,13 +46,13 @@ public class PlayerHealth : MonoBehaviour
             }
         }
 
-        initialSpawnPoint = transform.position;
+        initialRespawnPoint = transform.position;
         if (deathCanvas != null)
         {
             deathCanvas.SetActive(false);
         }
 
-        UpdateHealthSlider();
+        UpdateHealthBar();
     }
 
     public void TakeDamage(int amount)
@@ -62,11 +62,9 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= amount;
         if (currentHealth < 0) currentHealth = 0;
 
-
-
         PlaySound(damageSound);
         StartCoroutine(DamageFlash());
-        UpdateHealthSlider();
+        UpdateHealthBar();
 
         if (currentHealth <= 0)
         {
@@ -79,11 +77,6 @@ public class PlayerHealth : MonoBehaviour
         isDead = true;
 
         PlaySound(deathSound);
-
-        if (animator != null)
-        {
-            animator.SetTrigger("Death");
-        }
 
         EnemyAI[] enemies = FindObjectsOfType<EnemyAI>();
         for (int i = 0; i < enemies.Length; i++)
@@ -107,7 +100,7 @@ public class PlayerHealth : MonoBehaviour
         if (deathCanvas != null)
         {
             deathCanvas.SetActive(true);
-            ApplyDeathCanvasButtonSFX();
+            ApplyDeathButtonSFX();
         }
     }
 
@@ -116,7 +109,7 @@ public class PlayerHealth : MonoBehaviour
         isDead = false;
 
         currentHealth = maxHealth;
-        UpdateHealthSlider();
+        UpdateHealthBar();
 
         PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         if (playerMovement != null)
@@ -130,13 +123,13 @@ public class PlayerHealth : MonoBehaviour
             actionController.enabled = true;
         }
 
-        if (spawnPoint != null)
+        if (respawnPoint != null)
         {
-            transform.position = spawnPoint.position;
+            transform.position = respawnPoint.position;
         }
         else
         {
-            transform.position = initialSpawnPoint;
+            transform.position = initialRespawnPoint;
         }
 
         if (animator != null)
@@ -163,12 +156,12 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    private void UpdateHealthSlider()
+    private void UpdateHealthBar()
     {
-        if (healthSlider != null)
+        if (healthBar != null)
         {
-            healthSlider.maxValue = maxHealth;
-            healthSlider.value = currentHealth;
+            healthBar.maxValue = maxHealth;
+            healthBar.value = currentHealth;
         }
     }
 
@@ -190,10 +183,11 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    private void ApplyDeathCanvasButtonSFX()
+    private void ApplyDeathButtonSFX()
     {
         var menu = FindObjectOfType<MenuManager>();
         var clip = menu != null ? menu.clickSound : null;
+        var hClip = menu != null ? menu.hoverSound : null;
         if (deathCanvas == null) return;
         var buttons = deathCanvas.GetComponentsInChildren<Button>(true);
         for (int i = 0; i < buttons.Length; i++)
@@ -201,7 +195,7 @@ public class PlayerHealth : MonoBehaviour
             var btn = buttons[i];
             var effect = btn.GetComponent<ButtonScaleEffect>();
             if (effect == null) effect = btn.gameObject.AddComponent<ButtonScaleEffect>();
-            effect.ConfigureSounds(clip);
+            effect.ConfigureSounds(hClip, clip);
             effect.Initialize();
         }
     }
@@ -228,6 +222,6 @@ public class PlayerHealth : MonoBehaviour
         currentHealth += amount;
         if (currentHealth > maxHealth) currentHealth = maxHealth;
 
-        UpdateHealthSlider();
+        UpdateHealthBar();
     }
 }

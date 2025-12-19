@@ -65,7 +65,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 1.9161578}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -76,7 +76,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 1.2673705}
   m_EdgeRadius: 0
 --- !u!114 &1884787688073649188
 MonoBehaviour:
@@ -92,6 +92,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitboxDistance: 0.6
   hitboxLifetime: 0.2
+  hitRadius: 0.3
 --- !u!1 &3258567345104229992
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +230,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5824600039365575497}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
@@ -325,7 +326,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   runSpeed: 8
-  spriteScale: 2
   dashSpeed: 15
   dashDuration: 0.2
   dashCooldown: 1
@@ -336,7 +336,7 @@ MonoBehaviour:
   walkStepInterval: 0.5
   runStepInterval: 0.3
   canMove: 1
-  aimThreshold: 0.2
+  useAimSystem: 1
 --- !u!114 &6168014285639349253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -352,19 +352,34 @@ MonoBehaviour:
   equipActual: 0
   baseDamage: 1
   damageHitbox: {fileID: 1045380195764910929}
+  arrowPrefab: {fileID: 0}
+  arrowSpawnPoint: {fileID: 0}
   inventoryDisplay: []
   plowManager: {fileID: 0}
   tileCursorController: {fileID: 0}
-  attackSounds: []
-  treeCuttingSounds: []
-  dashSound: {fileID: 0}
-  audioVolume: 1
+  attackSounds:
+    - {fileID: 8300000, guid: b858936a6a7e3d94eb5adb3da028b8c6, type: 3}
+    treeCuttingSounds:
+    - {fileID: 8300000, guid: 6742826ac91421240ae9ede6e86a1d3d, type: 3}
+    miningSounds: []
+    plowSounds: []
+    shootSound: {fileID: 8300000, guid: f1e9b5628e5e4da408394b4def049c6a, type: 3}
+    dashSound: {fileID: 8300000, guid: 01bfe7fee954c0f4f92ec90ac683e985, type: 3}
+    audioVolume: 1
+    attackVolume: 1
+    treeCuttingVolume: 1
+    miningVolume: 1
+    plowVolume: 1
+    shootVolume: 1
+    dashVolume: 1
   pitchVariation: 0.1
   enAccion: 0
   maxActionDuration: 0.6
   lightPlayer: {fileID: 0}
   torchSprite: {fileID: 0}
   cicloDiaNoche: {fileID: 0}
+  shootOffsetDistance: 1
+  shootOffsetY: 0.5
 --- !u!50 &5574588633738027638
 Rigidbody2D:
   serializedVersion: 4
@@ -424,7 +439,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.011274338, y: 0.011359215}
+  m_Offset: {x: -0.011274338, y: 0.03859143}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.51, y: 0.14}
@@ -435,7 +450,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.5, y: 0.44553557}
   m_EdgeRadius: 0
 --- !u!114 &4910887840170003880
 MonoBehaviour:
@@ -450,7 +465,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  healthSlider: {fileID: 0}
+  deathCanvas: {fileID: 0}
   damageSound: {fileID: 0}
   deathSound: {fileID: 0}
   damageFlashDuration: 0.2
   damageFlashColor: {r: 1, g: 0, b: 0, a: 1}
+  spawnPoint: {fileID: 0}
+--- !u!1 &5083116812836235123

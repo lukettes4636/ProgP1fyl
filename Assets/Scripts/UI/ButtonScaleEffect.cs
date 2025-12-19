@@ -7,7 +7,8 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public float scaleFactor = 1.1f; 
     public float animationDuration = 0.2f; 
     
-    public AudioClip useSound;
+    public AudioClip hoverSound;
+    public AudioClip clickSound;
     [Range(0f,1f)] public float hoverVolume = 0.4f;
     [Range(0f,1f)] public float clickVolume = 0.7f;
     
@@ -43,16 +44,17 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
         isInitialized = true;
     }
 
-    public void ConfigureSounds(AudioClip clip)
+    public void ConfigureSounds(AudioClip hSound, AudioClip cSound)
     {
-        useSound = clip;
+        hoverSound = hSound;
+        clickSound = cSound;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         StopAllCoroutines();
         StartCoroutine(ScaleTo(scaleFactor));
-        PlaySound(hoverVolume);
+        PlayHoverSound();
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -65,7 +67,7 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         StopAllCoroutines();
         StartCoroutine(ScaleTo(scaleFactor));
-        PlaySound(hoverVolume);
+        PlayHoverSound();
     }
 
     public void OnDeselect(BaseEventData eventData)
@@ -90,16 +92,20 @@ public class ButtonScaleEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
         transform.localScale = target;
     }
     
-    private void PlaySound(float vol)
+    private void PlayHoverSound()
     {
-        if (useSound != null && audioSource != null)
+        if (hoverSound != null && audioSource != null)
         {
-            audioSource.PlayOneShot(useSound, vol);
+            audioSource.PlayOneShot(hoverSound, hoverVolume);
         }
     }
-    
+
     private void PlayClickSound()
     {
-        PlaySound(clickVolume);
+        if (clickSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(clickSound, clickVolume);
+        }
     }
 }
+

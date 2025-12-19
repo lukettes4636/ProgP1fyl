@@ -1,16 +1,23 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Serialization;
 
-public class Resource_Collect : MonoBehaviour
+public class ResourceCollect : MonoBehaviour
 {
-    [SerializeField] private int max_Health = 5;
-    [SerializeField] private PlayerActionController.EquipType requiredtool = PlayerActionController.EquipType.Hacha;
+    [FormerlySerializedAs("max_Health")]
+    [SerializeField] private int maxHealth = 5;
+    [FormerlySerializedAs("requiredtool")]
+    [SerializeField] private PlayerActionController.EquipType requiredTool = PlayerActionController.EquipType.Axe;
 
-    private int current_Health;
+    private int currentHealth;
 
-    [SerializeField] private GameObject resoursedrop_Prefab;
-    [SerializeField] private int drop_Amount;
-    [SerializeField] private string drop_Name = "Madera";
+    [FormerlySerializedAs("resoursedrop_Prefab")]
+    [SerializeField] private GameObject lootPrefab;
+    [FormerlySerializedAs("drop_Amount")]
+    [SerializeField] private int dropAmount;
+    [FormerlySerializedAs("drop_Name")]
+    [FormerlySerializedAs("dropResourceName")]
+    [SerializeField] private string dropResourceName = "Wood";
 
     [SerializeField] private float shakeDuration = 0.1f;
     [SerializeField] private float shakeMagnitude = 0.05f;
@@ -20,7 +27,7 @@ public class Resource_Collect : MonoBehaviour
 
     private void Start()
     {
-        current_Health = max_Health;
+        currentHealth = maxHealth;
         originalPosition = transform.position;
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -30,20 +37,20 @@ public class Resource_Collect : MonoBehaviour
         }
     }
 
-    private void DestroyResourse()
+    private void DestroyResource()
     {
-        for (int i = 0; i < drop_Amount; i++)
+        for (int i = 0; i < dropAmount; i++)
         {
-            GameObject obj = Instantiate(resoursedrop_Prefab, transform.position, Quaternion.identity);
+            GameObject obj = Instantiate(lootPrefab, transform.position, Quaternion.identity);
             LootDrop loot = obj.GetComponent<LootDrop>();
             if (loot != null)
             {
-                loot.SetResourceName(drop_Name);
+                loot.SetResourceName(dropResourceName);
             }
             CollectableItem col = obj.GetComponent<CollectableItem>();
             if (col != null)
             {
-                col.Initialize(drop_Name, 1, null);
+                col.Initialize(dropResourceName, 1, null);
             }
         }
 
@@ -55,14 +62,14 @@ public class Resource_Collect : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public bool TakeHit(PlayerActionController.EquipType toolUsed, int damage)
+    public bool ReceiveHit(PlayerActionController.EquipType toolUsed, int damage)
     {
-        if (toolUsed != requiredtool)
+        if (toolUsed != requiredTool)
         {
             return false;
         }
 
-        current_Health -= damage;
+        currentHealth -= damage;
 
         StartCoroutine(Shake());
 
@@ -71,9 +78,9 @@ public class Resource_Collect : MonoBehaviour
             joystickVibration.OnMining(); 
         }
 
-        if (current_Health <= 0)
+        if (currentHealth <= 0)
         {
-            DestroyResourse();
+            DestroyResource();
         }
 
         return true;
@@ -81,20 +88,20 @@ public class Resource_Collect : MonoBehaviour
 
     private IEnumerator Shake()
     {
-        float elapsed = 0.0f;
+        float elapsedTime = 0.0f;
 
         if (transform.position != originalPosition)
         {
             transform.position = originalPosition;
         }
 
-        while (elapsed < shakeDuration)
+        while (elapsedTime < shakeDuration)
         {
             float x = originalPosition.x + UnityEngine.Random.Range(-1f, 1f) * shakeMagnitude;
             float y = originalPosition.y + UnityEngine.Random.Range(-1f, 1f) * shakeMagnitude;
 
             transform.position = new Vector3(x, y, originalPosition.z);
-            elapsed += Time.deltaTime;
+            elapsedTime += Time.deltaTime;
 
             yield return null;
         }

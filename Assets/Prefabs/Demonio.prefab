@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8954184589360935532}
   - component: {fileID: 8358076207779670174}
   - component: {fileID: 8381451009351582941}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Demonio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54,7 +54,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -100,16 +100,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   attackDamage: 25
-  attackRange: 2
-  moveSpeed: 15
-  animator: {fileID: 8381451009351582941}
-  projectilePrefab: {fileID: 8928728445800644864, guid: c004e300f7bb9a0438b2457dad4f6f46, type: 3}
-  firePoint: {fileID: 0}
-  fireRate: 0.8
-  shootClip: {fileID: 8300000, guid: b858936a6a7e3d94eb5adb3da028b8c6, type: 3}
-  projectileDamage: 35
-  projectileSpeed: 20
-  projectileLifetime: 3
+  attackRange: 1
+  moveSpeed: 8
+  anim: {fileID: 0}
+  attackCooldown: 0.8
+  attackClip: {fileID: 8300000, guid: b858936a6a7e3d94eb5adb3da028b8c6, type: 3}
+  meleeDamage: 35
   detectionRange: 8
   enemyLayers:
     serializedVersion: 2
@@ -118,12 +114,12 @@ MonoBehaviour:
   - Enemy
   - Hostile
   - Boss
-  chaseSpeed: 3.5
-  optimalAttackDistance: 5
-  minAttackDistance: 3
-  followDistance: 3
-  stopDistance: 2
-  attackAnimationDuration: 0.5
+  chaseSpeed: 8
+  meleeAttackRange: 2
+  meleeStopDist: 1.8
+  followDist: 3
+  stopDist: 2
+  attackAnimDuration: 0.5
   fadeDelay: 0.5
   fadeDuration: 1
 --- !u!95 &8381451009351582941

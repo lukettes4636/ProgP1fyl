@@ -22,7 +22,7 @@ public class CollectableItem : MonoBehaviour
         playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        StartCoroutine(StartCollectionDelay());
+        StartCoroutine(CollectionDelayCoroutine());
     }
 
     public void Initialize(string name, int amount, Sprite sprite)
@@ -36,7 +36,7 @@ public class CollectableItem : MonoBehaviour
         }
     }
 
-    private IEnumerator StartCollectionDelay()
+    private IEnumerator CollectionDelayCoroutine()
     {
         yield return new WaitForSeconds(initialDelay);
         canBeCollected = true;
@@ -50,7 +50,7 @@ public class CollectableItem : MonoBehaviour
         }
     }
 
-    [SerializeField] private AudioClip pickupSound;
+    [SerializeField] private AudioClip collectionSound;
     [SerializeField] private float soundVolume = 0.5f;
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -60,9 +60,9 @@ public class CollectableItem : MonoBehaviour
             if (playerActionController != null)
             {
                 playerActionController.CollectResource(itemName, itemAmount);
-                if (pickupSound != null)
+                if (collectionSound != null)
                 {
-                    AudioSource.PlayClipAtPoint(pickupSound, transform.position, soundVolume);
+                    AudioSource.PlayClipAtPoint(collectionSound, transform.position, soundVolume);
                 }
             }
             Destroy(gameObject);

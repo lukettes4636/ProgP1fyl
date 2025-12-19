@@ -1,22 +1,31 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 
 public class InventoryHUD : MonoBehaviour
 {
     [SerializeField] private PlayerActionController player;
 
-    [SerializeField] private Image maderaIcon;
-    [SerializeField] private TMP_Text maderaText;
+    [FormerlySerializedAs("maderaIcon")]
+    [SerializeField] private Image woodIcon;
+    [FormerlySerializedAs("maderaText")]
+    [SerializeField] private TMP_Text woodText;
 
-    [SerializeField] private Image piedraIcon;
-    [SerializeField] private TMP_Text piedraText;
+    [FormerlySerializedAs("piedraIcon")]
+    [SerializeField] private Image stoneIcon;
+    [FormerlySerializedAs("piedraText")]
+    [SerializeField] private TMP_Text stoneText;
 
-    [SerializeField] private Image girasolIcon;
-    [SerializeField] private TMP_Text girasolText;
+    [FormerlySerializedAs("girasolIcon")]
+    [SerializeField] private Image sunflowerIcon;
+    [FormerlySerializedAs("girasolText")]
+    [SerializeField] private TMP_Text sunflowerText;
 
-    [SerializeField] private Image uvaIcon;
-    [SerializeField] private TMP_Text uvaText;
+    [FormerlySerializedAs("uvaIcon")]
+    [SerializeField] private Image grapeIcon;
+    [FormerlySerializedAs("uvaText")]
+    [SerializeField] private TMP_Text grapeText;
 
     [SerializeField] private Image mineralIcon;
     [SerializeField] private TMP_Text mineralText;
@@ -26,10 +35,10 @@ public class InventoryHUD : MonoBehaviour
         if (player == null) player = FindObjectOfType<PlayerActionController>();
         if (player == null) return;
 
-        if (maderaText != null) maderaText.text = player.GetItemCount("Madera").ToString();
-        if (piedraText != null) piedraText.text = player.GetItemCount("Piedra").ToString();
-        if (girasolText != null) girasolText.text = player.GetItemCount("Girasol").ToString();
-        if (uvaText != null) uvaText.text = player.GetItemCount("Uva").ToString();
+        if (woodText != null) woodText.text = player.GetItemCount("Wood").ToString();
+        if (stoneText != null) stoneText.text = player.GetItemCount("Stone").ToString();
+        if (sunflowerText != null) sunflowerText.text = player.GetItemCount("Sunflower").ToString();
+        if (grapeText != null) grapeText.text = player.GetItemCount("Grape").ToString();
         if (mineralText != null) mineralText.text = player.GetItemCount("Mineral").ToString();
     }
 }

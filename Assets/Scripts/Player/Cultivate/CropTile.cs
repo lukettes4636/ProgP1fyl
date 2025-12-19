@@ -17,21 +17,21 @@ public class CropTile : ScriptableObject
     public int maxDropAmount = 3;
 
     [SerializeField] private int currentStage = 0;
-    [SerializeField] private float timeGrown = 0f;
+    [SerializeField] private float grownTime = 0f;
     [SerializeField] private bool isReadyToHarvest = false;
     [SerializeField] private bool isMoist = false;
 
     public void Initialize(bool isInitiallyMoist)
     {
         currentStage = 0;
-        timeGrown = 0f;
+        grownTime = 0f;
         isReadyToHarvest = false;
         isMoist = isInitiallyMoist;
     }
 
-    public void SetMoisture(bool isWet)
+    public void SetMoisture(bool isWatered)
     {
-        isMoist = isWet;
+        isMoist = isWatered;
     }
 
     public bool IsMoist() { return isMoist; }
@@ -56,11 +56,11 @@ public class CropTile : ScriptableObject
     {
         if (isReadyToHarvest || !isMoist) return false;
 
-        timeGrown += deltaTime;
+        grownTime += deltaTime;
 
-        if (timeGrown >= timePerStage)
+        if (grownTime >= timePerStage)
         {
-            timeGrown = 0f;
+            grownTime = 0f;
             currentStage++;
 
             if (currentStage >= growthStages.Length - 1)

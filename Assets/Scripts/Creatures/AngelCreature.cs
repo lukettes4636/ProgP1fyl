@@ -2,24 +2,20 @@ using UnityEngine;
 
 public class AngelCreature : SummonedCreature
 {
-    [Header("Angel Settings")]
     [SerializeField] private int healAmount = 30;
     [SerializeField] private float healRange = 5f;
     [SerializeField] private float healCooldown = 3f;
     [SerializeField] private KeyCode healKey = KeyCode.Q;
 
-    [Header("Follow Player")]
-    [SerializeField] private float followDistance = 2f;
-    [SerializeField] private float stopDistance = 1.5f;
+    [SerializeField] private float followSpeed = 12f;
+    [SerializeField] private float followDist = 2f;
+    [SerializeField] private float stopDist = 1.5f;
 
-    [Header("Effects")]
     [SerializeField] private GameObject healEffect;
     [SerializeField] private AudioClip healSound;
 
-    [Header("Attack Animation Duration")]
-    [SerializeField] private float attackAnimationDuration = 0.6f;
+    [SerializeField] private float attackAnimDuration = 0.6f;
 
-    [Header("Fade Settings")]
     [SerializeField] private float fadeDelay = 0.5f;
     [SerializeField] private float fadeDuration = 1f;
 
@@ -28,14 +24,14 @@ public class AngelCreature : SummonedCreature
     private float lastHealTime;
     private bool isOnCooldown = false;
     private AudioSource audioSource;
-    private Rigidbody2D rb;
-    private float attackAnimationTimer = 0f;
+    private Rigidbody2D rb2d;
+    private float attackAnimTimer = 0f;
     private SpriteRenderer spriteRenderer;
     private bool isFading = false;
     private bool hasHealed = false;
 
     protected override void Awake()
-    {
+    { 
         base.Awake();
 
         playerHealth = FindObjectOfType<PlayerHealth>();
@@ -50,43 +46,45 @@ public class AngelCreature : SummonedCreature
             audioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
+        rb2d = GetComponent<Rigidbody2D>();
+        if (rb2d == null)
         {
-            rb = gameObject.AddComponent<Rigidbody2D>();
-            rb.gravityScale = 0f;
-            rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            rb2d = gameObject.AddComponent<Rigidbody2D>();
         }
+        rb2d.gravityScale = 0f;
+        rb2d.drag = 0f;
+        rb2d.angularDrag = 0f;
+        rb2d.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb2d.bodyType = RigidbodyType2D.Kinematic;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     protected override void Start()
-    {
+    { 
         base.Start();
         SetCreatureType(CreatureType.Angel);
+        moveSpeed = followSpeed;
 
         attackDamage = 0;
         attackRange = 0f;
     }
 
     protected override void Update()
-    {
+    { 
         if (isFading) return;
 
-        // Manejar timer de animación de ataque
         if (isAttacking)
         {
-            attackAnimationTimer += Time.deltaTime;
-            if (attackAnimationTimer >= attackAnimationDuration)
+            attackAnimTimer += Time.deltaTime;
+            if (attackAnimTimer >= attackAnimDuration)
             {
                 StopAttackAnimation();
-                attackAnimationTimer = 0f;
+                attackAnimTimer = 0f;
 
-                // Si ya curó, comenzar a desvanecerse
                 if (hasHealed)
                 {
-                    StartCoroutine(FadeOutAndDestroy());
+                    StartCoroutine(FadeAndDestroy());
                 }
             }
         }
@@ -103,10 +101,14 @@ public class AngelCreature : SummonedCreature
 
         if (Input.GetKeyDown(healKey) && !isOnCooldown && !isAttacking)
         {
-            TryHealPlayer();
+            float dist = Vector3.Distance(transform.position, playerTransform.position);
+            if (dist <= healRange)
+            {
+                Heal();
+            }
         }
 
-        if (!isAttacking)
+        if (!isAttacking && !isFading)
         {
             FollowPlayer();
         }
@@ -116,27 +118,25 @@ public class AngelCreature : SummonedCreature
     {
         if (playerTransform == null) return;
 
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+        float dist = Vector2.Distance(transform.position, playerTransform.position);
 
-        if (distanceToPlayer > followDistance)
+        if (dist > followDist)
         {
-            Vector2 direction = (playerTransform.position - transform.position).normalized;
-            Vector2 targetPosition = (Vector2)transform.position + direction * moveSpeed * Time.deltaTime;
-
-            rb.MovePosition(targetPosition);
-            SetMovementDirection(direction);
+            Vector2 dir = (playerTransform.position - transform.position).normalized;
+            Vector2 targetPos = (Vector2)transform.position + dir * moveSpeed * Time.deltaTime;
+            rb2d.MovePosition(targetPos);
+            SetMoveDirection(dir);
         }
-        else if (distanceToPlayer < stopDistance)
+        else if (dist < stopDist)
         {
-            Vector2 direction = (transform.position - playerTransform.position).normalized;
-            Vector2 targetPosition = (Vector2)transform.position + direction * (moveSpeed * 0.5f) * Time.deltaTime;
-
-            rb.MovePosition(targetPosition);
-            SetMovementDirection(direction);
+            Vector2 dir = (transform.position - playerTransform.position).normalized;
+            Vector2 targetPos = (Vector2)transform.position + dir * (moveSpeed * 0.5f) * Time.deltaTime;
+            rb2d.MovePosition(targetPos);
+            SetMoveDirection(dir);
         }
         else
         {
-            SetMovementDirection(Vector2.zero);
+            SetMoveDirection(Vector2.zero);
         }
     }
 
@@ -144,52 +144,18 @@ public class AngelCreature : SummonedCreature
     {
     }
 
-    protected override void Attack(GameObject target)
-    {
-        if (target.CompareTag("Player"))
-        {
-            if (CanHeal() && !IsOnCooldown())
-            {
-                ForceHeal();
-            }
-        }
-    }
-
-    private void TryHealPlayer()
-    {
+    private void Heal()
+    { 
         if (playerHealth == null) return;
 
-        float distanceToPlayer = Vector3.Distance(transform.position, playerHealth.transform.position);
-        if (distanceToPlayer > healRange)
-        {
-            Debug.Log("Player too far to heal!");
-            return;
-        }
-
-        ExecuteHeal();
-    }
-
-    private void ExecuteHeal()
-    {
-        if (playerHealth == null) return;
-
-        // Orientar hacia el jugador al curar
-        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
-        lastMovementDirection = directionToPlayer;
-
-        // Detener movimiento y comenzar animación de ataque
-        SetMovementDirection(Vector2.zero);
-        StartAttackAnimation();
-        attackAnimationTimer = 0f;
-        hasHealed = true;
-
-        // Curar al jugador
         playerHealth.Heal(healAmount);
+        lastHealTime = Time.time;
+        isOnCooldown = true;
+        hasHealed = true;
 
         if (healEffect != null)
         {
-            GameObject effect = Instantiate(healEffect, playerHealth.transform.position, Quaternion.identity);
-            Destroy(effect, 2f);
+            Instantiate(healEffect, playerTransform.position, Quaternion.identity);
         }
 
         if (healSound != null && audioSource != null)
@@ -197,67 +163,26 @@ public class AngelCreature : SummonedCreature
             audioSource.PlayOneShot(healSound);
         }
 
-        lastHealTime = Time.time;
-        isOnCooldown = true;
-    }
-
-    public bool CanHeal()
-    {
-        if (isOnCooldown) return false;
-        if (playerHealth == null) return false;
-
-        float distanceToPlayer = Vector3.Distance(transform.position, playerHealth.transform.position);
-        return distanceToPlayer <= healRange;
-    }
-
-    public bool IsOnCooldown()
-    {
-        return isOnCooldown;
-    }
-
-    public void ForceHeal()
-    {
-        if (CanHeal())
+        if (anim != null)
         {
-            ExecuteHeal();
+            anim.SetTrigger("Attack");
+            StartAttackAnimation();
         }
     }
 
-    public float GetCooldownProgress()
-    {
-        if (!isOnCooldown) return 1f;
-        return (Time.time - lastHealTime) / healCooldown;
-    }
-
-    protected override void OnDrawGizmosSelected()
-    {
-        base.OnDrawGizmosSelected();
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, healRange);
-
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, followDistance);
-    }
-
-    private System.Collections.IEnumerator FadeOutAndDestroy()
-    {
+    private System.Collections.IEnumerator FadeAndDestroy()
+    { 
         isFading = true;
-
-        // Esperar un momento antes de empezar a desvanecer
         yield return new WaitForSeconds(fadeDelay);
 
-        if (spriteRenderer != null)
+        float t = 0;
+        Color col = spriteRenderer.color;
+        while (t < fadeDuration)
         {
-            Color startColor = spriteRenderer.color;
-            float elapsedTime = 0f;
-
-            while (elapsedTime < fadeDuration)
-            {
-                elapsedTime += Time.deltaTime;
-                float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
-                spriteRenderer.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
-                yield return null;
-            }
+            t += Time.deltaTime;
+            col.a = Mathf.Lerp(1, 0, t / fadeDuration);
+            spriteRenderer.color = col;
+            yield return null;
         }
 
         Destroy(gameObject);

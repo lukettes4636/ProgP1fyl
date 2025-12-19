@@ -34,7 +34,14 @@ public class AltarSummon : MonoBehaviour
             if (promptText != null)
             {
                 int have = player.GetItemCount(mineralName);
-                promptText.text = "Presiona Acción para invocar (" + have + "/" + requiredMineralCount + " " + mineralName + ")";
+                if (requireWeaponEquipped && player.GetCurrentEquip() == PlayerActionController.EquipType.None)
+                {
+                    promptText.text = "Weapon Required!";
+                }
+                else
+                {
+                    promptText.text = "Press Action to summon (" + have + "/" + requiredMineralCount + " " + mineralName + ")";
+                }
             }
         }
 
