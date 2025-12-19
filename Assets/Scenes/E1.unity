@@ -28513,9 +28513,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1237641764}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: BotonSalir
+        m_MethodName: QuitButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -30087,6 +30087,60 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1050270521994604750, guid: eebb651763da96345b664609520d4173, type: 3}
   m_PrefabInstance: {fileID: 1847624847}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1237641763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1237641765}
+  - component: {fileID: 1237641764}
+  m_Layer: 0
+  m_Name: MENU
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1237641764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1237641763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d41c13541738054ebe9b5a1630932b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameplaySceneName: E1
+  menuSceneName: MainMenu
+  menuCanvas: {fileID: 0}
+  gameUIContainer: {fileID: 0}
+  creditsPanel: {fileID: 0}
+  controlsPanel: {fileID: 0}
+  menuCamera: {fileID: 0}
+  gameCamera: {fileID: 0}
+  clickSound: {fileID: 0}
+  hoverSound: {fileID: 0}
+--- !u!4 &1237641765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1237641763}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 27.223524, y: 13.319979, z: 5.3789725}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1241318207 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4852996616170292813, guid: fbd10586329d46543a4db62c0e3bd25f, type: 3}
@@ -95921,3 +95975,4 @@ SceneRoots:
   - {fileID: 1550833002}
   - {fileID: 353788682}
   - {fileID: 2064897986}
+  - {fileID: 1237641765}

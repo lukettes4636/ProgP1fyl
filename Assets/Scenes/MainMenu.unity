@@ -3776,7 +3776,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1258520173}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: CerrarCreditos
+        m_MethodName: CloseCredits
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -12138,11 +12138,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 2.2506251
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 1
-  orthographic size: 15
+  orthographic size: 10
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
@@ -12167,7 +12167,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -47.2, y: 19.4, z: -10}
+  m_LocalPosition: {x: -39.23, y: 17.26, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30697,7 +30697,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1258520173}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: BotonSalir
+        m_MethodName: QuitButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -34923,7 +34923,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1258520173}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: CerrarControles
+        m_MethodName: CloseControls
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -35717,14 +35717,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d41c13541738054ebe9b5a1630932b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameplaySceneName: Gameplay
+  gameplaySceneName: E1
   menuSceneName: MenuPrincipal
   menuCanvas: {fileID: 405604639}
   gameUIContainer: {fileID: 1458351832}
-  creditsPanel: {fileID: 0}
-  controlsPanel: {fileID: 0}
-  menuCamera: {fileID: 0}
-  gameCamera: {fileID: 0}
+  creditsPanel: {fileID: 1747910668}
+  controlsPanel: {fileID: 1118348508}
+  menuCamera: {fileID: 1140286633}
+  gameCamera: {fileID: 1577385862}
   clickSound: {fileID: 8300000, guid: 5f74101f1c449a547ba9ad6d9934391a, type: 3}
   hoverSound: {fileID: 0}
 --- !u!1001 &1258991883
@@ -41318,7 +41318,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1258520173}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: BotonJugar
+        m_MethodName: PlayButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -47122,7 +47122,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1258520173}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: AbrirControles
+        m_MethodName: OpenControls
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -52069,7 +52069,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1258520173}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: AbrirCreditos
+        m_MethodName: OpenCredits
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

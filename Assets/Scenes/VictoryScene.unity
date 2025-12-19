@@ -616,7 +616,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1812793824}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: BotonSalir
+        m_MethodName: QuitButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2124,15 +2124,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d41c13541738054ebe9b5a1630932b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nombreEscenaGameplay: E1
-  nombreEscenaMenu: MainMenu
+  gameplaySceneName: E1
+  menuSceneName: MainMenu
   menuCanvas: {fileID: 0}
   gameUIContainer: {fileID: 0}
-  panelCreditos: {fileID: 0}
-  panelControles: {fileID: 0}
-  camaraMenu: {fileID: 0}
-  camaraJuego: {fileID: 0}
+  creditsPanel: {fileID: 0}
+  controlsPanel: {fileID: 0}
+  menuCamera: {fileID: 0}
+  gameCamera: {fileID: 0}
   clickSound: {fileID: 8300000, guid: 5f74101f1c449a547ba9ad6d9934391a, type: 3}
+  hoverSound: {fileID: 0}
 --- !u!4 &1812793825
 Transform:
   m_ObjectHideFlags: 0
@@ -2537,7 +2538,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1812793824}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: BotonReintentarDesdeVictoria
+        m_MethodName: RetryFromVictoryButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
